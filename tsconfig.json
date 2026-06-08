@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    /* Path mapping */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/App.tsx",
+    "src/main.tsx",
+    "src/components/ui/CustomButton.tsx",
+    "src/components/ui/CustomBadge.tsx",
+    "src/components/ui/Field.tsx",
+    "src/components/ui/StatCard.tsx",
+    "src/components/ui/Modal.tsx",
+    "src/api/**/*.ts",
+    "src/api/**/*.tsx",
+    "src/constants/**/*.ts",
+    "src/constants/**/*.tsx",
+    "src/data/**/*.ts",
+    "src/data/**/*.tsx",
+    "src/hooks/**/*.ts",
+    "src/hooks/**/*.tsx",
+    "src/pages/**/*.ts",
+    "src/pages/**/*.tsx",
+    "src/router/**/*.ts",
+    "src/router/**/*.tsx",
+    "src/store/**/*.ts",
+    "src/store/**/*.tsx",
+    "src/types/**/*.ts",
+    "src/types/**/*.tsx",
+    "src/utils/**/*.ts",
+    "src/utils/**/*.tsx",
+    "src/components/signature/**/*.ts",
+    "src/components/signature/**/*.tsx",
+    "src/components/layout/**/*.ts",
+    "src/components/layout/**/*.tsx",
+    "src/components/ticket/**/*.ts",
+    "src/components/ticket/**/*.tsx",
+    "src/components/thread/**/*.ts",
+    "src/components/thread/**/*.tsx"
+  ]
+}
