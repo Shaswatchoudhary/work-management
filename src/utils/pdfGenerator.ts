@@ -103,12 +103,12 @@ const drawSignatureBlock = (
 
   // Details — compact 2-column layout
   const leftDetails = [
-    { lbl: "Name:",   val: sig.signedBy },
-    { lbl: "Role:",   val: sig.role },
+    { lbl: "Name:", val: sig.signedBy },
+    { lbl: "Role:", val: sig.role },
   ];
   const rightDetails = [
     { lbl: "Signed:", val: formatSignatureTimestamp(sig.signedAt) },
-    { lbl: "Hash:",   val: sig.hash },
+    { lbl: "Hash:", val: sig.hash },
   ];
 
   // Left column
@@ -165,22 +165,22 @@ export const addSignatureSectionToPdf = (
   ticket: Ticket,
   contentEndY: number,  // ← ab caller se actual Y pass hoga
 ): void => {
-  const sigs      = ticket.signatures ?? {};
-  const pageH     = doc.internal.pageSize.getHeight();
-  const blockH    = 52;
-  const gap       = 4;
-  const colW      = 89;
-  const col1      = 14;
-  const col2      = 107;
-  const headerH   = 10;
-  const footerH   = 8;
+  const sigs = ticket.signatures ?? {};
+  const pageH = doc.internal.pageSize.getHeight();
+  const blockH = 46;
+  const gap = 3;
+  const colW = 89;
+  const col1 = 14;
+  const col2 = 107;
+  const headerH = 10;
+  const footerH = 8;
 
   // Total height needed: header + row1 + gap + row2 + footer
   const totalH = headerH + blockH + gap + blockH + footerH;
 
   // Agar content ke baad jagah nahi — new page
-  let startY = contentEndY + 8;
-  if (startY + totalH > pageH - 10) {
+  let startY = contentEndY + 4;
+  if (startY + totalH > pageH - 20) {
     doc.addPage();
     startY = 15;
   }
@@ -197,10 +197,10 @@ export const addSignatureSectionToPdf = (
   const row1Y = startY + headerH;
   const row2Y = row1Y + blockH + gap;
 
-  drawSignatureBlock(doc, sigs.hrApproval,    col1, row1Y, colW, "HR Approval",               1);
-  drawSignatureBlock(doc, sigs.adminApproval, col2, row1Y, colW, "Admin Final Approval",       2);
-  drawSignatureBlock(doc, sigs.hrInspection,  col1, row2Y, colW, "HR Inspection",              3);
-  drawSignatureBlock(doc, sigs.adminPayment,  col2, row2Y, colW, "Admin Inspection + Payment", 4);
+  drawSignatureBlock(doc, sigs.hrApproval, col1, row1Y, colW, "HR Approval", 1);
+  drawSignatureBlock(doc, sigs.adminApproval, col2, row1Y, colW, "Admin Final Approval", 2);
+  drawSignatureBlock(doc, sigs.hrInspection, col1, row2Y, colW, "HR Inspection", 3);
+  drawSignatureBlock(doc, sigs.adminPayment, col2, row2Y, colW, "Admin Inspection + Payment", 4);
 
   // Footer
   doc.setFontSize(5.5);
@@ -226,14 +226,14 @@ export function generateRequirementPdf(ticket: Ticket, helpdeskUser: SafeUser | 
 
   let y = 50;
   const rows: [string, string][] = [
-    ["Category",       ticket.category],
-    ["Priority",       ticket.priority],
-    ["Location",       ticket.location],
+    ["Category", ticket.category],
+    ["Priority", ticket.priority],
+    ["Location", ticket.location],
     ["Estimated Cost", fmtMoney(ticket.estimatedCost)],
-    ["Status",         STATUS_LABEL[ticket.status] || ticket.status],
-    ["Raised By",      helpdeskUser?.name || ticket.createdBy],
-    ["Raised At",      fmtDate(ticket.createdAt)],
-    ["Tags",           (ticket.tags || []).join(", ") || "—"],
+    ["Status", STATUS_LABEL[ticket.status] || ticket.status],
+    ["Raised By", helpdeskUser?.name || ticket.createdBy],
+    ["Raised At", fmtDate(ticket.createdAt)],
+    ["Tags", (ticket.tags || []).join(", ") || "—"],
   ];
   rows.forEach(([k, v]) => { kv(doc, y, k, v); y += 7; });
 
@@ -276,11 +276,11 @@ export function generateInspectionPdf(
 
   let y = 50;
   const rows: [string, string][] = [
-    ["Category",         ticket.category],
-    ["Assigned To",      ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—"],
-    ["Inspection Result",ticket.inspection?.passed ? "PASSED" : "FAILED"],
+    ["Category", ticket.category],
+    ["Assigned To", ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—"],
+    ["Inspection Result", ticket.inspection?.passed ? "PASSED" : "FAILED"],
     ["Inspection Notes", ticket.inspection?.notes || "—"],
-    ["Estimated Cost",   fmtMoney(ticket.estimatedCost)],
+    ["Estimated Cost", fmtMoney(ticket.estimatedCost)],
   ];
   rows.forEach(([k, v]) => { kv(doc, y, k, v); y += 7; });
 
@@ -310,10 +310,10 @@ export function generatePaymentPdf(ticket: Ticket, _adminSig: string): PdfResult
   let y = 50;
   const rows: [string, string][] = [
     ["Amount Released", fmtMoney(ticket.payment?.amount ?? ticket.estimatedCost)],
-    ["Released At",     fmtDate(ticket.payment?.releasedAt || new Date().toISOString())],
-    ["Assigned To",     ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—"],
-    ["Category",        ticket.category],
-    ["Final Status",    "CLOSED"],
+    ["Released At", fmtDate(ticket.payment?.releasedAt || new Date().toISOString())],
+    ["Assigned To", ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—"],
+    ["Category", ticket.category],
+    ["Final Status", "CLOSED"],
   ];
   rows.forEach(([k, v]) => { kv(doc, y, k, v); y += 7; });
 

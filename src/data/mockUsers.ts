@@ -15,7 +15,7 @@ export const MOCK_USERS: User[] = [
     name: "Priya Sharma",
     email: "hr@company.com",
     password: "1234",
-    pin: "7823",          // ← HR ka personal PIN — signature ke liye use hoga
+    pin: "1222",          // ← HR ka personal PIN — signature ke liye use hoga
     role: "hr",
     department: "Human Resources",
   },
@@ -24,7 +24,7 @@ export const MOCK_USERS: User[] = [
     name: "Suresh Verma",
     email: "admin@company.com",
     password: "1234",
-    pin: "3967",          // ← Admin ka personal PIN
+    pin: "1234",          // ← Admin ka personal PIN
     role: "admin",
     department: "Administration",
   },

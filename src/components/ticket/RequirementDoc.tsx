@@ -27,11 +27,11 @@ export default function RequirementDoc({ ticket }: RequirementDocProps) {
       {/* Details table */}
       <table className="w-full text-xs mb-5 border border-gray-300">
         <tbody>
-          <Row k="Category"       v={ticket.category} />
-          <Row k="Priority"       v={ticket.priority} />
-          <Row k="Location"       v={ticket.location} />
+          <Row k="Category" v={ticket.category} />
+          <Row k="Priority" v={ticket.priority} />
+          <Row k="Location" v={ticket.location} />
           <Row k="Estimated Cost" v={fmtMoney(ticket.estimatedCost)} />
-          <Row k="Tags"           v={(ticket.tags || []).join(", ") || "—"} />
+          <Row k="Tags" v={(ticket.tags || []).join(", ") || "—"} />
           <Row
             k="Assignee"
             v={ticket.assignee
@@ -56,7 +56,7 @@ export default function RequirementDoc({ ticket }: RequirementDocProps) {
         </div>
 
         {/* Row 1 — Approval signatures */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-4 items-stretch">
           <SigBlock
             number={1}
             label="HR Approval"
@@ -72,7 +72,7 @@ export default function RequirementDoc({ ticket }: RequirementDocProps) {
         </div>
 
         {/* Row 2 — Inspection signatures */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-4 items-stretch">
           <SigBlock
             number={3}
             label="HR Inspection"
@@ -120,7 +120,7 @@ interface SigBlockProps {
 }
 function SigBlock({ number, label, color, block }: SigBlockProps) {
   return (
-    <div className="border border-gray-300 rounded-sm overflow-hidden">
+    <div className="border border-gray-300 rounded-sm overflow-hidden h-full flex flex-col">
       {/* Header bar */}
       <div className="bg-gray-100 border-b border-gray-300 px-3 py-1.5 flex items-center gap-2">
         <span className="text-[10px] font-bold text-gray-500 bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center">
@@ -132,13 +132,12 @@ function SigBlock({ number, label, color, block }: SigBlockProps) {
       </div>
 
       {/* Signature image area */}
-      <div className="h-20 bg-white flex items-center justify-center border-b border-gray-200">
+      <div className="h-24 bg-white flex items-center justify-center border-b border-gray-200">
         {block?.signatureImage ? (
           <img
             src={block.signatureImage}
             alt={`${label} signature`}
-            className="max-h-16 max-w-full object-contain"
-          />
+            className="max-h-20 max-w-[90%] object-contain" />
         ) : (
           <span className="text-xs text-gray-400 italic">Pending signature</span>
         )}
@@ -146,10 +145,19 @@ function SigBlock({ number, label, color, block }: SigBlockProps) {
 
       {/* Details */}
       {block ? (
-        <div className="px-3 py-2 space-y-0.5 bg-gray-50">
-          <div className="text-[10px] font-semibold text-gray-800">{block.signedBy}</div>
-          <div className="text-[10px] text-gray-500">{block.role}</div>
-          <div className="text-[10px] text-gray-500">
+        <div className="px-3 py-2 bg-gray-50 flex-1">
+          <div className="text-[10px] font-semibold text-gray-800 h-4">
+            {block.signedBy}
+          </div>
+
+          <div
+            className="text-[10px] text-gray-500 h-8 overflow-hidden"
+            title={block.role}
+          >
+            {block.role}
+          </div>
+
+          <div className="text-[10px] text-gray-500 h-8">
             {new Date(block.signedAt).toLocaleString("en-IN", {
               day: "2-digit",
               month: "short",
@@ -159,8 +167,11 @@ function SigBlock({ number, label, color, block }: SigBlockProps) {
               second: "2-digit",
             })}
           </div>
-          <div className="text-[9px] text-gray-400 font-mono">Hash: {block.hash}</div>
-          {/* Verified badge */}
+
+          <div className="text-[9px] text-gray-400 font-mono">
+            Hash: {block.hash}
+          </div>
+
           <div className="flex items-center gap-1 mt-1">
             <div className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[9px] text-emerald-600 font-semibold uppercase tracking-wider">

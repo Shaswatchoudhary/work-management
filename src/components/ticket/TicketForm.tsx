@@ -7,7 +7,7 @@ import { PRIORITY } from "../../constants/ticketStatus.ts";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
-import { generateRequirementPdf, downloadPdf } from "../../utils/pdfGenerator.ts";
+import { generateAndDownloadPdf } from "../../utils/generatePDF.ts";
 import { Ticket, Priority } from "../../types";
 
 interface FormData {
@@ -48,6 +48,7 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
 
   const isEdit = !!ticket;
   const [form, setForm] = useState<FormData>(empty);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (ticket) {
@@ -66,7 +67,8 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
     }
   }, [ticket, open]);
 
-  const update = (k: keyof FormData, v: string | string[]) => setForm((f) => ({ ...f, [k]: v }));
+  const update = (k: keyof FormData, v: string | string[]) =>
+    setForm((f) => ({ ...f, [k]: v }));
 
   const toggleTag = (t: string) =>
     setForm((f) => ({
@@ -74,45 +76,49 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
       tags: f.tags.includes(t) ? f.tags.filter((x) => x !== t) : [...f.tags, t],
     }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.location.trim() || !form.description.trim()) {
+    if (!form.title.trim() || !form.location.trim() || !form.description.trim())
       return alert("Title, location and description are required.");
-    }
-    const payload = { ...form, estimatedCost: Number(form.estimatedCost) || 0 };
 
-    if (isEdit && ticket) {
-      updateTicket(ticket.id, payload);
-      const wasRejected = ticket.status === "rejected_hr" || ticket.status === "rejected_admin";
-     if (wasRejected) {
-  // Old fields ki jagah signatures clear karo
-  updateTicket(ticket.id, {
-    signatures: {},           // ← signatures reset karo
-    hrApprovedAt: undefined,
-    adminApprovedAt: undefined,
-  });
-  setStatus(ticket.id, "pending_hr", {
-    comment: {
-      userId: user!.id,
-      role: user!.role,
-      text: "Edited and resubmitted after feedback.",
-    },
-  });
-  notify({ title: `Ticket ${ticket.id} edited & resubmitted`, forRole: "hr" });
-}
-    } else {
-      const created = addTicket(payload, user!);
-      const pdf = generateRequirementPdf(created, user || undefined);
-      addPdf(created.id, {
-        name: pdf.name,
-        type: "requirement",
-        dataUrl: pdf.dataUrl,
-        at: new Date().toISOString(),
-      });
-      downloadPdf(pdf);
-      notify({ title: `New ticket ${created.id} submitted for HR review`, forRole: "hr" });
+    const payload = { ...form, estimatedCost: Number(form.estimatedCost) || 0 };
+    setSubmitting(true);
+
+    try {
+      if (isEdit && ticket) {
+        updateTicket(ticket.id, payload);
+        const wasRejected =
+          ticket.status === "rejected_hr" || ticket.status === "rejected_admin";
+        if (wasRejected) {
+          updateTicket(ticket.id, {
+            signatures: {},
+            hrApprovedAt: undefined,
+            adminApprovedAt: undefined,
+          });
+          setStatus(ticket.id, "pending_hr", {
+            comment: {
+              userId: user!.id,
+              role: user!.role,
+              text: "Edited and resubmitted after feedback.",
+            },
+          });
+          notify({ title: `Ticket ${ticket.id} edited & resubmitted`, forRole: "hr" });
+        }
+      } else {
+        const created = addTicket(payload, user!);
+        const dataUrl = await generateAndDownloadPdf(created, user || undefined);
+        addPdf(created.id, {
+          name: `Requirement_${created.id}.pdf`,
+          type: "requirement",
+          dataUrl,
+          at: new Date().toISOString(),
+        });
+        notify({ title: `New ticket ${created.id} submitted for HR review`, forRole: "hr" });
+      }
+    } finally {
+      setSubmitting(false);
+      onClose?.();
     }
-    onClose?.();
   };
 
   return (
@@ -132,21 +138,26 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
             className="bg-[#0a0a0a] border-white/20 text-white placeholder:text-white/35 focus:border-white/50"
           />
         </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-[#e2e8f0] font-medium text-[13px]">Category</Label>
-            <Select value={form.category} onChange={(e) => update("category", e.target.value)} className="bg-[#0a0a0a] border-white/20 text-white focus:border-white/50">
-              {CATEGORIES.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
+            <Select
+              value={form.category}
+              onChange={(e) => update("category", e.target.value)}
+              className="bg-[#0a0a0a] border-white/20 text-white focus:border-white/50"
+            >
+              {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
             </Select>
           </div>
           <div>
             <Label className="text-[#e2e8f0] font-medium text-[13px]">Priority</Label>
-            <Select value={form.priority} onChange={(e) => update("priority", e.target.value as Priority)} className="bg-[#0a0a0a] border-white/20 text-white focus:border-white/50">
-              {PRIORITY.map((p) => (
-                <option key={p}>{p}</option>
-              ))}
+            <Select
+              value={form.priority}
+              onChange={(e) => update("priority", e.target.value as Priority)}
+              className="bg-[#0a0a0a] border-white/20 text-white focus:border-white/50"
+            >
+              {PRIORITY.map((p) => <option key={p}>{p}</option>)}
             </Select>
           </div>
           <div>
@@ -168,6 +179,7 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
             />
           </div>
         </div>
+
         <div>
           <Label className="text-[#e2e8f0] font-medium text-[13px]">Description</Label>
           <Textarea
@@ -177,6 +189,7 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
             className="bg-[#0a0a0a] border-white/20 text-white placeholder:text-white/35 focus:border-white/50"
           />
         </div>
+
         <div>
           <Label className="text-[#e2e8f0] font-medium text-[13px]">Tags</Label>
           <div className="flex flex-wrap gap-2">
@@ -185,19 +198,21 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
                 key={t}
                 type="button"
                 onClick={() => toggleTag(t)}
-                className={`text-xs rounded-md px-2 py-1 border ${
-                  form.tags.includes(t)
+                className={`text-xs rounded-md px-2 py-1 border transition-colors ${form.tags.includes(t)
                     ? "bg-[#4f6ef7] border-[#4f6ef7] text-white"
                     : "bg-[#0a0a0a] border-white/30 text-white/80 hover:text-white"
-                }`}
+                  }`}
               >
                 {t}
               </button>
             ))}
           </div>
         </div>
+
         <div>
-          <Label className="text-[#e2e8f0] font-medium text-[13px]">File attachment (optional, link)</Label>
+          <Label className="text-[#e2e8f0] font-medium text-[13px]">
+            File attachment (optional, link)
+          </Label>
           <Input
             value={form.attachment}
             onChange={(e) => update("attachment", e.target.value)}
@@ -205,16 +220,25 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
             className="bg-[#0a0a0a] border-white/20 text-white placeholder:text-white/35 focus:border-white/50"
           />
         </div>
+
         <div className="flex justify-end gap-2 pt-2 border-t border-border">
-          <Button type="button" variant="secondary" onClick={onClose} className="border-white/20 text-white/70">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onClose}
+            className="border-white/20 text-white/70"
+            disabled={submitting}
+          >
             Cancel
           </Button>
-          <Button type="submit" className="text-white">
-            {isEdit
-              ? ticket?.status === "rejected_hr" || ticket?.status === "rejected_admin"
-                ? "Save & Resubmit"
-                : "Save Changes"
-              : "Submit & Generate PDF"}
+          <Button type="submit" className="text-white" disabled={submitting}>
+            {submitting
+              ? "Generating PDF..."
+              : isEdit
+                ? ticket?.status === "rejected_hr" || ticket?.status === "rejected_admin"
+                  ? "Save & Resubmit"
+                  : "Save Changes"
+                : "Submit & Generate PDF"}
           </Button>
         </div>
       </form>
