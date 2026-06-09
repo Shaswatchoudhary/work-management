@@ -5,21 +5,28 @@ import { MOCK_USERS } from "../data/mockUsers";
 // Yeh hash tamper detection ke liye hai.
 // Agar koi PDF ke baad manually data badalne ki koshish kare,
 // hash mismatch hoga aur pata chal jayega.
-export const generateSignatureHash = (data: {
+// we have used sha256 hash algo instead of djb2 because it is more secure and reliable. 
+export const generateSecureHash = async (data: {
   userId: string;
   ticketId: string;
   purpose: string;
   signedAt: string;
-}): string => {
+}): Promise<string> => {
   const raw = `${data.userId}|${data.ticketId}|${data.purpose}|${data.signedAt}`;
-  // DJB2 hash algorithm — simple, fast, collision-resistant for our use
-  let hash = 5381;
-  for (let i = 0; i < raw.length; i++) {
-    hash = ((hash << 5) + hash) ^ raw.charCodeAt(i);
-  }
-  // Unsigned 32-bit int → hex string, padded to 8 chars
-  return (hash >>> 0).toString(16).toUpperCase().padStart(8, "0");
+
+  // String ko bytes me convert karein
+  const msgBuffer = new TextEncoder().encode(raw);
+
+  // Browser ka built-in crypto module use karke SHA-256 hash banayein
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+  // Array buffer ko Hex String me convert karein
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+  return hashHex.toUpperCase(); // Yeh ek 64-character ka secure hash dega
 };
+
 
 // ─── Browser fingerprint ───────────────────────────────────────────────────
 // Exact IP track nahi kar sakte (no backend), lekin basic device info store karte hain.
@@ -43,13 +50,14 @@ export const verifyPin = (userId: string, enteredPin: string): boolean => {
 // ─── SignatureBlock banana ─────────────────────────────────────────────────
 // PIN verify hone ke baad yeh function signature block generate karta hai.
 // Yahi data PDF mein embed hoga aur ticketStore mein save hoga.
-export const createSignatureBlock = (
+// Note: Hash async hone ki vajah se is function ko bhi async banaya gaya hai.
+export const createSignatureBlock = async (
   userId: string,
   userName: string,
   ticketId: string,
   purpose: SignaturePurpose,
   signatureImage: string, // base64 PNG of the drawn canvas signature
-): SignatureBlock => {
+): Promise<SignatureBlock> => {
   const signedAt = new Date().toISOString(); // exact timestamp — ISO format
 
   // Purpose ke hisaab se role label
@@ -60,7 +68,8 @@ export const createSignatureBlock = (
     admin_inspection_payment: "Admin — Payment Authority",
   };
 
-  const hash = generateSignatureHash({ userId, ticketId, purpose, signedAt });
+  // Naya SHA-256 hash secure function call kiya await ke sath
+  const hash = await generateSecureHash({ userId, ticketId, purpose, signedAt });
 
   return {
     signedBy: userName,
@@ -78,8 +87,9 @@ export const createSignatureBlock = (
 // ─── Signature verify karna (tamper check) ────────────────────────────────
 // PDF download karne se pehle ya audit mein use karo.
 // Agar kisi ne store mein data manually badla, hash mismatch karega.
-export const verifySignatureIntegrity = (sig: SignatureBlock): boolean => {
-  const expected = generateSignatureHash({
+// Note: Hash validation async hone ki vajah se yeh function ab Promise<boolean> return karega.
+export const verifySignatureIntegrity = async (sig: SignatureBlock): Promise<boolean> => {
+  const expected = await generateSecureHash({
     userId: sig.userId,
     ticketId: sig.ticketId,
     purpose: sig.purpose,
@@ -99,5 +109,4 @@ export const formatSignatureTimestamp = (isoString: string): string => {
     second: "2-digit",
     hour12: true,
   });
-  // Output: "07 Jun 2026, 03:42:18 PM"
 };

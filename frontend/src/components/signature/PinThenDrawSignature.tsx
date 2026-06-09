@@ -13,10 +13,10 @@ interface PinThenDrawSignatureProps {
 }
 
 const PURPOSE_LABELS: Record<SignaturePurpose, string> = {
-  hr_approval:               "HR Approval",
-  admin_approval:            "Admin Final Approval",
-  hr_inspection:             "HR Inspection Co-signature",
-  admin_inspection_payment:  "Admin Inspection + Payment Authorization",
+  hr_approval: "HR Approval",
+  admin_approval: "Admin Final Approval",
+  hr_inspection: "HR Inspection Co-signature",
+  admin_inspection_payment: "Admin Inspection + Payment Authorization",
 };
 
 // ── Locked display — sign ho gaya, kuch edit nahi hoga ────────────────────
@@ -26,6 +26,10 @@ const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
       <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
         {PURPOSE_LABELS[sig.purpose]}
       </span>
+      {/* <span className="flex items-center gap-1 text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+        ✓ Verified & Locked
+      </span> */}
+
       <span className="flex items-center gap-1 text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
         ✓ Verified & Locked
       </span>
@@ -55,8 +59,12 @@ const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
         <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Signed by</span>
         <span className="text-gray-800 font-semibold">{sig.signedBy}</span>
       </div>
-      <div className="flex gap-3">
+      {/* <div className="flex gap-3">
         <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Role</span>
+        <span className="text-gray-800 font-semibold">{sig.role}</span>
+      </div> */}
+      <div className=" flex gap-3">
+        <span className="text-gray-400 w-24 flex-shrink-0 upparcase tracking-wider text-[9x] pt-0.5>Role " />
         <span className="text-gray-800 font-semibold">{sig.role}</span>
       </div>
       <div className="flex gap-3">
@@ -106,14 +114,14 @@ export default function PinThenDrawSignature({
   // savedBlock — naya sign hone pe yahan store hoga (existingSignature prop nahi hoga tab)
   const [savedBlock, setSavedBlock] = useState<SignatureBlock | null>(null);
 
-  const [pin, setPin]           = useState("");
-  const [error, setError]       = useState("");
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState("");
   const [attempts, setAttempts] = useState(0);
-  const [locked, setLocked]     = useState(false);
-  const [loading, setLoading]   = useState(false);
+  const [locked, setLocked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const canvasRef   = useRef<HTMLCanvasElement>(null);
-  const isDrawing   = useRef(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDrawing = useRef(false);
   const MAX_ATTEMPTS = 3;
 
   // Agar existingSignature prop aaya — seedha signed mode
@@ -185,7 +193,7 @@ export default function PinThenDrawSignature({
   }, []);
 
   // ── Save signature — canvas → base64 → SignatureBlock ─────────────────
-  const saveSignature = useCallback(() => {
+  const saveSignature = useCallback(async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -201,7 +209,7 @@ export default function PinThenDrawSignature({
     }
 
     const signatureImage = canvas.toDataURL("image/png");
-    const block = createSignatureBlock(userId, userName, ticketId, purpose, signatureImage);
+    const block = await createSignatureBlock(userId, userName, ticketId, purpose, signatureImage);
 
     // Save locally so SignedDisplay can render even without existingSignature prop
     setSavedBlock(block);
@@ -316,11 +324,10 @@ export default function PinThenDrawSignature({
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
-            className={`w-12 h-12 rounded-xl border-2 flex items-center justify-center text-xl font-bold transition-all duration-150 ${
-              pin.length > i
-                ? "border-[#4f6ef7] bg-[#4f6ef7]/15 text-white scale-105"
-                : "border-white/15 bg-white/5 text-transparent"
-            }`}
+            className={`w-12 h-12 rounded-xl border-2 flex items-center justify-center text-xl font-bold transition-all duration-150 ${pin.length > i
+              ? "border-[#4f6ef7] bg-[#4f6ef7]/15 text-white scale-105"
+              : "border-white/15 bg-white/5 text-transparent"
+              }`}
           >
             {pin.length > i ? "●" : ""}
           </div>

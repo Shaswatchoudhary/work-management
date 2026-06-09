@@ -21,16 +21,16 @@ interface AppShellProps {
 }
 
 export default function AppShell({ role, tabs, activeTab, onTab, children }: AppShellProps) {
-  const user              = useAuthStore((s) => s.user);
-  const logout            = useAuthStore((s) => s.logout);
-  const navigate          = useNavigate();
-  const allNotifications  = useNotificationStore((s) => s.notifications);
-  const markAllRead       = useNotificationStore((s) => s.markAllRead);
-  const notifications     = allNotifications.filter((n) => n.forRole === role || n.forRole === "all");
-  const unread            = notifications.filter((n) => !n.read).length;
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const navigate = useNavigate();
+  const allNotifications = useNotificationStore((s) => s.notifications);
+  const markAllRead = useNotificationStore((s) => s.markAllRead);
+  const notifications = allNotifications.filter((n) => n.forRole === role || n.forRole === "all");
+  const unread = notifications.filter((n) => !n.read).length;
 
   const [openBell, setOpenBell] = useState(false);
-  const [bellPos, setBellPos]   = useState({ bottom: 0, right: 0 });
+  const [bellPos, setBellPos] = useState({ bottom: 0, right: 0 });
   const bellRef = useRef<HTMLButtonElement>(null);
 
   const handleBellClick = () => {
@@ -156,11 +156,10 @@ export default function AppShell({ role, tabs, activeTab, onTab, children }: App
             <button
               key={t.key}
               onClick={() => onTab(t.key)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                activeTab === t.key
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${activeTab === t.key
                   ? "bg-white/10 text-white border border-white/15 shadow-sm"
                   : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
-              }`}
+                }`}
             >
               {t.label}
             </button>
