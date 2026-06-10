@@ -21,32 +21,27 @@ const PURPOSE_LABELS: Record<SignaturePurpose, string> = {
 
 // ── Locked display — sign ho gaya, kuch edit nahi hoga ────────────────────
 const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
-  <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/[0.06] p-4 pointer-events-none select-none">
-    <div className="flex items-center justify-between mb-3">
-      <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
+  <div style={{ borderRadius: "10px", border: "0.5px solid #BBF7D0", background: "#F0FDF4", padding: "16px", pointerEvents: "none", userSelect: "none" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+      <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#16A34A", fontWeight: 700 }}>
         {PURPOSE_LABELS[sig.purpose]}
       </span>
-      {/* <span className="flex items-center gap-1 text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
-        ✓ Verified & Locked
-      </span> */}
-
-      <span className="flex items-center gap-1 text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+      <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "9px", background: "#BBF7D0", color: "#16A34A", padding: "4px 8px", borderRadius: "20px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
         ✓ Verified & Locked
       </span>
     </div>
 
     {/* Drawn signature image */}
-    <div className="bg-white rounded-md p-2 border border-gray-200 mb-3">
+    <div style={{ background: "#fff", borderRadius: "8px", padding: "8px", border: "0.5px solid #EDE9E0", marginBottom: "12px" }}>
       {sig.signatureImage ? (
         <img
           src={sig.signatureImage}
           alt="Signature"
-          className="w-full h-[80px] object-contain"
+          style={{ width: "100%", height: "80px", objectFit: "contain" }}
         />
       ) : (
         <div
-          className="text-gray-800 text-center py-4"
-          style={{ fontFamily: "'Dancing Script', cursive", fontSize: 26 }}
+          style={{ color: "#333", textAlign: "center", padding: "16px 0", fontFamily: "'Georgia', serif", fontStyle: "italic", fontSize: "24px" }}
         >
           {sig.signedBy}
         </div>
@@ -54,22 +49,18 @@ const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
     </div>
 
     {/* All details — plain spans only, no inputs */}
-    <div className="bg-white rounded-md p-3 border border-gray-200 space-y-2 text-[11px]">
-      <div className="flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Signed by</span>
-        <span className="text-gray-800 font-semibold">{sig.signedBy}</span>
+    <div style={{ background: "#fff", borderRadius: "8px", padding: "12px", border: "0.5px solid #EDE9E0", display: "flex", flexDirection: "column", gap: "8px", fontSize: "11px" }}>
+      <div style={{ display: "flex", gap: "12px" }}>
+        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Signed by</span>
+        <span style={{ color: "#333", fontWeight: 600 }}>{sig.signedBy}</span>
       </div>
-      {/* <div className="flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Role</span>
-        <span className="text-gray-800 font-semibold">{sig.role}</span>
-      </div> */}
-      <div className=" flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 upparcase tracking-wider text-[9x] pt-0.5>Role " />
-        <span className="text-gray-800 font-semibold">{sig.role}</span>
+      <div style={{ display: "flex", gap: "12px" }}>
+        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Role</span>
+        <span style={{ color: "#333", fontWeight: 600 }}>{sig.role}</span>
       </div>
-      <div className="flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Date & Time</span>
-        <span className="text-gray-800 font-semibold font-mono text-[10px]">
+      <div style={{ display: "flex", gap: "12px" }}>
+        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Date & Time</span>
+        <span style={{ color: "#333", fontWeight: 600, fontFamily: "monospace", fontSize: "10px" }}>
           {new Date(sig.signedAt).toLocaleString("en-IN", {
             day: "2-digit", month: "short", year: "numeric",
             hour: "2-digit", minute: "2-digit", second: "2-digit",
@@ -77,21 +68,21 @@ const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
           })}
         </span>
       </div>
-      <div className="flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Ticket ID</span>
-        <span className="text-gray-800 font-semibold">{sig.ticketId}</span>
+      <div style={{ display: "flex", gap: "12px" }}>
+        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Ticket ID</span>
+        <span style={{ color: "#333", fontWeight: 600 }}>{sig.ticketId}</span>
       </div>
-      <div className="flex gap-3">
-        <span className="text-gray-400 w-24 flex-shrink-0 uppercase tracking-wider text-[9px] pt-0.5">Hash</span>
-        <span className="text-gray-500 font-mono text-[9px] break-all">{sig.hash}</span>
+      <div style={{ display: "flex", gap: "12px" }}>
+        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Hash</span>
+        <span style={{ color: "#CCC", fontFamily: "monospace", fontSize: "9px", wordBreak: "break-all" }}>{sig.hash}</span>
       </div>
     </div>
 
-    <div className="mt-2 flex items-center gap-1.5">
-      <div className="w-3 h-3 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
-        <span className="text-white text-[7px] font-bold leading-none">✓</span>
+    <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
+      <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#16A34A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <span style={{ color: "#fff", fontSize: "7px", fontWeight: 700, lineHeight: 1 }}>✓</span>
       </div>
-      <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-wider">
+      <span style={{ fontSize: "9px", color: "#16A34A", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
         PIN Verified · Digitally Signed · Non-editable
       </span>
     </div>
@@ -256,16 +247,16 @@ export default function PinThenDrawSignature({
   // ── Render: draw mode ──────────────────────────────────────────────────
   if (mode === "draw") {
     return (
-      <div className="rounded-lg border border-white/15 bg-white/[0.04] p-4 space-y-3">
+      <div style={{ borderRadius: "10px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-0.5">
+          <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#AAA", fontWeight: 600, marginBottom: "4px" }}>
             {PURPOSE_LABELS[purpose]}
           </div>
-          <p className="text-sm text-white/60">PIN verified. Now draw your signature below.</p>
+          <p style={{ fontSize: "13px", color: "#555" }}>PIN verified. Now draw your signature below.</p>
         </div>
 
         {/* Canvas — white background, black ink */}
-        <div className="rounded-lg overflow-hidden border border-white/20 bg-white">
+        <div style={{ borderRadius: "10px", overflow: "hidden", border: "0.5px solid #EDE9E0", background: "#fff" }}>
           <canvas
             ref={canvasRef}
             width={560}
@@ -277,30 +268,30 @@ export default function PinThenDrawSignature({
             onTouchStart={startDrawing}
             onTouchMove={draw}
             onTouchEnd={stopDrawing}
-            className="w-full h-[160px] cursor-crosshair touch-none block"
+            style={{ width: "100%", height: "160px", cursor: "crosshair", touchAction: "none", display: "block" }}
           />
         </div>
 
-        <p className="text-[10px] text-white/30 text-center">
+        <p style={{ fontSize: "10px", color: "#AAA", textAlign: "center" }}>
           Draw inside the white box above
         </p>
 
         {error && (
-          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300 text-center">
+          <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "8px 12px", fontSize: "12px", color: "#DC2626", textAlign: "center" }}>
             {error}
           </div>
         )}
 
-        <div className="flex gap-2">
+        <div style={{ display: "flex", gap: "8px" }}>
           <button
             onClick={clearCanvas}
-            className="flex-1 py-2.5 bg-white/5 border border-white/15 text-white/70 text-sm font-medium rounded-xl hover:bg-white/10 transition-all"
+            style={{ flex: 1, padding: "10px 14px", background: "#fff", border: "0.5px solid #EDE9E0", color: "#555", fontSize: "13px", fontWeight: 500, borderRadius: "10px", cursor: "pointer", transition: "background 0.15s" }}
           >
             Clear
           </button>
           <button
             onClick={saveSignature}
-            className="flex-1 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-500 transition-all"
+            style={{ flex: 1, padding: "10px 14px", background: "#16A34A", border: "none", color: "#fff", fontSize: "13px", fontWeight: 600, borderRadius: "10px", cursor: "pointer", transition: "background 0.15s" }}
           >
             Save Signature
           </button>
@@ -311,23 +302,28 @@ export default function PinThenDrawSignature({
 
   // ── Render: idle mode — PIN entry ──────────────────────────────────────
   return (
-    <div className="rounded-lg border border-white/15 bg-white/[0.04] p-4 space-y-4">
+    <div style={{ borderRadius: "10px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
       <div>
-        <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-0.5">
+        <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#AAA", fontWeight: 600, marginBottom: "4px" }}>
           {PURPOSE_LABELS[purpose]}
         </div>
-        <p className="text-sm text-white/60">{label} — enter your 4-digit PIN to unlock signature.</p>
+        <p style={{ fontSize: "13px", color: "#555" }}>{label} — enter your 4-digit PIN to unlock signature.</p>
       </div>
 
       {/* 4 dot indicators */}
-      <div className="flex gap-3 justify-center py-2">
+      <div style={{ display: "flex", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
-            className={`w-12 h-12 rounded-xl border-2 flex items-center justify-center text-xl font-bold transition-all duration-150 ${pin.length > i
-              ? "border-[#4f6ef7] bg-[#4f6ef7]/15 text-white scale-105"
-              : "border-white/15 bg-white/5 text-transparent"
-              }`}
+            style={{
+              width: "48px", height: "48px", borderRadius: "10px", border: "2px solid",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "20px", fontWeight: 700, transition: "all 0.15s",
+              borderColor: pin.length > i ? "#F59E0B" : "#EDE9E0",
+              background: pin.length > i ? "#FFFBEB" : "#fff",
+              color: pin.length > i ? "#F59E0B" : "transparent",
+              transform: pin.length > i ? "scale(1.05)" : "scale(1)",
+            }}
           >
             {pin.length > i ? "●" : ""}
           </div>
@@ -347,32 +343,46 @@ export default function PinThenDrawSignature({
         onKeyDown={(e) => e.key === "Enter" && handleVerify()}
         disabled={locked}
         placeholder="••••"
-        className="w-full px-4 py-3 bg-white/5 border border-white/15 rounded-xl text-white text-center font-mono text-2xl tracking-[0.5em] focus:outline-none focus:border-[#4f6ef7] disabled:opacity-40 transition-all"
+        style={{
+          width: "100%", padding: "10px 14px",
+          background: "#fff", border: "0.5px solid #EDE9E0", borderRadius: "10px",
+          color: "#333", textAlign: "center", fontFamily: "monospace",
+          fontSize: "24px", letterSpacing: "0.5em", outline: "none",
+          opacity: locked ? 0.4 : 1, cursor: locked ? "not-allowed" : "text",
+        }}
         autoFocus
       />
 
       {error && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300 text-center">
+        <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "8px 12px", fontSize: "12px", color: "#DC2626", textAlign: "center" }}>
           {error}
         </div>
       )}
 
       {locked && (
-        <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-center">
-          <div className="text-red-300 text-sm font-semibold">🔒 Locked</div>
-          <div className="text-red-400/70 text-xs mt-1">Contact admin to reset.</div>
+        <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "10px 12px", textAlign: "center" }}>
+          <div style={{ fontSize: "13px", fontWeight: 600, color: "#DC2626" }}>🔒 Locked</div>
+          <div style={{ fontSize: "11px", color: "#DC2626", marginTop: "4px", opacity: 0.8 }}>Contact admin to reset.</div>
         </div>
       )}
 
       <button
         onClick={handleVerify}
         disabled={pin.length !== 4 || locked || loading}
-        className="w-full py-3 bg-[#4f6ef7] text-white text-sm font-bold rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#3d5ae0] transition-all cursor-pointer"
+        style={{
+          width: "100%", padding: "10px 14px",
+          background: pin.length !== 4 || locked || loading ? "#FCD97A" : "#F59E0B",
+          border: "none", borderRadius: "10px",
+          color: "#fff", fontSize: "13px", fontWeight: 600,
+          opacity: pin.length !== 4 || locked || loading ? 0.5 : 1,
+          cursor: pin.length !== 4 || locked || loading ? "not-allowed" : "pointer",
+          transition: "background 0.15s",
+        }}
       >
         {loading ? "Verifying..." : "Verify PIN"}
       </button>
 
-      <p className="text-[10px] text-white/25 text-center">
+      <p style={{ fontSize: "10px", color: "#AAA", textAlign: "center" }}>
         ⚠️ This signature is legally binding. Do not share your PIN.
       </p>
     </div>

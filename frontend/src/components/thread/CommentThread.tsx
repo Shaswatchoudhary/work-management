@@ -3,16 +3,14 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { fmtRel } from "../../utils/dateFormatter.ts";
 import { ROLE_LABEL } from "../../constants/roles.ts";
-import { Textarea } from "../ui/Field.tsx";
-import Button from "../ui/CustomButton.tsx";
 
 interface CommentThreadProps {
   ticketId: string;
 }
 
 export default function CommentThread({ ticketId }: CommentThreadProps) {
-  const user = useAuthStore((s) => s.user);
-  const ticket = useTicketStore((s) => s.tickets.find((t) => t.id === ticketId));
+  const user      = useAuthStore((s) => s.user);
+  const ticket    = useTicketStore((s) => s.tickets.find((t) => t.id === ticketId));
   const addComment = useTicketStore((s) => s.addComment);
   const [text, setText] = useState("");
 
@@ -26,30 +24,49 @@ export default function CommentThread({ ticketId }: CommentThreadProps) {
 
   return (
     <div>
-      <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+      {/* Comment list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "280px", overflowY: "auto", marginBottom: "10px" }}>
         {ticket.comments.length === 0 && (
-          <div className="text-xs text-muted-foreground">No activity yet.</div>
+          <div style={{ fontSize: "12px", color: "#AAA" }}>No activity yet.</div>
         )}
         {ticket.comments.map((c) => (
-          <div key={c.id} className="rounded-md border border-border bg-[#0f0f0f] p-3">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground">{ROLE_LABEL[c.role] || c.role}</span>
-                <span className="text-muted-foreground">{fmtRel(c.at)}</span>
-              </div>
+          <div key={c.id} style={{ borderRadius: "8px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "10px 12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <span style={{ fontSize: "11px", fontWeight: 600, color: "#555" }}>
+                {ROLE_LABEL[c.role] || c.role}
+              </span>
+              <span style={{ fontSize: "10px", color: "#BBB" }}>{fmtRel(c.at)}</span>
             </div>
-            <div className="mt-1 text-sm">{c.text}</div>
+            <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.5 }}>{c.text}</div>
           </div>
         ))}
       </div>
-      <div className="mt-3 flex gap-2">
-        <Textarea
+
+      {/* Input */}
+      <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
+        <textarea
           placeholder="Add a comment..."
           value={text}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value)}
-          className="min-h-[60px]"
+          onChange={(e) => setText(e.target.value)}
+          rows={2}
+          style={{
+            flex: 1, padding: "8px 12px", fontSize: "13px",
+            border: "0.5px solid #EDE9E0", borderRadius: "8px",
+            background: "#fff", color: "#333", outline: "none",
+            resize: "vertical", fontFamily: "inherit",
+          }}
         />
-        <Button onClick={submit}>Reply</Button>
+        <button
+          onClick={submit}
+          style={{
+            height: "36px", padding: "0 14px",
+            background: "#F59E0B", border: "none", borderRadius: "8px",
+            color: "#fff", fontSize: "13px", fontWeight: 500, cursor: "pointer",
+            flexShrink: 0,
+          }}
+        >
+          Reply
+        </button>
       </div>
     </div>
   );

@@ -13,7 +13,17 @@ export default function ProtectedRoute({ role, children }: ProtectedRouteProps) 
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
 
   if (!hasHydrated) {
-    return <div className="min-h-screen bg-[#0f0f0f]" />;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#F7F5F0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      />
+    );
   }
 
   if (!user || !ROLE_HOME[user.role]) {

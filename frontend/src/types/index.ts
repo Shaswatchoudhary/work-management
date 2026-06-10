@@ -1,25 +1,22 @@
 export type Role = "helpdesk" | "hr" | "admin";
 
 // ===== SIGNATURE TYPES =====
-
-// Har ek signature ka purpose — 4 total milenge PDF mein
 export type SignaturePurpose =
-  | "hr_approval"               // 1st sign — HR ne ticket approve kiya
-  | "admin_approval"            // 2nd sign — Admin ne final approve kiya
-  | "hr_inspection"             // 3rd sign — HR ne inspection ki
-  | "admin_inspection_payment"; // 4th sign — Admin ne inspect + payment authorize ki
+  | "hr_approval"
+  | "admin_approval"
+  | "hr_inspection"
+  | "admin_inspection_payment";
 
-// Ek signature block ka pura data — PDF mein yahi embed hoga
 export interface SignatureBlock {
-  signedBy: string;        // "Priya Sharma"
-  role: string;            // "HR Manager"
-  userId: string;          // "u-hr" — kaun tha track karne ke liye
+  signedBy: string;
+  role: string;
+  userId: string;
   purpose: SignaturePurpose;
-  ticketId: string;        // "TKT-1005"
-  signedAt: string;        // ISO string — "2026-06-07T10:42:18.000Z"
-  hash: string;            // tamper detection ke liye — change hoga toh mismatch hoga
-  deviceHint: string;      // browser fingerprint — extra security layer
-  signatureImage: string;  // base64 PNG of the drawn canvas signature
+  ticketId: string;
+  signedAt: string;
+  hash: string;
+  deviceHint: string;
+  signatureImage: string;
 }
 
 export interface User {
@@ -27,7 +24,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  pin: string;   // ← 4-digit personal PIN, password se alag
+  pin: string;
   role: Role;
   department: string;
 }
@@ -109,12 +106,11 @@ export interface Ticket {
   adminSignature?: string;
   hrApprovedAt?: string;
   adminApprovedAt?: string;
-  // === DIGITAL SIGNATURES ===
   signatures?: {
-    hrApproval?: SignatureBlock;        // pehla sign — HR approval
-    adminApproval?: SignatureBlock;     // doosra sign — Admin approval
-    hrInspection?: SignatureBlock;      // teesra sign — HR inspection
-    adminPayment?: SignatureBlock;      // chautha sign — Admin payment auth
+    hrApproval?: SignatureBlock;
+    adminApproval?: SignatureBlock;
+    hrInspection?: SignatureBlock;
+    adminPayment?: SignatureBlock;
   };
 }
 
@@ -126,21 +122,41 @@ export interface Notification {
   at: string;
 }
 
+// ✅ Sirf ek AuthState — purani wali hata di, verifyCredentials add ki
 export interface AuthState {
   user: SafeUser | null;
   hasHydrated: boolean;
-  login: (email: string, password: string, role: Role) => { ok: boolean; user?: SafeUser; error?: string };
+  setHasHydrated: (v: boolean) => void;
+
+  verifyCredentials: (
+    email: string,
+    password: string,
+    role: Role,
+  ) => { ok: true; user: SafeUser } | { ok: false; error: string };
+
+  login: (
+    email: string,
+    password: string,
+    role: Role,
+  ) => { ok: true; user: SafeUser } | { ok: false; error: string };
+
   logout: () => void;
-  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 export interface TicketState {
   tickets: Ticket[];
-  addTicket: (data: Omit<Ticket, "id" | "status" | "createdBy" | "createdAt" | "updatedAt" | "assignee" | "inspection" | "payment" | "pdfs" | "comments">, user: SafeUser) => Ticket;
+  addTicket: (
+    data: Omit<Ticket, "id" | "status" | "createdBy" | "createdAt" | "updatedAt" | "assignee" | "inspection" | "payment" | "pdfs" | "comments">,
+    user: SafeUser,
+  ) => Ticket;
   updateTicket: (id: string, patch: Partial<Ticket>) => void;
   addComment: (id: string, comment: Omit<Comment, "id" | "at">) => void;
   addPdf: (id: string, pdf: TicketPdf) => void;
-  setStatus: (id: string, status: Status, opts?: { comment?: Omit<Comment, "id" | "at">; patch?: Partial<Ticket> }) => void;
+  setStatus: (
+    id: string,
+    status: Status,
+    opts?: { comment?: Omit<Comment, "id" | "at">; patch?: Partial<Ticket> },
+  ) => void;
   getById: (id: string) => Ticket | undefined;
   reset: () => void;
 }

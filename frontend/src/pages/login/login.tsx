@@ -1,244 +1,252 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useCallback, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useCallback } from "react";
 import { useAuthStore } from "../../store/authStore.ts";
-import { ROLE_HOME, ROLE_LABEL } from "../../constants/roles.ts";
+import { ROLE_HOME } from "../../constants/roles.ts";
 import { Role } from "../../types";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
+
+const C = {
+  bg: "#F7F5F0",
+  card: "#FFFFFF",
+  border: "#EDE9E0",
+  inputBg: "#FAFAF7",
+  amber: "#F59E0B",
+  amberLight: "#FEF3C7",
+  amberText: "#92400E",
+  text: "#1A1A1A",
+  muted: "#AAA",
+  subtle: "#777",
+  error: "#991B1B",
+  errorBg: "#FEF2F2",
+  errorBorder: "#FECACA",
+};
+
+type LoginStep = "credentials" | "confirm";
+
+const ROLE_CONFIG: Record<Role, { label: string; desc: string; color: string; bg: string; border: string }> = {
+  helpdesk: { label: "Help Desk", desc: "Create and track internal requests", color: "#92400E", bg: "#FEF3C7", border: "#FCD34D" },
+  hr: { label: "HR", desc: "Review and approve ticket requests", color: "#065F46", bg: "#D1FAE5", border: "#6EE7B7" },
+  admin: { label: "Admin", desc: "Final approvals, payments and reports", color: "#1E40AF", bg: "#DBEAFE", border: "#93C5FD" },
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%", height: "40px",
+  border: `0.5px solid ${C.border}`, borderRadius: "9px",
+  padding: "0 12px", fontSize: "13px", color: "#222",
+  background: C.inputBg, outline: "none", boxSizing: "border-box",
+};
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
+  const verifyCredentials = useAuthStore((s) => s.verifyCredentials);
 
-  const [email, setEmail] = useState("helpdesk@company.com");
-  const [password, setPassword] = useState("1234");
-  const [role, setRole] = useState<Role>("helpdesk");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [step, setStep] = useState<LoginStep>("credentials");
+  const [detectedRole, setDetectedRole] = useState<Role | null>(null);
+  const [detectedName, setDetectedName] = useState("");
 
-  const submit = useCallback(
+  // Step 1: sirf verify karo, store touch nahi hoga
+  const handleCredentials = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setErr("");
+      if (!email.trim()) { setErr("Email is required."); return; }
+      if (!password.trim()) { setErr("Password is required."); return; }
       setLoading(true);
 
-      const res = login(email.trim(), password, role);
+      const roles: Role[] = ["helpdesk", "hr", "admin"];
+      let matched: { role: Role; name: string } | null = null;
+
+      for (const r of roles) {
+        const res = verifyCredentials(email.trim(), password, r);
+        if (res.ok && res.user) {
+          matched = { role: res.user.role, name: res.user.name };
+          break;
+        }
+      }
+    //   const register = async ()=> {
+    //     try {
+    //       const response = await fetch(
+    //   "http://localhost:8080/api/auth/register",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ email, password }),
+    //   }
+    // );
+    // const data  = await response.json();
+    // console.log("data", data);
+
+    //     } catch (error) {
+    //       console.error("Login failed", error);
+    //       alert("Login failed");
+          
+    //     }
+    //   }
 
       setLoading(false);
-
-      if (!res.ok) {
-        setErr(res.error || "");
-        return;
-      }
-
-      navigate(ROLE_HOME[res.user!.role]);
+      if (!matched) { setErr("Invalid email or password."); return; }
+      setDetectedRole(matched.role);
+      setDetectedName(matched.name);
+      setStep("confirm");
     },
-    [login, navigate, email, password, role],
+    [verifyCredentials, email, password],
   );
 
-  const quickFill = useCallback((r: Role) => {
-    setRole(r);
-    setEmail(`${r}@company.com`);
-    setPassword("1234");
+  // Step 2: ab store mein set karo aur navigate karo
+  const handleConfirm = useCallback(() => {
+    if (!detectedRole) return;
+    login(email.trim(), password, detectedRole);
+    navigate(ROLE_HOME[detectedRole]);
+  }, [detectedRole, login, email, password, navigate]);
+
+  const handleBack = useCallback(() => {
+    setStep("credentials");
+    setDetectedRole(null);
+    setDetectedName("");
     setErr("");
   }, []);
 
-  // Sync quickFill email when switching role tab
-  useEffect(() => {
-    setEmail(`${role}@company.com`);
-  }, [role]);
-
   return (
-    <div className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#00173d] via-[#003c96] to-[#0070f3] font-sans p-4">
-      {/* Background shapes (rendered as highly styled SVGs) */}
-      
-      {/* 1. Cyan Torus/Ring (Top Center) */}
-      <div className="absolute top-[8%] left-[45%] w-36 h-36 opacity-80 pointer-events-none filter blur-[0.5px] z-0 animate-pulse">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="cyanTorus" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#00f2fe" />
-              <stop offset="100%" stopColor="#4facfe" />
-            </linearGradient>
-            <filter id="shadow">
-              <feDropShadow dx="2" dy="4" stdDeviation="4" floodColor="#000" floodOpacity="0.3" />
-            </filter>
-          </defs>
-          <circle cx="50" cy="50" r="30" fill="none" stroke="url(#cyanTorus)" strokeWidth="14" filter="url(#shadow)" />
-        </svg>
-      </div>
+    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 16px", fontFamily: "var(--font-sans, system-ui, sans-serif)" }}>
+      <div style={{ width: "100%", maxWidth: "380px" }}>
 
-      {/* 2. Left Zigzag Squiggle */}
-      <div className="absolute top-[35%] left-[12%] w-24 h-24 opacity-90 pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="zigGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#a1c4fd" />
-              <stop offset="100%" stopColor="#c2e9fb" />
-            </linearGradient>
-          </defs>
-          <path d="M20,50 L40,30 L60,50 L80,30" fill="none" stroke="url(#zigGrad)" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-
-      {/* 3. Bottom Left Big Spiral (Darker blue, layered behind) */}
-      <div className="absolute bottom-[5%] left-[5%] w-72 h-72 opacity-50 pointer-events-none filter blur-[3px] z-0">
-        <svg viewBox="0 0 200 200" className="w-full h-full">
-          <defs>
-            <linearGradient id="spiralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0a52d6" />
-              <stop offset="100%" stopColor="#001845" />
-            </linearGradient>
-          </defs>
-          <path d="M 30,150 C 30,70 170,70 170,130 C 170,170 100,170 100,130 C 100,100 140,100 140,120" fill="none" stroke="url(#spiralGrad)" strokeWidth="22" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* 4. Bottom Center Cyan/Blue Torus */}
-      <div className="absolute bottom-[10%] left-[30%] w-44 h-44 opacity-85 pointer-events-none filter blur-[1px] z-0">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="blueTorus" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38f9d7" />
-              <stop offset="100%" stopColor="#2575fc" />
-            </linearGradient>
-          </defs>
-          <circle cx="50" cy="50" r="30" fill="none" stroke="url(#blueTorus)" strokeWidth="15" />
-        </svg>
-      </div>
-
-      {/* 5. Right Big Dark Blue Spiral */}
-      <div className="absolute top-[18%] right-[10%] w-80 h-80 opacity-75 pointer-events-none filter blur-[2px] z-0">
-        <svg viewBox="0 0 200 200" className="w-full h-full">
-          <defs>
-            <linearGradient id="rightSpiral" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0072ff" />
-              <stop offset="100%" stopColor="#001845" />
-            </linearGradient>
-          </defs>
-          <path d="M 50,30 Q 150,40 160,110 T 80,160 T 130,80" fill="none" stroke="url(#rightSpiral)" strokeWidth="24" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* 6. Bottom Right Wave Ribbon */}
-      <div className="absolute bottom-[8%] right-[6%] w-72 h-44 opacity-75 pointer-events-none z-0">
-        <svg viewBox="0 0 200 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#4facfe" />
-              <stop offset="100%" stopColor="#00f2fe" />
-            </linearGradient>
-          </defs>
-          <path d="M 20,50 Q 60,10 100,50 T 180,50" fill="none" stroke="url(#waveGrad)" strokeWidth="22" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* 7. Right Small Double Waves */}
-      <div className="absolute bottom-[28%] right-[22%] w-24 h-20 opacity-80 pointer-events-none z-0">
-        <svg viewBox="0 0 100 60" className="w-full h-full">
-          <defs>
-            <linearGradient id="smallWave" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#66a6ff" />
-              <stop offset="100%" stopColor="#89f7fe" />
-            </linearGradient>
-          </defs>
-          <path d="M 10,20 Q 30,5 50,20 T 90,20" fill="none" stroke="url(#smallWave)" strokeWidth="8" strokeLinecap="round" />
-          <path d="M 10,40 Q 30,25 50,40 T 90,40" fill="none" stroke="url(#smallWave)" strokeWidth="8" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* Glassmorphic Outer Frame */}
-      <div className="w-full max-w-[960px] min-h-[580px] relative border border-cyan-400/20 rounded-3xl backdrop-blur-[12px] bg-white/[0.01] shadow-[0_0_80px_rgba(0,191,255,0.1)] flex items-center justify-center p-6 z-10 animate-fade-in">
-        
-        {/* Glassmorphic Login Card */}
-        <div className="w-full max-w-[390px] rounded-2xl bg-white/[0.06] border border-white/15 backdrop-blur-[25px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)] p-8">
-          {/* Logo */}
-          <div className="text-center mb-6">
-            <span className="text-white text-lg font-bold tracking-wide">Your logo</span>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px", justifyContent: "center" }}>
+          <div style={{ width: "32px", height: "32px", background: C.amber, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            </svg>
           </div>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#333" }}>Work Management</span>
+        </div>
 
-          <h2 className="text-white text-xl font-bold mb-4 text-left">Login</h2>
+        {/* Card */}
+        <div style={{ background: C.card, borderRadius: "20px", padding: "36px 32px", border: `0.5px solid ${C.border}`, boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
 
-          {/* Role Segmented Controller */}
-          <div className="bg-white/10 rounded-lg p-0.5 flex mb-5 border border-white/5 shadow-inner">
-            {(["helpdesk", "hr", "admin"] as const).map((r) => (
-              <button
-                key={r}
-                type="button"
-                onClick={() => quickFill(r)}
-                className={`flex-1 text-center py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
-                  role === r
-                    ? "bg-white text-black shadow-md"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {ROLE_LABEL[r]}
-              </button>
-            ))}
-          </div>
+          {/* STEP 1: Credentials */}
+          {step === "credentials" && (
+            <>
+              <div style={{ fontSize: "22px", fontWeight: 500, color: C.text, marginBottom: "4px" }}>Welcome back</div>
+              <div style={{ fontSize: "13px", color: C.muted, marginBottom: "28px" }}>
+                Don't have an account?{" "}
+                <Link to="/register" style={{ color: C.amber, fontWeight: 500, textDecoration: "none" }}>Register</Link>
+              </div>
 
-          <form onSubmit={submit} className="space-y-4" noValidate>
-            {/* Email Field */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-white/70 block">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="username@gmail.com"
-                className="w-full h-10 px-3 rounded-lg bg-white text-black text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all border-none"
-                required
-              />
-            </div>
+              <form onSubmit={handleCredentials} noValidate>
 
-            {/* Password Field */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-white/70 block">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full h-10 pl-3 pr-10 rounded-lg bg-white text-black text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all border-none"
-                  required
-                />
+                {/* Email */}
+                <div style={{ marginBottom: "16px" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 500, color: C.subtle, marginBottom: "5px" }}>Email</div>
+                  <input
+                    style={inputStyle}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@company.com"
+                    autoComplete="email"
+                    autoFocus
+                  
+                  />
+                </div>
+
+                {/* Password */}
+                <div style={{ marginBottom: "10px" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 500, color: C.subtle, marginBottom: "5px" }}>Password</div>
+                  <div style={{ position: "relative" }}>
+                    <input
+                      style={{ ...inputStyle, paddingRight: "40px" }}
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••"
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((p) => !p)}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: C.muted, padding: 0, display: "flex" }}
+                    >
+                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Forgot */}
+                <div style={{ textAlign: "right", marginBottom: "22px" }}>
+                  <a href="#" style={{ fontSize: "11px", color: C.muted, textDecoration: "none" }}>Forgot password?</a>
+                </div>
+
+                {/* Error */}
+                {err && (
+                  <div role="alert" style={{ background: C.errorBg, border: `0.5px solid ${C.errorBorder}`, borderRadius: "8px", padding: "10px 12px", fontSize: "12px", color: C.error, marginBottom: "16px", textAlign: "center" }}>
+                    {err}
+                  </div>
+                )}
+
+                {/* Submit */}
                 <button
-                  type="button"
-                  onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors cursor-pointer"
+                  type="submit"
+                  disabled={loading}
+                  style={{ width: "100%", height: "42px", background: loading ? "#FCD97A" : C.amber, border: "none", borderRadius: "10px", color: "#fff", fontSize: "14px", fontWeight: 500, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s" }}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {loading ? "Checking..." : "Continue"}
                 </button>
+              </form>
+            </>
+          )}
+
+          {/* STEP 2: Confirm Role */}
+          {step === "confirm" && detectedRole && (
+            <>
+              <div style={{ fontSize: "22px", fontWeight: 500, color: C.text, marginBottom: "4px" }}>Confirm your role</div>
+              <div style={{ fontSize: "13px", color: C.muted, marginBottom: "24px" }}>We found your account. Please confirm before continuing.</div>
+
+              {/* Account card */}
+              <div style={{ background: C.bg, border: `0.5px solid ${C.border}`, borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
+                <div style={{ fontSize: "11px", color: C.muted, marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Signed in as</div>
+                <div style={{ fontSize: "14px", fontWeight: 500, color: "#333", marginBottom: "16px" }}>{email}</div>
+
+                <div style={{ fontSize: "11px", color: C.muted, marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your role</div>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: ROLE_CONFIG[detectedRole].bg, border: `0.5px solid ${ROLE_CONFIG[detectedRole].border}`, borderRadius: "10px", padding: "10px 14px", width: "100%", boxSizing: "border-box" }}>
+                  <CheckCircle2 size={18} color={ROLE_CONFIG[detectedRole].color} />
+                  <div>
+                    <div style={{ fontSize: "13px", fontWeight: 600, color: ROLE_CONFIG[detectedRole].color }}>{ROLE_CONFIG[detectedRole].label}</div>
+                    <div style={{ fontSize: "11px", color: ROLE_CONFIG[detectedRole].color, opacity: 0.7, marginTop: "1px" }}>{ROLE_CONFIG[detectedRole].desc}</div>
+                  </div>
+                </div>
+
+                {detectedName && (
+                  <div style={{ fontSize: "12px", color: C.muted, marginTop: "10px" }}>
+                    Hello, <span style={{ color: "#555", fontWeight: 500 }}>{detectedName}</span>!
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Forgot Password */}
-            <div className="text-left">
-              <a href="#" className="text-xs text-white/60 hover:text-white transition-colors">
-                Forgot Password?
-              </a>
-            </div>
-
-            {/* Error Message */}
-            {err && (
-              <div
-                role="alert"
-                className="rounded-md border border-red-500/30 bg-red-500/10 text-red-300 text-xs p-2.5 text-center"
+              <button
+                onClick={handleConfirm}
+                style={{ width: "100%", height: "42px", background: C.amber, border: "none", borderRadius: "10px", color: "#fff", fontSize: "14px", fontWeight: 500, cursor: "pointer", marginBottom: "10px" }}
               >
-                {err}
-              </div>
-            )}
+                Go to {ROLE_CONFIG[detectedRole].label} Dashboard →
+              </button>
 
-            {/* Sign in Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-10 bg-[#002866] hover:bg-[#00388b] text-white text-sm font-semibold rounded-lg shadow-md transition-all duration-200 active:scale-[0.98] disabled:opacity-50 mt-5 flex items-center justify-center cursor-pointer"
-            >
-              {loading ? "Signing in..." : "Sign in"}
-            </button>
-          </form>
+              <button
+                onClick={handleBack}
+                style={{ width: "100%", height: "38px", background: "none", border: `0.5px solid ${C.border}`, borderRadius: "10px", color: C.muted, fontSize: "13px", cursor: "pointer" }}
+              >
+                ← Back
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

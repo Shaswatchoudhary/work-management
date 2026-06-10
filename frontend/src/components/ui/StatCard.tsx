@@ -5,20 +5,39 @@ interface StatCardProps {
   tone?: "default" | "primary" | "warning" | "success" | "danger" | "info";
 }
 
-export default function StatCard({ label, value, hint, tone = "default" }: StatCardProps) {
-  const tones = {
-    default: "border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]",
-    primary: "border-blue-400/25 shadow-[0_4px_30px_rgba(0,82,204,0.1)]",
-    warning: "border-amber-500/25 shadow-[0_4px_30px_rgba(245,158,11,0.1)]",
-    success: "border-emerald-500/25 shadow-[0_4px_30px_rgba(34,197,94,0.1)]",
-    danger: "border-red-500/25 shadow-[0_4px_30px_rgba(239,68,68,0.1)]",
-    info: "border-violet-500/25 shadow-[0_4px_30px_rgba(139,92,246,0.1)]",
-  };
+const TONES = {
+  default: { bg: "#F9FAFB", border: "#E5E7EB", label: "#6B7280", value: "#1A1A1A", sub: "#9CA3AF" },
+  primary: { bg: "#FFFBEB", border: "#FDE68A", label: "#92400E", value: "#1A1A1A", sub: "#D97706" },
+  warning: { bg: "#FFFBEB", border: "#FCD34D", label: "#92400E", value: "#D97706", sub: "#D97706" },
+  info:    { bg: "#EFF6FF", border: "#BFDBFE", label: "#1E40AF", value: "#2563EB", sub: "#2563EB" },
+  success: { bg: "#F0FDF4", border: "#BBF7D0", label: "#065F46", value: "#16A34A", sub: "#16A34A" },
+  danger:  { bg: "#FEF2F2", border: "#FECACA", label: "#991B1B", value: "#DC2626", sub: "#DC2626" },
+};
+
+const SUB_LABELS: Record<string, string> = {
+  default: "",
+  primary: "all time",
+  warning: "awaiting",
+  info:    "active",
+  success: "resolved",
+  danger:  "returned",
+};
+
+export default function StatCard({ label, value, hint, tone = "primary" }: StatCardProps) {
+  const c = TONES[tone];
   return (
-    <div className={`rounded-xl bg-white/[0.04] border ${tones[tone]} backdrop-blur-md p-4 transition-all duration-300 hover:bg-white/[0.07] hover:border-white/15`}>
-      <div className="text-xs text-white/60 uppercase tracking-wider font-semibold">{label}</div>
-      <div className="mt-2 text-2xl font-bold tracking-tight text-white">{value}</div>
-      {hint && <div className="mt-1 text-xs text-white/40">{hint}</div>}
+    <div style={{
+      background: c.bg,
+      border: `0.5px solid ${c.border}`,
+      borderRadius: "12px",
+      padding: "16px 18px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "4px",
+    }}>
+      <div style={{ fontSize: "12px", color: c.label, fontWeight: 500 }}>{label}</div>
+      <div style={{ fontSize: "28px", fontWeight: 700, color: c.value, lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: "11px", color: c.sub }}>{hint ?? SUB_LABELS[tone] ?? ""}</div>
     </div>
   );
 }

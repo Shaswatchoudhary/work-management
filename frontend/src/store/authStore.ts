@@ -16,28 +16,32 @@ export const useAuthStore = create<AuthState>()(
 
       setHasHydrated: (hasHydrated: boolean) => set({ hasHydrated }),
 
+      verifyCredentials: (email: string, password: string, role: Role) => {
+        const u = MOCK_USERS.find(
+          (x) => x.email === email && x.password === password && x.role === role,
+        );
+        if (!u) return { ok: false as const, error: "Invalid credentials or role mismatch." };
+        const { password: _, ...safe } = u;
+        return { ok: true as const, user: safe };
+      },
+
       login: (email: string, password: string, role: Role) => {
         const u = MOCK_USERS.find(
           (x) => x.email === email && x.password === password && x.role === role,
         );
-        if (!u) return { ok: false, error: "Invalid credentials or role mismatch." };
+        if (!u) return { ok: false as const, error: "Invalid credentials or role mismatch." };
         const { password: _, ...safe } = u;
         set({ user: safe });
-        return { ok: true, user: safe };
+        return { ok: true as const, user: safe };
       },
 
       logout: () => set({ user: null }),
     }),
     {
       name: "ticketms-auth",
-
-      // Sirf user save karo localStorage mein
-      // hasHydrated save mat karo — woh runtime flag hai
       partialize: (state) => ({
         user: isValidUser(state.user) ? state.user : null,
       }),
-
-      // localStorage se data load hone ke baad yeh callback chalta hai
       onRehydrateStorage: () => (state) => {
         if (!state) return;
         if (!isValidUser(state.user)) state.logout();
