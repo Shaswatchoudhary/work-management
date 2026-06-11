@@ -1,5 +1,5 @@
-import { SignatureBlock, SignaturePurpose } from "../types";
-import { MOCK_USERS } from "../data/mockUsers";
+import { SignatureBlock, SignaturePurpose } from "../signature/SignatureBlock";
+import { MOCK_USERS } from "../../data/mockUsers";
 
 // ─── Hash generate karna ───────────────────────────────────────────────────
 // Yeh hash tamper detection ke liye hai.

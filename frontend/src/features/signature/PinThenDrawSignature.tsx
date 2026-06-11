@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { verifyPin, createSignatureBlock } from "../../utils/signatureEngine";
-import { SignatureBlock, SignaturePurpose } from "../../types";
+import { verifyPin, createSignatureBlock } from "./signatureEngine";
+import { SignatureBlock, SignaturePurpose } from "./SignatureBlock";
 
 interface PinThenDrawSignatureProps {
   userId: string;

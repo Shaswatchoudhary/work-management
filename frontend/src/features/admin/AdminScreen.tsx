@@ -1,16 +1,16 @@
 import { useMemo, useState } from "react";
 import AppShell from "../../components/layout/AppShell.tsx";
 import StatCard from "../../components/ui/StatCard.tsx";
-import TicketTable from "../../components/ticket/TicketTable.tsx";
-import TicketDetail from "../../components/ticket/TicketDetail.tsx";
+import TicketTable from "../tickets/TicketTable.tsx";
+import TicketDetail from "../tickets/TicketDetail.tsx";
 import Badge from "../../components/ui/CustomBadge.tsx";
-import { useTicketStore } from "../../store/ticketStore.ts";
 import { MOCK_USERS } from "../../data/mockUsers.ts";
 import { fmtMoney } from "../../utils/dateFormatter.ts";
 import { ROLE_LABEL } from "../../constants/roles.ts";
+import { useTickets } from "../tickets/hooks/useTickets.ts";
 
 export default function AdminScreen() {
-  const tickets = useTicketStore((s) => s.tickets);
+  const { tickets } = useTickets();
   const [tab, setTab] = useState("queue");
   const [openId, setOpenId] = useState<string | null>(null);
 

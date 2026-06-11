@@ -1,8 +1,8 @@
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Ticket, SafeUser } from "../types";
-import { fmtMoney } from "./dateFormatter";
-import { STATUS_LABEL } from "../constants/ticketStatus";
+import { Ticket, SafeUser } from "../../types/index.ts";
+import { fmtMoney } from "../../utils/dateFormatter.ts";
+import { STATUS_LABEL } from "../../constants/ticketStatus.ts";
 
 export interface SignatureBlock {
   label: string;
@@ -338,7 +338,7 @@ export function ticketToTicketData(ticket: Ticket, user?: SafeUser): TicketData 
   const sigs = ticket.signatures ?? {};
 
   const toSigBlock = (
-    s: import("../types").SignatureBlock | undefined,
+    s: import("../../types").SignatureBlock | undefined,
     label: string,
   ): SignatureBlock | undefined => {
     if (!s) return undefined;

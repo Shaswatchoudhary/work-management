@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Modal from "../ui/Modal.tsx";
+import Modal from "../../components/ui/Modal.tsx";
 import { CATEGORIES, TAGS } from "../../data/categories.ts";
 import { PRIORITY } from "../../constants/ticketStatus.ts";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
-import { generateAndDownloadPdf } from "../../utils/generatePDF.ts";
+import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
 import { Ticket, Priority } from "../../types";
 
 interface FormData {
@@ -38,15 +38,15 @@ interface TicketFormProps {
 }
 
 export default function TicketForm({ open, onClose, ticket = null }: TicketFormProps) {
-  const user        = useAuthStore((s) => s.user);
-  const addTicket   = useTicketStore((s) => s.addTicket);
+  const user = useAuthStore((s) => s.user);
+  const addTicket = useTicketStore((s) => s.addTicket);
   const updateTicket = useTicketStore((s) => s.updateTicket);
-  const setStatus   = useTicketStore((s) => s.setStatus);
-  const addPdf      = useTicketStore((s) => s.addPdf);
-  const notify      = useNotificationStore((s) => s.addNotification);
+  const setStatus = useTicketStore((s) => s.setStatus);
+  const addPdf = useTicketStore((s) => s.addPdf);
+  const notify = useNotificationStore((s) => s.addNotification);
 
   const isEdit = !!ticket;
-  const [form, setForm]       = useState<FormData>(empty);
+  const [form, setForm] = useState<FormData>(empty);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {

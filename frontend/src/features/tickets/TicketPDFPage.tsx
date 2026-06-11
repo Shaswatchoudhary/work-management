@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import SignatureBlock from "../../components/signature/SignatureBlock";
-import { generatePDF, TicketData } from "../../utils/generatePDF";
+import SignatureBlock from "../signature/SignatureBlock";
+import { generatePDF, TicketData } from "../pdf/generatePDF";
 
 
 

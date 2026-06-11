@@ -53,6 +53,8 @@
     "src/types/**/*.tsx",
     "src/utils/**/*.ts",
     "src/utils/**/*.tsx",
+    "src/lib/**/*.ts",
+    "src/lib/**/*.tsx",
     "src/components/signature/**/*.ts",
     "src/components/signature/**/*.tsx",
     "src/components/layout/**/*.ts",

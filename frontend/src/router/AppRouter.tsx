@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.ts";
 import { ROLE_HOME } from "../constants/roles.ts";
-import LoginPage from "../pages/login/login.tsx";
-import RegisterPage from "../pages/register/RegisterScreen.tsx";
-import HrScreen from "../pages/hr/HrScreen.tsx";
-import HelpdeskScreen from "../pages/helpdesk/HelpdeskScreen.tsx";
-import AdminScreen from "../pages/admin/adminScreen.tsx";
+import LoginPage from "../features/auth/LoginPage.tsx";
+import RegisterPage from "../features/auth/RegisterPage.tsx";
+import HrScreen from "../features/hr/HrScreen.tsx";
+import HelpdeskScreen from "../features/helpdesk/HelpdeskScreen.tsx";
+import AdminScreen from "../features/admin/AdminScreen.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 
 export default function AppRouter() {

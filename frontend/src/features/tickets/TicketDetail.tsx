@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Modal from "../ui/Modal.tsx";
-import Button from "../ui/CustomButton.tsx";
-import Badge, { StatusBadge, PriorityBadge } from "../ui/CustomBadge.tsx";
-import { Input, Label, Textarea } from "../ui/Field.tsx";
+import Modal from "../../components/ui/Modal.tsx";
+import Button from "../../components/ui/CustomButton.tsx";
+import Badge, { StatusBadge, PriorityBadge } from "../../components/ui/CustomBadge.tsx";
+import { Input, Label, Textarea } from "../../components/ui/Field.tsx";
 import StatusTimeline from "./StatusTimeline.tsx";
 import CommentThread from "../thread/CommentThread.tsx";
 import PinThenDrawSignature from "../signature/PinThenDrawSignature.tsx";
@@ -13,7 +13,7 @@ import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
 import { fmtDate, fmtMoney } from "../../utils/dateFormatter.ts";
-import { generateAndDownloadPdf } from "../../utils/generatePDF.ts";
+import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
 import { SignatureBlock } from "../../types";
 
 interface TicketDetailProps {
@@ -22,20 +22,20 @@ interface TicketDetailProps {
 }
 
 export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
-  const ticket      = useTicketStore((s) => s.tickets.find((t) => t.id === ticketId));
-  const user        = useAuthStore((s) => s.user);
-  const setStatus   = useTicketStore((s) => s.setStatus);
+  const ticket = useTicketStore((s) => s.tickets.find((t) => t.id === ticketId));
+  const user = useAuthStore((s) => s.user);
+  const setStatus = useTicketStore((s) => s.setStatus);
   const updateTicket = useTicketStore((s) => s.updateTicket);
-  const addPdf      = useTicketStore((s) => s.addPdf);
-  const notify      = useNotificationStore((s) => s.addNotification);
+  const addPdf = useTicketStore((s) => s.addPdf);
+  const notify = useNotificationStore((s) => s.addNotification);
 
-  const [pdfLoading, setPdfLoading]         = useState(false);
-  const [rejectText, setRejectText]         = useState("");
-  const [assignName, setAssignName]         = useState("");
-  const [assignDept, setAssignDept]         = useState("");
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [rejectText, setRejectText] = useState("");
+  const [assignName, setAssignName] = useState("");
+  const [assignDept, setAssignDept] = useState("");
   const [inspectionNotes, setInspectionNotes] = useState("");
-  const [docView, setDocView]               = useState(user?.role === "hr" || user?.role === "admin");
-  const [editOpen, setEditOpen]             = useState(false);
+  const [docView, setDocView] = useState(user?.role === "hr" || user?.role === "admin");
+  const [editOpen, setEditOpen] = useState(false);
 
   if (!ticket) return null;
   const role = user?.role;
@@ -360,12 +360,12 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
                 {/* Info grid */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "13px" }}>
                   {[
-                    { label: "Location",     value: ticket.location },
+                    { label: "Location", value: ticket.location },
                     { label: "Estimated Cost", value: fmtMoney(ticket.estimatedCost) },
-                    { label: "Created",      value: fmtDate(ticket.createdAt) },
+                    { label: "Created", value: fmtDate(ticket.createdAt) },
                     { label: "Last Updated", value: fmtDate(ticket.updatedAt) },
-                    { label: "Assignee",     value: ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—" },
-                    { label: "Inspection",   value: ticket.inspection ? (ticket.inspection.passed ? "Passed" : "Failed") : "—" },
+                    { label: "Assignee", value: ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—" },
+                    { label: "Inspection", value: ticket.inspection ? (ticket.inspection.passed ? "Passed" : "Failed") : "—" },
                   ].map(({ label, value }) => (
                     <div key={label} style={infoBox}>
                       <div style={{ fontSize: "10px", textTransform: "uppercase" as const, letterSpacing: "0.06em", color: "#AAA", fontWeight: 600 }}>{label}</div>
@@ -416,10 +416,10 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
               <div style={actionBox}>
                 <div style={sectionLabel}>Signatures on file</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {ticket.signatures.hrApproval    && <SignatureCard number={1} label="HR Approval"       accent="#16A34A" block={ticket.signatures.hrApproval} />}
-                  {ticket.signatures.adminApproval && <SignatureCard number={2} label="Admin Approval"    accent="#2563EB" block={ticket.signatures.adminApproval} />}
-                  {ticket.signatures.hrInspection  && <SignatureCard number={3} label="HR Inspection"     accent="#7C3AED" block={ticket.signatures.hrInspection} />}
-                  {ticket.signatures.adminPayment  && <SignatureCard number={4} label="Admin Payment Auth" accent="#D97706" block={ticket.signatures.adminPayment} />}
+                  {ticket.signatures.hrApproval && <SignatureCard number={1} label="HR Approval" accent="#16A34A" block={ticket.signatures.hrApproval} />}
+                  {ticket.signatures.adminApproval && <SignatureCard number={2} label="Admin Approval" accent="#2563EB" block={ticket.signatures.adminApproval} />}
+                  {ticket.signatures.hrInspection && <SignatureCard number={3} label="HR Inspection" accent="#7C3AED" block={ticket.signatures.hrInspection} />}
+                  {ticket.signatures.adminPayment && <SignatureCard number={4} label="Admin Payment Auth" accent="#D97706" block={ticket.signatures.adminPayment} />}
                 </div>
               </div>
             )}
@@ -432,15 +432,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
   );
 }
 
-interface InfoProps { label: string; value: string | number; }
-function Info({ label, value }: InfoProps) {
-  return (
-    <div style={{ borderRadius: "8px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "8px 12px" }}>
-      <div style={{ fontSize: "10px", textTransform: "uppercase" as const, letterSpacing: "0.06em", color: "#AAA", fontWeight: 600 }}>{label}</div>
-      <div style={{ fontSize: "13px", marginTop: "2px", color: "#333" }}>{value}</div>
-    </div>
-  );
-}
+
 
 interface SignatureCardProps { number: number; label: string; accent: string; block: SignatureBlock; }
 function SignatureCard({ number, label, accent, block }: SignatureCardProps) {

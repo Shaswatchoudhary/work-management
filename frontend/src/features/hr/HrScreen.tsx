@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import AppShell from "../../components/layout/AppShell.tsx";
 import StatCard from "../../components/ui/StatCard.tsx";
-import TicketTable from "../../components/ticket/TicketTable.tsx";
-import TicketDetail from "../../components/ticket/TicketDetail.tsx";
+import TicketTable from "../tickets/TicketTable.tsx";
+import TicketDetail from "../tickets/TicketDetail.tsx";
 import { Input, Select } from "../../components/ui/Field.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";

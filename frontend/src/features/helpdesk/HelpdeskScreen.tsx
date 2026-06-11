@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import AppShell from "../../components/layout/AppShell.tsx";
 import StatCard from "../../components/ui/StatCard.tsx";
-import TicketTable from "../../components/ticket/TicketTable.tsx";
-import TicketDetail from "../../components/ticket/TicketDetail.tsx";
-import TicketForm from "../../components/ticket/TicketForm.tsx";
+import TicketTable from "../tickets/TicketTable.tsx";
+import TicketDetail from "../tickets/TicketDetail.tsx";
+import TicketForm from "../tickets/TicketForm.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { CATEGORIES } from "../../data/categories.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";
@@ -18,17 +18,17 @@ export default function HelpdeskScreen() {
   const [filterStatus, setFilterStatus] = useState("");
 
   const stats = useMemo(() => {
-    const total      = tickets.length;
-    const pending    = tickets.filter((t) => ["pending_hr","pending_admin","inspection_pending","payment_pending"].includes(t.status)).length;
+    const total = tickets.length;
+    const pending = tickets.filter((t) => ["pending_hr", "pending_admin", "inspection_pending", "payment_pending"].includes(t.status)).length;
     const inProgress = tickets.filter((t) => t.status === "work_in_progress").length;
-    const closed     = tickets.filter((t) => t.status === "closed").length;
-    const rejected   = tickets.filter((t) => t.status === "rejected_hr" || t.status === "rejected_admin").length;
+    const closed = tickets.filter((t) => t.status === "closed").length;
+    const rejected = tickets.filter((t) => t.status === "rejected_hr" || t.status === "rejected_admin").length;
     return { total, pending, inProgress, closed, rejected };
   }, [tickets]);
 
   const filtered = useMemo(() => tickets
-    .filter((t) => filterCat    ? t.category === filterCat   : true)
-    .filter((t) => filterStatus ? t.status   === filterStatus : true)
+    .filter((t) => filterCat ? t.category === filterCat : true)
+    .filter((t) => filterStatus ? t.status === filterStatus : true)
     .filter((t) => q ? (t.title + t.id + t.location).toLowerCase().includes(q.toLowerCase()) : true),
     [tickets, q, filterCat, filterStatus]);
 
@@ -40,9 +40,9 @@ export default function HelpdeskScreen() {
       activeTab={tab}
       onTab={setTab}
       tabs={[
-        { key: "dashboard",  label: "Dashboard" },
-        { key: "tickets",    label: "My Tickets" },
-        { key: "new",        label: "New Request" },
+        { key: "dashboard", label: "Dashboard" },
+        { key: "tickets", label: "My Tickets" },
+        { key: "new", label: "New Request" },
         { key: "inspection", label: "Inspection Queue" },
       ]}
     >
@@ -62,19 +62,19 @@ export default function HelpdeskScreen() {
             }
           />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
-            <StatCard label="Total"       value={stats.total}      tone="primary" />
-            <StatCard label="Pending"     value={stats.pending}    tone="warning" />
-            <StatCard label="In Progress" value={stats.inProgress} tone="info"    />
-            <StatCard label="Closed"      value={stats.closed}     tone="success" />
-            <StatCard label="Rejected"    value={stats.rejected}   tone="danger"  />
+            <StatCard label="Total" value={stats.total} tone="primary" />
+            <StatCard label="Pending" value={stats.pending} tone="warning" />
+            <StatCard label="In Progress" value={stats.inProgress} tone="info" />
+            <StatCard label="Closed" value={stats.closed} tone="success" />
+            <StatCard label="Rejected" value={stats.rejected} tone="danger" />
           </div>
-         <div>
-  <div style={{ fontSize: "13px", fontWeight: 600, color: "#333", marginBottom: "10px" }}>Recently updated</div>
-  {/* ✅ White card wrapper — green background AppShell se aa rha tha, ab card mein hai */}
-  <div style={{ background: "#fff", borderRadius: "12px", border: "0.5px solid #EDE9E0", overflow: "hidden" }}>
-    <TicketTable tickets={tickets.slice(0, 6)} onOpen={setOpenId} />
-  </div>
-</div>
+          <div>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: "#333", marginBottom: "10px" }}>Recently updated</div>
+            {/* ✅ White card wrapper — green background AppShell se aa rha tha, ab card mein hai */}
+            <div style={{ background: "#fff", borderRadius: "12px", border: "0.5px solid #EDE9E0", overflow: "hidden" }}>
+              <TicketTable tickets={tickets.slice(0, 6)} onOpen={setOpenId} />
+            </div>
+          </div>
         </div>
       )}
 
