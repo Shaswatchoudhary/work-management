@@ -1,4 +1,5 @@
 import { Ticket } from "../../types";
+import "./styles/TicketTable.scss";
 
 const PRIORITY_COLORS: Record<string, { bg: string; color: string }> = {
   Low:      { bg: "#F0FDF4", color: "#16A34A" },
@@ -29,63 +30,53 @@ interface TicketTableProps {
 export default function TicketTable({ tickets, onOpen, emptyText = "No tickets found." }: TicketTableProps) {
   if (tickets.length === 0) {
     return (
-      <div style={{
-        borderRadius: "10px",
-        border: "0.5px solid #EDE9E0",
-        background: "#fff",
-        padding: "32px",
-        textAlign: "center",
-        fontSize: "13px",
-        color: "#AAA",
-      }}>
+      <div className="ticket-empty-state">
         {emptyText}
       </div>
     );
   }
 
   return (
-    <div style={{ borderRadius: "10px", border: "0.5px solid #EDE9E0", background: "#fff", overflow: "hidden" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+    <div className="ticket-table-wrapper">
+      <table className="ticket-list-table">
         <thead>
-          <tr style={{ background: "#FAFAF7", borderBottom: "0.5px solid #EDE9E0" }}>
+          <tr>
             {["ID", "Title", "Category", "Priority", "Status", "Updated"].map((h) => (
-              <th key={h} style={{ textAlign: "left", padding: "10px 14px", fontSize: "11px", fontWeight: 600, color: "#AAA", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <th key={h}>
                 {h}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {tickets.map((t, i) => {
+          {tickets.map((t) => {
             const pColor = PRIORITY_COLORS[t.priority] ?? { bg: "#F9FAFB", color: "#555" };
             const sColor = STATUS_COLORS[t.status]   ?? { bg: "#F9FAFB", color: "#555" };
             return (
               <tr
                 key={t.id}
                 onClick={() => onOpen(t.id)}
-                style={{
-                  borderTop: i === 0 ? "none" : "0.5px solid #F5F3EE",
-                  cursor: "pointer",
-                  transition: "background 0.1s",
-                  background: "transparent",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#FAFAF7")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
-                <td style={{ padding: "11px 14px", fontWeight: 600, color: "#F59E0B" }}>{t.id}</td>
-                <td style={{ padding: "11px 14px", color: "#222", fontWeight: 500 }}>{t.title}</td>
-                <td style={{ padding: "11px 14px", color: "#777" }}>{t.category}</td>
-                <td style={{ padding: "11px 14px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 600, padding: "3px 8px", borderRadius: "6px", background: pColor.bg, color: pColor.color }}>
+                <td className="ticket-id">{t.id}</td>
+                <td className="ticket-title">{t.title}</td>
+                <td className="ticket-category">{t.category}</td>
+                <td>
+                  <span
+                    className="badge"
+                    style={{ background: pColor.bg, color: pColor.color }}
+                  >
                     {t.priority}
                   </span>
                 </td>
-                <td style={{ padding: "11px 14px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 600, padding: "3px 8px", borderRadius: "6px", background: sColor.bg, color: sColor.color }}>
+                <td>
+                  <span
+                    className="badge"
+                    style={{ background: sColor.bg, color: sColor.color }}
+                  >
                     {t.status.replace(/_/g, " ")}
                   </span>
                 </td>
-                <td style={{ padding: "11px 14px", color: "#AAA", fontSize: "12px" }}>
+                <td className="ticket-updated">
                   {new Date(t.updatedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}
                 </td>
               </tr>

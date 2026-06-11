@@ -1,0 +1,117 @@
+@use "sass:color";
+
+
+// ── Variables ──────────────────────────────────────────────
+$cream: #F7F5F0;
+$white: #FFFFFF;
+$border: #EDE9E0;
+$border-soft: #F5F3EE;
+$amber: #F59E0B;
+$text-dark: #1A1A1A;
+$text-mid: #333;
+$text-muted: #AAA;
+
+// ── Page layout ────────────────────────────────────────────
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Page header ────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-dark;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: $text-muted;
+    margin: 2px 0 0;
+  }
+}
+
+// ── Stat cards grid ────────────────────────────────────────
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ── Section ────────────────────────────────────────────────
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-mid;
+    margin-bottom: 10px;
+  }
+}
+
+// ── Table card wrapper ─────────────────────────────────────
+.tableCard {
+  background: $white;
+  border-radius: 12px;
+  border: 0.5px solid $border;
+  overflow: hidden;
+}
+
+// ── Filters row ────────────────────────────────────────────
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filterInput,
+.filterSelect {
+  height: 36px;
+  padding: 0 12px;
+  border: 0.5px solid $border;
+  border-radius: 8px;
+  font-size: 13px;
+  background: $white;
+  color: $text-mid;
+  outline: none;
+  font-family: inherit;
+}
+
+.filterInput {
+  min-width: 220px;
+}
+
+// ── Primary button ─────────────────────────────────────────
+.btnPrimary {
+  height: 36px;
+  padding: 0 16px;
+  background: $amber;
+  border: none;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-start;
+
+  &:hover {
+    background: color.adjust($amber, $lightness: -6%);
+  }
+}

@@ -1,0 +1,344 @@
+@use "sass:color";
+
+// ── Variables ─────────────────────────────────────────────────────────
+$bg:           #F7F5F0;
+$card:         #FFFFFF;
+$border:       #EDE9E0;
+$input-bg:     #FAFAF7;
+$amber:        #F59E0B;
+$amber-light:  #FEF3C7;
+$amber-text:   #92400E;
+$text:         #1A1A1A;
+$muted:        #AAA;
+$subtle:       #777;
+$error:        #991B1B;
+$error-bg:     #FEF2F2;
+$error-border: #FECACA;
+
+// ── Role colors ───────────────────────────────────────────────────────
+$role-helpdesk-color:  #92400E;
+$role-helpdesk-bg:     #FEF3C7;
+$role-helpdesk-border: #FCD34D;
+
+$role-hr-color:        #065F46;
+$role-hr-bg:           #D1FAE5;
+$role-hr-border:       #6EE7B7;
+
+$role-admin-color:     #1E40AF;
+$role-admin-bg:        #DBEAFE;
+$role-admin-border:    #93C5FD;
+
+// ── Page wrapper ──────────────────────────────────────────────────────
+.login-page {
+  min-height: 100vh;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  box-sizing: border-box;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 380px;
+}
+
+// ── Logo ──────────────────────────────────────────────────────────────
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  justify-content: center;
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    background: $amber;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+}
+
+// ── Card ──────────────────────────────────────────────────────────────
+.login-card {
+  background: $card;
+  border-radius: 20px;
+  padding: 36px 32px;
+  border: 0.5px solid $border;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+// ── Typography ────────────────────────────────────────────────────────
+.login-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: $text;
+  margin: 0 0 4px 0;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: $muted;
+  margin: 0 0 28px 0;
+
+  a {
+    color: $amber;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ── Form ──────────────────────────────────────────────────────────────
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-field {
+  margin-bottom: 16px;
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: $subtle;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+}
+
+.login-input {
+  width: 100%;
+  height: 40px;
+  border: 0.5px solid $border;
+  border-radius: 9px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #222;
+  background: $input-bg;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: $amber;
+  }
+
+  &--password {
+    padding-right: 40px;
+  }
+}
+
+.login-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $muted;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.login-forgot {
+  text-align: right;
+  margin-bottom: 22px;
+
+  a {
+    font-size: 11px;
+    color: $muted;
+    text-decoration: none;
+
+    &:hover {
+      color: $subtle;
+    }
+  }
+}
+
+// ── Error ─────────────────────────────────────────────────────────────
+.login-error {
+  background: $error-bg;
+  border: 0.5px solid $error-border;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: $error;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+// ── Submit button ─────────────────────────────────────────────────────
+.login-btn-primary {
+  width: 100%;
+  height: 42px;
+  background: $amber;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+background: color.adjust($amber, $lightness: -6%);
+  }
+
+  &:disabled {
+    background: #FCD97A;
+    cursor: not-allowed;
+  }
+}
+
+.login-btn-secondary {
+  width: 100%;
+  height: 38px;
+  background: none;
+  border: 0.5px solid $border;
+  border-radius: 10px;
+  color: $muted;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: $subtle;
+    color: $subtle;
+  }
+}
+
+// ── Confirm step ──────────────────────────────────────────────────────
+.login-confirm-subtitle {
+  font-size: 13px;
+  color: $muted;
+  margin: 0 0 24px 0;
+}
+
+.login-account-card {
+  background: $bg;
+  border: 0.5px solid $border;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.login-account-label {
+  font-size: 11px;
+  color: $muted;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.login-account-email {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.login-role-label {
+  font-size: 11px;
+  color: $muted;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.login-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  width: 100%;
+  box-sizing: border-box;
+  border-width: 0.5px;
+  border-style: solid;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__desc {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 1px;
+  }
+
+  // Role variants
+  &--helpdesk {
+    background: $role-helpdesk-bg;
+    border-color: $role-helpdesk-border;
+
+    .login-role-badge__name,
+    .login-role-badge__desc {
+      color: $role-helpdesk-color;
+    }
+  }
+
+  &--hr {
+    background: $role-hr-bg;
+    border-color: $role-hr-border;
+
+    .login-role-badge__name,
+    .login-role-badge__desc {
+      color: $role-hr-color;
+    }
+  }
+
+  &--admin {
+    background: $role-admin-bg;
+    border-color: $role-admin-border;
+
+    .login-role-badge__name,
+    .login-role-badge__desc {
+      color: $role-admin-color;
+    }
+  }
+}
+
+.login-hello {
+  font-size: 12px;
+  color: $muted;
+  margin-top: 10px;
+
+  span {
+    color: #555;
+    font-weight: 500;
+  }
+}
+
+.login-btn-confirm {
+  margin-bottom: 10px;
+}

@@ -1,5 +1,4 @@
-// usePermission.ts
-// Role-based permission checks — use in components to show/hide actions
+
 import { useAuthStore } from "../store/authStore";
 
 export function usePermission() {

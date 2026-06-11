@@ -1,9 +1,8 @@
-/* src/components/signature/SignatureBlock.tsx */
 import React, {
   forwardRef,
   ForwardRefRenderFunction,
-
 } from "react";
+import "./styles/SignatureBlock.scss";
 
 /**
  * Props for an individual signature card.
@@ -17,7 +16,7 @@ interface CardProps {
 }
 
 /**
- * Simple, inline‑styled card that represents one signature.
+ * Card component using classNames.
  */
 const Card: React.FC<CardProps> = ({
   title,
@@ -26,107 +25,44 @@ const Card: React.FC<CardProps> = ({
   hash,
   headerColor,
 }) => (
-  <div
-    style={{
-      width: "100%",
-      maxWidth: "260px",
-      margin: "8px",
-      backgroundColor: "#ffffff",
-      borderRadius: "8px",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-      overflow: "hidden",
-      fontFamily: "'Inter', sans-serif",
-    }}
-  >
+  <div className="signature-card">
     {/* Header bar (coloured) */}
     <div
-      style={{
-        backgroundColor: headerColor,
-        color: "#ffffff",
-        padding: "4px 8px",
-        fontSize: "0.85rem",
-        fontWeight: 600,
-        textTransform: "uppercase",
-      }}
+      className="card-header"
+      style={{ backgroundColor: headerColor }}
     >
       {title}
     </div>
 
     {/* Body */}
-    <div style={{ padding: "12px" }}>
+    <div className="card-body">
       {/* Name */}
-      <div
-        style={{
-          fontSize: "1rem",
-          fontWeight: 600,
-          marginBottom: "4px",
-        }}
-      >
+      <div className="signer-name">
         {name}
       </div>
 
       {/* Role */}
-      <div
-        style={{
-          fontSize: "0.85rem",
-          color: "#555555",
-          marginBottom: "8px",
-        }}
-      >
+      <div className="signer-role">
         {role}
       </div>
 
       {/* Mock cursive signature – Georgia italic */}
-      <div
-        style={{
-          fontFamily: "Georgia, serif",
-          fontStyle: "italic",
-          fontSize: "1.2rem",
-          color: "#222222",
-          marginBottom: "8px",
-        }}
-      >
-        {name.split(" ")[0]} {name.split(" ")[1][0]}. {/* simple handwritten look */}
+      <div className="drawn-look">
+        {name.split(" ")[0]} {name.split(" ")[1] ? name.split(" ")[1][0] + "." : ""}
       </div>
 
       {/* Hash – monospace */}
-      <div
-        style={{
-          fontFamily: "monospace",
-          fontSize: "0.75rem",
-          backgroundColor: "#f5f5f5",
-          padding: "2px 4px",
-          display: "inline-block",
-          marginBottom: "8px",
-        }}
-      >
+      <div className="signer-hash">
         {hash}
       </div>
 
       {/* “PIN VERIFIED” badge */}
-      <div
-        style={{
-          display: "inline-block",
-          backgroundColor: "#28a745",
-          color: "#ffffff",
-          fontSize: "0.75rem",
-          fontWeight: 600,
-          padding: "2px 6px",
-          borderRadius: "4px",
-          marginBottom: "8px",
-        }}
-      >
+      <div className="badge-verified">
         PIN VERIFIED · DIGITALLY SIGNED
       </div>
 
       {/* Timestamp */}
-      <div
-        style={{
-          fontSize: "0.7rem",
-          color: "#777777",
-          marginTop: "4px",
-        }}
-      >
+      <div className="timestamp">
         {new Date().toLocaleString()}
       </div>
     </div>
@@ -137,22 +73,11 @@ const Card: React.FC<CardProps> = ({
  * Forward‑ref component – the parent passes a `ref` that points to the whole
  * 2 × 2 grid. `html2canvas` will capture this element.
  */
-
-
-const SignatureBlock: ForwardRefRenderFunction<HTMLDivElement, {}> = (
+const SignatureBlockComponent: ForwardRefRenderFunction<HTMLDivElement, {}> = (
   _props,
   ref
 ) => (
-  <div
-    ref={ref}
-    style={{
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      backgroundColor: "#ffffff",
-      padding: "16px",
-    }}
-  >
+  <div ref={ref} className="signature-block-grid">
     <Card
       title="HR APPROVAL"
       name="Priya Sharma"
@@ -184,7 +109,8 @@ const SignatureBlock: ForwardRefRenderFunction<HTMLDivElement, {}> = (
   </div>
 );
 
-export default forwardRef(SignatureBlock);
+export default forwardRef(SignatureBlockComponent);
+
 
 /**
  * Exported meta‑data for the default signatures – useful for future

@@ -1,0 +1,352 @@
+.signature-verify-container {
+  border-radius: 10px;
+  border: 0.5px solid #ede9e0;
+  background: #fafaf7;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+
+  &.draw-mode {
+    gap: 12px;
+  }
+
+  .section-header {
+    .purpose-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #aaa;
+      fontWeight: 600;
+      margin-bottom: 4px;
+    }
+
+    .instructions {
+      font-size: 13px;
+      color: #555;
+      margin: 0;
+    }
+  }
+
+  /* Dots list */
+  .pin-dots-list {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 8px 0;
+    box-sizing: border-box;
+
+    .dot-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      border: 2px solid #ede9e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      transition: all 0.15s;
+      background: #fff;
+      color: transparent;
+      transform: scale(1);
+      box-sizing: border-box;
+
+      &.active {
+        border-color: #f59e0b;
+        background: #fffbeb;
+        color: #f59e0b;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  /* PIN input */
+  .pin-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #fff;
+    border: 0.5px solid #ede9e0;
+    border-radius: 10px;
+    color: #333;
+    text-align: center;
+    font-family: monospace;
+    font-size: 24px;
+    letter-spacing: 0.5em;
+    outline: none;
+    box-sizing: border-box;
+    transition: opacity 0.15s ease;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Error block */
+  .error-block {
+    border-radius: 8px;
+    border: 0.5px solid #fecaca;
+    background: #fef2f2;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #dc2626;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Locked message block */
+  .locked-block {
+    border-radius: 8px;
+    border: 0.5px solid #fecaca;
+    background: #fef2f2;
+    padding: 10px 12px;
+    text-align: center;
+    box-sizing: border-box;
+
+    .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #dc2626;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #dc2626;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+  }
+
+  /* Submit / verify action button */
+  .action-btn-full {
+    width: 100%;
+    padding: 10px 14px;
+    background: #f59e0b;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    box-sizing: border-box;
+
+    &:disabled {
+      background: #fcd97a;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Caution warning */
+  .caution-warning {
+    font-size: 10px;
+    color: #aaa;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Canvas styling */
+  .canvas-wrapper {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid #ede9e0;
+    background: #fff;
+    box-sizing: border-box;
+
+    .signature-canvas {
+      width: 100%;
+      height: 160px;
+      cursor: crosshair;
+      touch-action: none;
+      display: block;
+    }
+  }
+
+  .canvas-help-text {
+    font-size: 10px;
+    color: #aaa;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Button controls */
+  .button-row {
+    display: flex;
+    gap: 8px;
+    box-sizing: border-box;
+
+    button {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      box-sizing: border-box;
+    }
+
+    .btn-clear {
+      background: #fff;
+      border: 0.5px solid #ede9e0;
+      color: #555;
+      font-weight: 500;
+
+      &:hover {
+        background: #f9faf7;
+      }
+    }
+
+    .btn-save {
+      background: #16a34a;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+
+      &:hover {
+        background: #15803d;
+      }
+    }
+  }
+}
+
+/* Locked signed display screen */
+.signature-locked-display {
+  border-radius: 10px;
+  border: 0.5px solid #bbf7d0;
+  background: #f0fdf4;
+  padding: 16px;
+  pointer-events: none;
+  user-select: none;
+  box-sizing: border-box;
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+
+    .purpose-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .badge-locked {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      background: #bbf7d0;
+      color: #16a34a;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .signature-img-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    border: 0.5px solid #ede9e0;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+
+    .signature-img {
+      width: 100%;
+      height: 80px;
+      object-fit: contain;
+    }
+
+    .signature-fallback-name {
+      color: #333;
+      text-align: center;
+      padding: 16px 0;
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 24px;
+    }
+  }
+
+  .details-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    border: 0.5px solid #ede9e0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 11px;
+    box-sizing: border-box;
+
+    .detail-row {
+      display: flex;
+      gap: 12px;
+      box-sizing: border-box;
+
+      .field-label {
+        color: #aaa;
+        width: 96px;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 9px;
+        padding-top: 2px;
+      }
+
+      .field-value {
+        color: #333;
+        font-weight: 600;
+      }
+
+      .field-value-hash {
+        color: #ccc;
+        font-family: monospace;
+        font-size: 9px;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .verified-badge-footer {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+
+    .dot-check {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #16a34a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      .check-char {
+        color: #fff;
+        font-size: 7px;
+        font-weight: 700;
+        line-height: 1;
+      }
+    }
+
+    .badge-text {
+      font-size: 9px;
+      color: #16a34a;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}

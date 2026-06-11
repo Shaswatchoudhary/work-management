@@ -1,0 +1,433 @@
+@use "sass:color";
+
+// ── Variables ─────────────────────────────────────────────────────────
+$border: rgba(255, 255, 255, 0.10);
+$card-bg: rgba(255, 255, 255, 0.04);
+$text: #ffffff;
+$muted: rgba(255, 255, 255, 0.60);
+$subtle: rgba(255, 255, 255, 0.40);
+$accent: #0066ff;
+
+// ── Page sections ─────────────────────────────────────────────────────
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-section--sm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────
+.admin-header {
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: $text;
+    margin: 0;
+  }
+
+  p {
+    font-size: 13px;
+    color: $muted;
+    margin: 2px 0 0;
+  }
+}
+
+// ── Stat grid ─────────────────────────────────────────────────────────
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// ── Reports ───────────────────────────────────────────────────────────
+.admin-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.admin-category-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: $text;
+}
+
+.admin-category-card {
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: $card-bg;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.admin-category-row {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.admin-category-label {
+  width: 160px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.admin-category-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.10);
+  overflow: hidden;
+}
+
+.admin-category-bar-fill {
+  height: 100%;
+  background: $accent;
+  border-radius: 9999px;
+}
+
+.admin-category-count {
+  width: 40px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: $text;
+}
+
+// ── Users table ───────────────────────────────────────────────────────
+.admin-users-card {
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: $card-bg;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.admin-users-table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+
+.admin-users-thead {
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid $border;
+
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.70);
+  }
+}
+
+.admin-users-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  td {
+    padding: 12px 16px;
+  }
+}
+
+.admin-users-name {
+  font-weight: 600;
+  color: $text;
+}
+
+.admin-users-email,
+.admin-users-dept {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+// ─── Color Variables ───────────────────────────────────────────────────────
+$color-text-primary: #333;
+$color-text-muted: #999;
+$color-text-disabled: #ccc;
+$color-border: #e5e7eb;
+$color-background: #ffffff;
+$color-background-light: #f9fafb;
+$color-success: #10b981;
+$color-loading: #6b7280;
+
+// ─── Spacing Variables ─────────────────────────────────────────────────────
+$spacing-xs: 2px;
+$spacing-sm: 4px;
+$spacing-md: 8px;
+$spacing-lg: 12px;
+$spacing-xl: 16px;
+$spacing-2xl: 24px;
+
+// ─── Typography Variables ─────────────────────────────────────────────────
+$font-size-xs: 12px;
+$font-size-sm: 13px;
+$font-size-base: 14px;
+$font-size-lg: 16px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+
+// ─── Border Radius Variables ───────────────────────────────────────────────
+$border-radius-sm: 4px;
+$border-radius-md: 6px;
+$border-radius-lg: 8px;
+
+// ─── Transition Variables ──────────────────────────────────────────────────
+$transition-fast: 0.15s ease;
+$transition-standard: 0.3s ease;
+
+// ─── Main Container ───────────────────────────────────────────────────────
+.signaturePadContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  // ─── Label ────────────────────────────────────────────────────────────
+  .label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-normal;
+    color: $color-text-muted;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  // ─── Canvas Wrapper ───────────────────────────────────────────────────
+  .canvasWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-lg;
+    background-color: $color-background;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    width: 100%;
+    min-height: 180px;
+
+    // ─── Canvas Element ───────────────────────────────────────────────
+    .canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    // ─── Loading State ─────────────────────────────────────────────────
+    .loadingState {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 180px;
+      width: 100%;
+      font-size: $font-size-xs;
+      color: $color-loading;
+      background-color: $color-background-light;
+    }
+  }
+
+  // ─── Button Group ─────────────────────────────────────────────────────
+  .buttonGroup {
+    display: flex;
+    gap: $spacing-md;
+    align-items: center;
+
+    // ─── Base Button Styles ───────────────────────────────────────────
+    button {
+      flex: 1;
+      padding: $spacing-md $spacing-lg;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      border: none;
+      border-radius: $border-radius-lg;
+      cursor: pointer;
+      transition: all $transition-fast;
+      text-transform: capitalize;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.98);
+      }
+    }
+
+    // ─── Primary Button ───────────────────────────────────────────────
+    .btnPrimary {
+      background-color: #16a34a;
+      color: $color-background;
+
+      &:hover:not(:disabled) {
+        background-color: #15803d;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #16a34a;
+        outline-offset: 2px;
+      }
+    }
+
+    // ─── Secondary Button ─────────────────────────────────────────────
+    .btnSecondary {
+      background-color: $color-background;
+      color: $color-text-primary;
+      border: 1px solid $color-border;
+
+      &:hover:not(:disabled) {
+        background-color: $color-background-light;
+        border-color: $color-text-muted;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $color-border;
+        outline-offset: 2px;
+      }
+    }
+
+    // ─── Success Message ──────────────────────────────────────────────
+    .successMessage {
+      font-size: $font-size-xs;
+      color: $color-success;
+      font-weight: $font-weight-semibold;
+      white-space: nowrap;
+      animation: fadeIn $transition-fast ease-in;
+    }
+  }
+}
+
+// ─── Animations ───────────────────────────────────────────────────────────
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Responsive Design ────────────────────────────────────────────────────
+@media (max-width: 640px) {
+  .signaturePadContainer {
+    gap: $spacing-md;
+
+    .label {
+      font-size: $font-size-xs;
+    }
+
+    .canvasWrapper {
+      min-height: 160px;
+
+      .loadingState {
+        height: 160px;
+      }
+    }
+
+    .buttonGroup {
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+
+      button {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 90px;
+        padding: $spacing-md;
+
+        &:nth-child(3) {
+          flex: 1 1 100%;
+        }
+      }
+
+      .successMessage {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// ─── Dark Mode Support (Optional) ──────────────────────────────────────────
+@media (prefers-color-scheme: dark) {
+  .signaturePadContainer {
+    $color-text-primary-dark: #f3f4f6;
+    $color-text-muted-dark: #9ca3af;
+    $color-border-dark: #374151;
+    $color-background-dark: #1f2937;
+    $color-background-light-dark: #111827;
+
+    .label {
+      color: $color-text-muted-dark;
+    }
+
+    .canvasWrapper {
+      border-color: $color-border-dark;
+      background-color: $color-background-dark;
+
+      .loadingState {
+        background-color: $color-background-light-dark;
+        color: #9ca3af;
+      }
+    }
+
+    .buttonGroup {
+      .btnSecondary {
+        background-color: $color-background-dark;
+        color: $color-text-primary-dark;
+        border-color: $color-border-dark;
+
+        &:hover:not(:disabled) {
+          background-color: $color-background-light-dark;
+          border-color: #4b5563;
+        }
+      }
+
+      .successMessage {
+        color: #6ee7b7;
+      }
+    }
+  }
+}
+
+// ─── Print Styles ────────────────────────────────────────────────────────
+@media print {
+  .signaturePadContainer {
+    .buttonGroup {
+      display: none;
+    }
+  }
+}

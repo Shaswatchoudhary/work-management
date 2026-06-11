@@ -8,6 +8,7 @@ import { MOCK_USERS } from "../../data/mockUsers.ts";
 import { fmtMoney } from "../../utils/dateFormatter.ts";
 import { ROLE_LABEL } from "../../constants/roles.ts";
 import { useTickets } from "../tickets/hooks/useTickets.ts";
+import "./styles/AdminScreen.scss";
 
 export default function AdminScreen() {
   const { tickets } = useTickets();
@@ -68,12 +69,12 @@ export default function AdminScreen() {
       ]}
     >
       {tab === "queue" && (
-        <div className="space-y-6">
+        <div className="admin-section">
           <Header
             title="Final Approval Queue"
             subtitle="HR-approved tickets awaiting your decision"
           />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="admin-stat-grid">
             <StatCard label="Awaiting Approval" value={stats.awaiting} tone="warning" />
             <StatCard label="Payment Pending" value={stats.payments} tone="info" />
             <StatCard label="Pending Payout" value={fmtMoney(stats.pendingPayout)} tone="primary" />
@@ -88,7 +89,7 @@ export default function AdminScreen() {
       )}
 
       {tab === "inspection" && (
-        <div className="space-y-4">
+        <div className="admin-section">
           <Header title="Inspection Co-Signature" subtitle="Co-sign with HR to release payment." />
           <TicketTable
             tickets={queues.inspection}
@@ -99,7 +100,7 @@ export default function AdminScreen() {
       )}
 
       {tab === "payments" && (
-        <div className="space-y-4">
+        <div className="admin-section">
           <Header title="Payment Release" subtitle="Authorize payment and close tickets." />
           <TicketTable
             tickets={queues.payments}
@@ -110,9 +111,9 @@ export default function AdminScreen() {
       )}
 
       {tab === "reports" && (
-        <div className="space-y-6">
+        <div className="admin-section">
           <Header title="Reports" subtitle="Spend, distribution and ticket health." />
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="admin-report-grid">
             <StatCard
               label="Spend (This Month)"
               value={fmtMoney(reports.monthlySpend)}
@@ -121,19 +122,19 @@ export default function AdminScreen() {
             <StatCard label="Open Tickets" value={reports.open} tone="warning" />
             <StatCard label="Closed Tickets" value={reports.closed} tone="success" />
           </div>
-          <div>
-            <h3 className="text-sm font-semibold mb-2">Tickets by Category</h3>
-            <div className="rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md divide-y divide-white/5 shadow-md">
+          <div className="admin-section--sm">
+            <h3 className="admin-category-title">Tickets by Category</h3>
+            <div className="admin-category-card">
               {Object.entries(reports.byCategory).map(([cat, count]) => {
                 const max = Math.max(...Object.values(reports.byCategory));
                 const pct = Math.round((count / max) * 100);
                 return (
-                  <div key={cat} className="px-4 py-3 flex items-center gap-3">
-                    <div className="w-40 text-sm text-white/90">{cat}</div>
-                    <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full bg-[#0066ff]" style={{ width: `${pct}%` }} />
+                  <div key={cat} className="admin-category-row">
+                    <div className="admin-category-label">{cat}</div>
+                    <div className="admin-category-bar-track">
+                      <div className="admin-category-bar-fill" style={{ width: `${pct}%` }} />
                     </div>
-                    <div className="w-10 text-right text-sm font-semibold text-white">{count}</div>
+                    <div className="admin-category-count">{count}</div>
                   </div>
                 );
               })}
@@ -143,27 +144,27 @@ export default function AdminScreen() {
       )}
 
       {tab === "users" && (
-        <div className="space-y-4">
+        <div className="admin-section">
           <Header title="System Users" subtitle="Internal roles" />
-          <div className="rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md overflow-hidden shadow-lg">
-            <table className="w-full text-sm">
-              <thead className="bg-white/[0.06] text-xs uppercase tracking-wider text-white/60 border-b border-white/10">
+          <div className="admin-users-card">
+            <table className="admin-users-table">
+              <thead className="admin-users-thead">
                 <tr>
-                  <th className="text-left px-4 py-2.5 font-semibold text-white/70">Name</th>
-                  <th className="text-left px-4 py-2.5 font-semibold text-white/70">Email</th>
-                  <th className="text-left px-4 py-2.5 font-semibold text-white/70">Role</th>
-                  <th className="text-left px-4 py-2.5 font-semibold text-white/70">Department</th>
+                  <th className="admin-users-name">Name</th>
+                  <th className="admin-users-email">Email</th>
+                  <th className="admin-users-role">Role</th>
+                  <th className="admin-users-dept">Department</th>
                 </tr>
               </thead>
               <tbody>
                 {MOCK_USERS.map((u) => (
-                  <tr key={u.id} className="border-t border-white/5 hover:bg-white/[0.05] transition-colors">
-                    <td className="px-4 py-3 font-semibold text-white">{u.name}</td>
-                    <td className="px-4 py-3 text-white/60">{u.email}</td>
-                    <td className="px-4 py-3">
+                  <tr key={u.id} className="admin-users-row">
+                    <td className="admin-users-name-cell">{u.name}</td>
+                    <td className="admin-users-email-cell">{u.email}</td>
+                    <td className="admin-users-role-cell">
                       <Badge tone="primary">{ROLE_LABEL[u.role]}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-white/60">{u.department}</td>
+                    <td className="admin-users-dept-cell">{u.department}</td>
                   </tr>
                 ))}
               </tbody>
@@ -185,8 +186,8 @@ interface HeaderProps {
 function Header({ title, subtitle }: HeaderProps) {
   return (
     <div>
-      <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-      {subtitle && <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>}
+      <h2 className="admin-section-title">{title}</h2>
+      {subtitle && <p className="admin-section-subtitle">{subtitle}</p>}
     </div>
   );
 }

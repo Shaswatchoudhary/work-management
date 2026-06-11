@@ -1,0 +1,136 @@
+/* TicketForm.scss */
+
+.ticket-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      height: 36px;
+      padding: 0 10px;
+      border: 0.5px solid #ede9e0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #333;
+      background: #fff;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease;
+
+      &:focus {
+        border-color: #f59e0b;
+      }
+    }
+
+    textarea {
+      height: auto;
+      padding: 8px 10px;
+      resize: vertical;
+      font-family: inherit;
+    }
+  }
+
+  .form-grid-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .tags-list-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    box-sizing: border-box;
+
+    .tag-select-btn {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      border: 0.5px solid #ede9e0;
+      background: #fafaf7;
+      color: #555;
+      font-weight: 400;
+      transition: all 0.15s ease-in-out;
+      box-sizing: border-box;
+
+      &.is-selected {
+        border: none;
+        background: #f59e0b;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      &:hover:not(.is-selected) {
+        background: #f5f3ee;
+        border-color: #aaa;
+      }
+    }
+  }
+
+  .form-actions-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 0.5px solid #ede9e0;
+    box-sizing: border-box;
+
+    button {
+      height: 36px;
+      font-size: 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      box-sizing: border-box;
+    }
+
+    .btn-cancel {
+      padding: 0 14px;
+      background: #fafaf7;
+      border: 0.5px solid #ede9e0;
+      color: #777;
+
+      &:hover {
+        background: #f5f3ee;
+        color: #333;
+      }
+    }
+
+    .btn-submit {
+      padding: 0 16px;
+      background: #f59e0b;
+      border: none;
+      font-weight: 500;
+      color: #fff;
+
+      &:disabled {
+        background: #fcd97a;
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
+
+      &:hover:not(:disabled) {
+        background: #d97706;
+      }
+    }
+  }
+}

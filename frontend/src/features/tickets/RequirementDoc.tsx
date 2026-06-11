@@ -1,6 +1,7 @@
 import { fmtDate, fmtMoney } from "../../utils/dateFormatter.ts";
 import { STATUS_LABEL } from "../../constants/ticketStatus.ts";
 import { Ticket, SignatureBlock } from "../../types";
+import "./styles/RequirementDoc.scss";
 
 interface RequirementDocProps {
   ticket: Ticket;
@@ -8,24 +9,24 @@ interface RequirementDocProps {
 
 export default function RequirementDoc({ ticket }: RequirementDocProps) {
   return (
-    <div className="bg-white text-black rounded-md shadow-inner p-8 font-serif text-sm leading-relaxed">
+    <div className="requirement-doc">
       {/* Header */}
-      <div className="border-b-2 border-black pb-3 mb-5 flex items-start justify-between">
+      <div className="header">
         <div>
-          <div className="text-xs uppercase tracking-[0.2em] text-gray-600">Work Management</div>
-          <div className="text-xl font-bold mt-1">Requirement Document</div>
+          <div className="label">Work Management</div>
+          <div className="title">Requirement Document</div>
         </div>
-        <div className="text-right text-xs text-gray-600">
-          <div>Ref: <b className="text-black">{ticket.id}</b></div>
+        <div className="meta">
+          <div>Ref: <b className="ref-id">{ticket.id}</b></div>
           <div>Date: {fmtDate(ticket.createdAt)}</div>
           <div>Status: {STATUS_LABEL[ticket.status] || ticket.status}</div>
         </div>
       </div>
 
-      <h2 className="text-lg font-bold mb-3">{ticket.title}</h2>
+      <h2 className="doc-title">{ticket.title}</h2>
 
       {/* Details table */}
-      <table className="w-full text-xs mb-5 border border-gray-300">
+      <table className="details-table">
         <tbody>
           <Row k="Category" v={ticket.category} />
           <Row k="Priority" v={ticket.priority} />
@@ -42,57 +43,51 @@ export default function RequirementDoc({ ticket }: RequirementDocProps) {
       </table>
 
       {/* Description */}
-      <div className="mb-8">
-        <div className="text-xs uppercase tracking-wider text-gray-600 mb-1">Description</div>
-        <div className="whitespace-pre-wrap border border-gray-300 p-3 bg-gray-50 min-h-[80px]">
+      <div>
+        <div className="section-title">Description</div>
+        <div className="description-box">
           {ticket.description || "—"}
         </div>
       </div>
 
       {/* ── 4 Signature blocks ── */}
-      <div className="border-t-2 border-black pt-4 mb-2">
-        <div className="text-xs uppercase tracking-[0.15em] text-gray-500 mb-4">
+      <div className="signatures-section">
+        <div className="section-label">
           Authorized Signatures
         </div>
 
         {/* Row 1 — Approval signatures */}
-        <div className="grid grid-cols-2 gap-4 mb-4 items-stretch">
+        <div className="sig-row">
           <SigBlock
             number={1}
             label="HR Approval"
-            color="text-emerald-700"
+            color="hr-approval"
             block={ticket.signatures?.hrApproval}
           />
           <SigBlock
             number={2}
             label="Admin Approval"
-            color="text-blue-700"
+            color="admin-approval"
             block={ticket.signatures?.adminApproval}
           />
         </div>
 
         {/* Row 2 — Inspection signatures */}
-        <div className="grid grid-cols-2 gap-4 items-stretch">
+        <div className="sig-row">
           <SigBlock
             number={3}
             label="HR Inspection"
-            color="text-violet-700"
+            color="hr-inspection"
             block={ticket.signatures?.hrInspection}
           />
           <SigBlock
             number={4}
             label="Admin — Inspection & Payment"
-            color="text-amber-700"
+            color="admin-payment"
             block={ticket.signatures?.adminPayment}
           />
         </div>
       </div>
-
-      {/* Footer */}
-      {/* <div className="mt-6 text-[10px] text-gray-400 border-t border-gray-200 pt-2 text-center">
-        This is a system-generated document. Each signature is PIN-verified and tamper-evident.
-        Hash values can be independently verified.
-      </div> */}
     </div>
   );
 }
@@ -104,9 +99,9 @@ interface RowProps {
 }
 function Row({ k, v }: RowProps) {
   return (
-    <tr className="border-b border-gray-300">
-      <td className="px-3 py-2 bg-gray-100 font-semibold w-1/3">{k}</td>
-      <td className="px-3 py-2">{v ?? "—"}</td>
+    <tr>
+      <td className="label">{k}</td>
+      <td>{v ?? "—"}</td>
     </tr>
   );
 }
@@ -120,44 +115,44 @@ interface SigBlockProps {
 }
 function SigBlock({ number, label, color, block }: SigBlockProps) {
   return (
-    <div className="border border-gray-300 rounded-sm overflow-hidden h-full flex flex-col">
+    <div className="sig-block">
       {/* Header bar */}
-      <div className="bg-gray-100 border-b border-gray-300 px-3 py-1.5 flex items-center gap-2">
-        <span className="text-[10px] font-bold text-gray-500 bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center">
+      <div className="sig-header">
+        <span className="sig-num">
           {number}
         </span>
-        <span className={`text-[11px] font-semibold uppercase tracking-wider ${color}`}>
+        <span className={`sig-label ${color}`}>
           {label}
         </span>
       </div>
 
       {/* Signature image area */}
-      <div className="h-24 bg-white flex items-center justify-center border-b border-gray-200">
+      <div className="sig-image-area">
         {block?.signatureImage ? (
           <img
             src={block.signatureImage}
             alt={`${label} signature`}
-            className="max-h-20 max-w-[90%] object-contain" />
+          />
         ) : (
-          <span className="text-xs text-gray-400 italic">Pending signature</span>
+          <span className="pending-text">Pending signature</span>
         )}
       </div>
 
       {/* Details */}
       {block ? (
-        <div className="px-3 py-2 bg-gray-50 flex-1">
-          <div className="text-[10px] font-semibold text-gray-800 h-4">
+        <div className="sig-details">
+          <div className="sig-name">
             {block.signedBy}
           </div>
 
           <div
-            className="text-[10px] text-gray-500 h-8 overflow-hidden"
+            className="sig-role"
             title={block.role}
           >
             {block.role}
           </div>
 
-          <div className="text-[10px] text-gray-500 h-8">
+          <div className="sig-date">
             {new Date(block.signedAt).toLocaleString("en-IN", {
               day: "2-digit",
               month: "short",
@@ -168,20 +163,20 @@ function SigBlock({ number, label, color, block }: SigBlockProps) {
             })}
           </div>
 
-          <div className="text-[9px] text-gray-400 font-mono">
+          <div className="sig-hash">
             Hash: {block.hash}
           </div>
 
-          <div className="flex items-center gap-1 mt-1">
-            <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[9px] text-emerald-600 font-semibold uppercase tracking-wider">
+          <div className="sig-verified">
+            <div className="dot" />
+            <span className="verified-text">
               PIN Verified · Digitally Signed
             </span>
           </div>
         </div>
       ) : (
-        <div className="px-3 py-2 bg-gray-50">
-          <div className="text-[10px] text-gray-400 italic">Not yet signed</div>
+        <div className="sig-details">
+          <div className="unsigned-text">Not yet signed</div>
         </div>
       )}
     </div>

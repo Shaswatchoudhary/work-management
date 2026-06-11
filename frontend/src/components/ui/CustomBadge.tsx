@@ -1,25 +1,39 @@
 import { STATUS_TONE, STATUS_LABEL } from "../../constants/ticketStatus";
 import { Status, Priority } from "../../types";
 
-const tones = {
-  muted: "bg-[#232323] text-muted-foreground border border-border",
-  warning: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
-  success: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
-  danger: "bg-red-500/10 text-red-400 border border-red-500/30",
-  info: "bg-violet-500/10 text-violet-400 border border-violet-500/30",
-  primary: "bg-[#4f6ef7]/10 text-[#7d94f9] border border-[#4f6ef7]/30",
+export type BadgeTone = "muted" | "warning" | "success" | "danger" | "info" | "primary";
+
+const tonesStyle: Record<BadgeTone, React.CSSProperties> = {
+  muted: { backgroundColor: "#232323", color: "var(--muted-foreground)", border: "0.5px solid var(--border)" },
+  warning: { backgroundColor: "rgba(245, 158, 11, 0.1)", color: "#f59e0b", border: "0.5px solid rgba(245, 158, 11, 0.3)" },
+  success: { backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "0.5px solid rgba(16, 185, 129, 0.3)" },
+  danger: { backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#ef4444", border: "0.5px solid rgba(239, 68, 68, 0.3)" },
+  info: { backgroundColor: "rgba(139, 92, 246, 0.1)", color: "#8b5cf6", border: "0.5px solid rgba(139, 92, 246, 0.3)" },
+  primary: { backgroundColor: "rgba(79, 110, 247, 0.1)", color: "#7d94f9", border: "0.5px solid rgba(79, 110, 247, 0.3)" },
 };
 
 interface BadgeProps {
-  tone?: keyof typeof tones;
+  tone?: BadgeTone;
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export default function Badge({ tone = "muted", children, className = "" }: BadgeProps) {
+export default function Badge({ tone = "muted", children, className = "", style }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${tones[tone] || tones.muted} ${className}`}
+      className={className}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "4px",
+        borderRadius: "6px",
+        padding: "2px 8px",
+        fontSize: "12px",
+        fontWeight: 500,
+        ...tonesStyle[tone],
+        ...style,
+      }}
     >
       {children}
     </span>
@@ -31,7 +45,7 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  return <Badge tone={STATUS_TONE[status] as keyof typeof tones || "muted"}>{STATUS_LABEL[status] || status}</Badge>;
+  return <Badge tone={STATUS_TONE[status] as BadgeTone || "muted"}>{STATUS_LABEL[status] || status}</Badge>;
 }
 
 interface PriorityBadgeProps {
@@ -39,7 +53,7 @@ interface PriorityBadgeProps {
 }
 
 export function PriorityBadge({ priority }: PriorityBadgeProps) {
-  const tone: keyof typeof tones =
+  const tone: BadgeTone =
     priority === "Critical"
       ? "danger"
       : priority === "High"

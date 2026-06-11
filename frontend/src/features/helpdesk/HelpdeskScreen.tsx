@@ -7,6 +7,7 @@ import TicketForm from "../tickets/TicketForm.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { CATEGORIES } from "../../data/categories.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";
+import "./styles/HelpdeskScreen.scss";
 
 export default function HelpdeskScreen() {
   const tickets = useTicketStore((s) => s.tickets);
@@ -46,85 +47,90 @@ export default function HelpdeskScreen() {
         { key: "inspection", label: "Inspection Queue" },
       ]}
     >
-      {/* DASHBOARD */}
+      {/* ── DASHBOARD ── */}
       {tab === "dashboard" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className="page">
           <PageHeader
             title="Help Desk Dashboard"
             subtitle="Overview of all internal requests"
             action={
-              <button
-                onClick={() => setShowForm(true)}
-                style={{ height: "36px", padding: "0 16px", background: "#F59E0B", border: "none", borderRadius: "9px", color: "#fff", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}
-              >
+              <button className="btnPrimary" onClick={() => setShowForm(true)}>
                 + New Request
               </button>
             }
           />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
+          <div className="stats">
             <StatCard label="Total" value={stats.total} tone="primary" />
             <StatCard label="Pending" value={stats.pending} tone="warning" />
             <StatCard label="In Progress" value={stats.inProgress} tone="info" />
             <StatCard label="Closed" value={stats.closed} tone="success" />
             <StatCard label="Rejected" value={stats.rejected} tone="danger" />
           </div>
-          <div>
-            <div style={{ fontSize: "13px", fontWeight: 600, color: "#333", marginBottom: "10px" }}>Recently updated</div>
-            {/* ✅ White card wrapper — green background AppShell se aa rha tha, ab card mein hai */}
-            <div style={{ background: "#fff", borderRadius: "12px", border: "0.5px solid #EDE9E0", overflow: "hidden" }}>
+          <div className="section">
+            <div className="section__label">Recently updated</div>
+            <div className="tableCard">
               <TicketTable tickets={tickets.slice(0, 6)} onOpen={setOpenId} />
             </div>
           </div>
         </div>
       )}
 
-      {/* MY TICKETS */}
+      {/* ── MY TICKETS ── */}
       {tab === "tickets" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="page">
           <PageHeader
             title="My Tickets"
-            subtitle={`${filtered.length} of ${tickets.length}`} // filtered length of tickets from search 
-            action={ // button to create new request
-              <button onClick={() => setShowForm(true)} style={{ height: "36px", padding: "0 16px", background: "#F59E0B", border: "none", borderRadius: "9px", color: "#fff", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}>
+            subtitle={`${filtered.length} of ${tickets.length}`}
+            action={
+              <button className="btnPrimary" onClick={() => setShowForm(true)}>
                 + New Request
               </button>
             }
           />
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div className="filters">
             <input
+              className="filterInput"
               placeholder="Search by ID, title, location..."
-              value={q} // search query
-              onChange={(e) => setQ(e.target.value)} // update search query
-              style={{ height: "36px", padding: "0 12px", border: "0.5px solid #EDE9E0", borderRadius: "8px", fontSize: "13px", background: "#fff", color: "#333", outline: "none", minWidth: "220px" }}
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
             />
-            <select value={filterCat} onChange={(e) => setFilterCat(e.target.value)} style={{ height: "36px", padding: "0 10px", border: "0.5px solid #EDE9E0", borderRadius: "8px", fontSize: "13px", background: "#fff", color: "#555", outline: "none" }}>
+            <select className="filterSelect" value={filterCat} onChange={(e) => setFilterCat(e.target.value)}>
               <option value="">All categories</option>
               {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
             </select>
-            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ height: "36px", padding: "0 10px", border: "0.5px solid #EDE9E0", borderRadius: "8px", fontSize: "13px", background: "#fff", color: "#555", outline: "none" }}>
+            <select className="filterSelect" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
               <option value="">All statuses</option>
-              {Object.values(STATUS).map((s) => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}
+              {Object.values(STATUS).map((s) => (
+                <option key={s} value={s}>{s.replace(/_/g, " ")}</option>
+              ))}
             </select>
           </div>
           <TicketTable tickets={filtered} onOpen={setOpenId} />
         </div>
       )}
 
-      {/* NEW REQUEST */}
+      {/* ── NEW REQUEST ── */}
       {tab === "new" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <PageHeader title="Submit New Request" subtitle="A PDF requirement document is generated on submission." />
-          <button onClick={() => setShowForm(true)} style={{ alignSelf: "flex-start", height: "36px", padding: "0 16px", background: "#F59E0B", border: "none", borderRadius: "9px", color: "#fff", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}>
+        <div className="page">
+          <PageHeader
+            title="Submit New Request"
+            subtitle="A PDF requirement document is generated on submission."
+          />
+          <button className="btnPrimary" onClick={() => setShowForm(true)}>
             Open Request Form
           </button>
         </div>
       )}
 
-      {/* INSPECTION */}
+      {/* ── INSPECTION ── */}
       {tab === "inspection" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="page">
           <PageHeader title="Inspection Queue" subtitle="Verify completed work and mark pass / fail." />
-          <TicketTable tickets={inspectionQueue} onOpen={setOpenId} emptyText="No tickets currently awaiting inspection." />
+          <TicketTable
+            tickets={inspectionQueue}
+            onOpen={setOpenId}
+            emptyText="No tickets currently awaiting inspection."
+          />
         </div>
       )}
 
@@ -134,6 +140,7 @@ export default function HelpdeskScreen() {
   );
 }
 
+// ── PageHeader ──────────────────────────────────────────────
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
@@ -142,10 +149,10 @@ interface PageHeaderProps {
 
 function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+    <div className="header">
       <div>
-        <h2 style={{ fontSize: "20px", fontWeight: 600, color: "#1A1A1A", margin: 0 }}>{title}</h2>
-        {subtitle && <p style={{ fontSize: "13px", color: "#AAA", margin: "2px 0 0" }}>{subtitle}</p>}
+        <h2 className="header__title">{title}</h2>
+        {subtitle && <p className="header__subtitle">{subtitle}</p>}
       </div>
       {action}
     </div>

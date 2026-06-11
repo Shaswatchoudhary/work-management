@@ -7,6 +7,7 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
 import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
 import { Ticket, Priority } from "../../types";
+import "./styles/TicketForm.scss";
 
 interface FormData {
   title: string; category: string; priority: Priority;
@@ -17,18 +18,6 @@ interface FormData {
 const empty: FormData = {
   title: "", category: CATEGORIES[0], priority: "Medium",
   location: "", estimatedCost: "", description: "", tags: [], attachment: "",
-};
-
-const iStyle: React.CSSProperties = {
-  width: "100%", height: "36px", padding: "0 10px",
-  border: "0.5px solid #EDE9E0", borderRadius: "8px",
-  fontSize: "13px", color: "#333", background: "#fff",
-  outline: "none", boxSizing: "border-box",
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "#777",
-  textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "4px", display: "block",
 };
 
 interface TicketFormProps {
@@ -103,65 +92,59 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
 
   return (
     <Modal open={open} onClose={onClose} title={isEdit ? `Edit ${ticket?.id}` : "New Request"} size="lg">
-      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+      <form onSubmit={submit} className="ticket-request-form">
 
         {/* Title */}
-        <div>
-          <label style={labelStyle}>Title</label>
-          <input style={iStyle} value={form.title} onChange={(e) => update("title", e.target.value)} placeholder="Short summary of the request" />
+        <div className="form-group">
+          <label>Title</label>
+          <input value={form.title} onChange={(e) => update("title", e.target.value)} placeholder="Short summary of the request" />
         </div>
 
         {/* Grid: Category, Priority, Location, Cost */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-          <div>
-            <label style={labelStyle}>Category</label>
-            <select style={iStyle} value={form.category} onChange={(e) => update("category", e.target.value)}>
+        <div className="form-grid-fields">
+          <div className="form-group">
+            <label>Category</label>
+            <select value={form.category} onChange={(e) => update("category", e.target.value)}>
               {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Priority</label>
-            <select style={iStyle} value={form.priority} onChange={(e) => update("priority", e.target.value as Priority)}>
+          <div className="form-group">
+            <label>Priority</label>
+            <select value={form.priority} onChange={(e) => update("priority", e.target.value as Priority)}>
               {PRIORITY.map((p) => <option key={p}>{p}</option>)}
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Location / Floor</label>
-            <input style={iStyle} value={form.location} onChange={(e) => update("location", e.target.value)} placeholder="Tower A, Floor 3..." />
+          <div className="form-group">
+            <label>Location / Floor</label>
+            <input value={form.location} onChange={(e) => update("location", e.target.value)} placeholder="Tower A, Floor 3..." />
           </div>
-          <div>
-            <label style={labelStyle}>Estimated Cost (INR)</label>
-            <input style={iStyle} type="number" value={form.estimatedCost} onChange={(e) => update("estimatedCost", e.target.value)} placeholder="0" />
+          <div className="form-group">
+            <label>Estimated Cost (INR)</label>
+            <input type="number" value={form.estimatedCost} onChange={(e) => update("estimatedCost", e.target.value)} placeholder="0" />
           </div>
         </div>
 
         {/* Description */}
-        <div>
-          <label style={labelStyle}>Description</label>
+        <div className="form-group">
+          <label>Description</label>
           <textarea
             value={form.description}
             onChange={(e) => update("description", e.target.value)}
             placeholder="Detailed problem statement..."
             rows={3}
-            style={{ ...iStyle, height: "auto", padding: "8px 10px", resize: "vertical", fontFamily: "inherit" }}
           />
         </div>
 
         {/* Tags */}
-        <div>
-          <label style={labelStyle}>Tags</label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        <div className="form-group">
+          <label>Tags</label>
+          <div className="tags-list-row">
             {TAGS.map((t) => (
               <button
-                key={t} type="button" onClick={() => toggleTag(t)}
-                style={{
-                  fontSize: "12px", padding: "4px 10px", borderRadius: "7px", cursor: "pointer",
-                  border: form.tags.includes(t) ? "none" : "0.5px solid #EDE9E0",
-                  background: form.tags.includes(t) ? "#F59E0B" : "#FAFAF7",
-                  color: form.tags.includes(t) ? "#fff" : "#555",
-                  fontWeight: form.tags.includes(t) ? 600 : 400,
-                  transition: "all 0.15s",
-                }}
+                key={t}
+                type="button"
+                onClick={() => toggleTag(t)}
+                className={`tag-select-btn ${form.tags.includes(t) ? "is-selected" : ""}`}
               >
                 {t}
               </button>
@@ -170,22 +153,25 @@ export default function TicketForm({ open, onClose, ticket = null }: TicketFormP
         </div>
 
         {/* Attachment */}
-        <div>
-          <label style={labelStyle}>File attachment (optional, link)</label>
-          <input style={iStyle} value={form.attachment} onChange={(e) => update("attachment", e.target.value)} placeholder="https://..." />
+        <div className="form-group">
+          <label>File attachment (optional, link)</label>
+          <input value={form.attachment} onChange={(e) => update("attachment", e.target.value)} placeholder="https://..." />
         </div>
 
         {/* Footer buttons */}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", paddingTop: "8px", borderTop: "0.5px solid #EDE9E0" }}>
+        <div className="form-actions-footer">
           <button
-            type="button" onClick={onClose} disabled={submitting}
-            style={{ height: "36px", padding: "0 14px", background: "#FAFAF7", border: "0.5px solid #EDE9E0", borderRadius: "8px", fontSize: "13px", color: "#777", cursor: "pointer" }}
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="btn-cancel"
           >
             Cancel
           </button>
           <button
-            type="submit" disabled={submitting}
-            style={{ height: "36px", padding: "0 16px", background: submitting ? "#FCD97A" : "#F59E0B", border: "none", borderRadius: "8px", fontSize: "13px", fontWeight: 500, color: "#fff", cursor: submitting ? "not-allowed" : "pointer" }}
+            type="submit"
+            disabled={submitting}
+            className="btn-submit"
           >
             {submitLabel}
           </button>

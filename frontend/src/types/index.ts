@@ -16,7 +16,7 @@ export interface SignatureBlock {
   signedAt: string;
   hash: string;
   deviceHint: string;
-  signatureImage: string;
+  signatureImage?: string;
 }
 
 export interface User {

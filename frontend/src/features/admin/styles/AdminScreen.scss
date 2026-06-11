@@ -1,0 +1,170 @@
+@use "sass:color";
+
+// ── Variables ─────────────────────────────────────────────────────────
+$border: rgba(255, 255, 255, 0.10);
+$card-bg: rgba(255, 255, 255, 0.04);
+$text: #ffffff;
+$muted: rgba(255, 255, 255, 0.60);
+$subtle: rgba(255, 255, 255, 0.40);
+$accent: #0066ff;
+
+// ── Page sections ─────────────────────────────────────────────────────
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-section--sm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────
+.admin-header {
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: $text;
+    margin: 0;
+  }
+
+  p {
+    font-size: 13px;
+    color: $muted;
+    margin: 2px 0 0;
+  }
+}
+
+// ── Stat grid ─────────────────────────────────────────────────────────
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// ── Reports ───────────────────────────────────────────────────────────
+.admin-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.admin-category-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: $text;
+}
+
+.admin-category-card {
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: $card-bg;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.admin-category-row {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.admin-category-label {
+  width: 160px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.admin-category-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.10);
+  overflow: hidden;
+}
+
+.admin-category-bar-fill {
+  height: 100%;
+  background: $accent;
+  border-radius: 9999px;
+}
+
+.admin-category-count {
+  width: 40px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: $text;
+}
+
+// ── Users table ───────────────────────────────────────────────────────
+.admin-users-card {
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: $card-bg;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.admin-users-table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+
+.admin-users-thead {
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid $border;
+
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.70);
+  }
+}
+
+.admin-users-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  td {
+    padding: 12px 16px;
+  }
+}
+
+.admin-users-name {
+  font-weight: 600;
+  color: $text;
+}
+
+.admin-users-email,
+.admin-users-dept {
+  color: rgba(255, 255, 255, 0.60);
+}

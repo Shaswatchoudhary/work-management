@@ -1,4 +1,4 @@
-import { SignatureBlock, SignaturePurpose } from "../signature/SignatureBlock";
+import { SignatureBlock, SignaturePurpose } from "./types";
 import { MOCK_USERS } from "../../data/mockUsers";
 
 // ─── Hash generate karna ───────────────────────────────────────────────────

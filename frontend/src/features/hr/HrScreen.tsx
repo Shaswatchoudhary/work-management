@@ -3,9 +3,9 @@ import AppShell from "../../components/layout/AppShell.tsx";
 import StatCard from "../../components/ui/StatCard.tsx";
 import TicketTable from "../tickets/TicketTable.tsx";
 import TicketDetail from "../tickets/TicketDetail.tsx";
-import { Input, Select } from "../../components/ui/Field.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";
+import "./styles/HrScreen.scss";
 
 export default function HrScreen() {
   const tickets = useTicketStore((s) => s.tickets);
@@ -18,6 +18,7 @@ export default function HrScreen() {
   const inspection = tickets.filter(
     (t) => t.status === "inspection_pending" && t.inspection?.passed && !t.inspection?.signedByHr,
   );
+
   const all = useMemo(
     () =>
       tickets
@@ -30,8 +31,7 @@ export default function HrScreen() {
     awaitingReview: pending.length,
     coSign: inspection.length,
     approvedToday: tickets.filter(
-      (t) =>
-        t.hrApprovedAt && new Date(t.hrApprovedAt).toDateString() === new Date().toDateString(),
+      (t) => t.hrApprovedAt && new Date(t.hrApprovedAt).toDateString() === new Date().toDateString(),
     ).length,
     rejected: tickets.filter((t) => t.status === "rejected_hr").length,
   };
@@ -47,10 +47,11 @@ export default function HrScreen() {
         { key: "all", label: "All Tickets" },
       ]}
     >
+      {/* ── PENDING REVIEW ── */}
       {tab === "queue" && (
-        <div className="space-y-6">
+        <div className="hr-page">
           <Header title="HR Review Queue" subtitle="First-level approval / rejection" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="stats">
             <StatCard label="Awaiting Review" value={stats.awaitingReview} tone="warning" />
             <StatCard label="Inspection Co-Sign" value={stats.coSign} tone="info" />
             <StatCard label="Approved Today" value={stats.approvedToday} tone="success" />
@@ -64,8 +65,9 @@ export default function HrScreen() {
         </div>
       )}
 
+      {/* ── INSPECTION CO-SIGN ── */}
       {tab === "inspection" && (
-        <div className="space-y-4">
+        <div className="hr-page">
           <Header title="Inspection Co-Signature" subtitle="Sign off on completed work." />
           <TicketTable
             tickets={inspection}
@@ -75,28 +77,27 @@ export default function HrScreen() {
         </div>
       )}
 
+      {/* ── ALL TICKETS ── */}
       {tab === "all" && (
-        <div className="space-y-4">
+        <div className="hr-page">
           <Header title="All Tickets" />
-          <div className="flex flex-wrap gap-2">
-            <Input
+          <div className="filters">
+            <input
+              className="filterInput"
               placeholder="Search..."
               value={q}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value)}
-              className="max-w-xs"
+              onChange={(e) => setQ(e.target.value)}
             />
-            <Select
+            <select
+              className="filterSelect"
               value={filterStatus}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterStatus(e.target.value)}
-              className="max-w-[200px]"
+              onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="">All statuses</option>
               {Object.values(STATUS).map((s) => (
-                <option key={s} value={s}>
-                  {s.replace(/_/g, " ")}
-                </option>
+                <option key={s} value={s}>{s.replace(/_/g, " ")}</option>
               ))}
-            </Select>
+            </select>
           </div>
           <TicketTable tickets={all} onOpen={setOpenId} />
         </div>
@@ -114,9 +115,9 @@ interface HeaderProps {
 
 function Header({ title, subtitle }: HeaderProps) {
   return (
-    <div>
-      <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-      {subtitle && <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>}
+    <div className="hr-header">
+      <h2 className="hr-header__title">{title}</h2>
+      {subtitle && <span className="hr-header__subtitle">{subtitle}</span>}
     </div>
   );
 }

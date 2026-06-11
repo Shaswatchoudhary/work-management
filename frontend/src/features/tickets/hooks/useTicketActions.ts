@@ -5,7 +5,7 @@ import { useTicketStore } from "../../../store/ticketStore";
 import { useAuthStore } from "../../../store/authStore";
 import { useNotificationStore } from "../../../store/notificationStore";
 
-export function useTicketActions(ticketId: string) {
+export function useTicketActions(_ticketId: string) {
   const setStatus    = useTicketStore((s) => s.setStatus);
   const updateTicket = useTicketStore((s) => s.updateTicket);
   const user         = useAuthStore((s) => s.user);

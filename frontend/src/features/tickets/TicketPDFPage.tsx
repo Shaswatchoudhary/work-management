@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import SignatureBlock from "../signature/SignatureBlock";
 import { generatePDF, TicketData } from "../pdf/generatePDF";
-
-
+import "./styles/TicketPDFPage.scss";
 
 const mockTicket: TicketData = {
   id: "TKT-1017",
@@ -55,13 +54,13 @@ export default function TicketPDFPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Ticket details – styled with Tailwind (allowed) */}
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+    <div className="pdf-page-container">
+      {/* Ticket details */}
+      <div className="pdf-doc-card">
+        <h1 className="pdf-doc-title">
           {mockTicket.title} — Requirement Document
         </h1>
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="pdf-details-grid">
           <div>
             <strong>Ticket ID:</strong> {mockTicket.id}
           </div>
@@ -86,42 +85,39 @@ export default function TicketPDFPage() {
           <div>
             <strong>Raised At:</strong> {mockTicket.raisedAt}
           </div>
-          <div className="col-span-2">
+          <div className="span-full">
             <strong>Tags:</strong> {mockTicket.tags}
           </div>
         </div>
 
         {/* Description block */}
-        <div className="mt-4 p-4 bg-gray-50 rounded">
-          <p className="text-gray-800">{mockTicket.description}</p>
+        <div className="pdf-desc-block">
+          <p className="desc-text">{mockTicket.description}</p>
         </div>
       </div>
 
-      {/* Visible signature preview – captured for the PDF */}
-      <div className="max-w-4xl mx-auto mb-6">
+      {/* Visible signature preview */}
+      <div className="pdf-preview-wrapper">
         <SignatureBlock ref={sigRef} />
       </div>
 
       {/* Action button + status */}
-      <div className="max-w-4xl mx-auto flex items-center">
+      <div className="pdf-actions-bar">
         <button
           onClick={handleGenerate}
           disabled={loading}
-          className={`px-6 py-2 rounded-md text-white font-medium focus:outline-none transition ${loading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-indigo-600 hover:bg-indigo-700"
-            }`}
+          className="btn-pdf-download"
         >
           {loading ? (
             <>
               <svg
-                className="animate-spin h-5 w-5 mr-2 inline-block"
+                className="spinner-icon"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
               >
                 <circle
-                  className="opacity-25"
+                  className="spinner-bg"
                   cx="12"
                   cy="12"
                   r="10"
@@ -129,7 +125,7 @@ export default function TicketPDFPage() {
                   strokeWidth="4"
                 ></circle>
                 <path
-                  className="opacity-75"
+                  className="spinner-fill"
                   fill="currentColor"
                   d="M4 12a8 8 0 018-8v8z"
                 ></path>
@@ -143,11 +139,11 @@ export default function TicketPDFPage() {
 
         {statusMsg && (
           <p
-            className={`ml-4 text-sm font-medium ${statusType === "error"
-              ? "text-red-600"
+            className={`pdf-status-msg ${statusType === "error"
+              ? "is-error"
               : statusType === "done"
-                ? "text-green-600"
-                : "text-blue-600"
+                ? "is-done"
+                : ""
               }`}
           >
             {statusMsg}
@@ -157,3 +153,4 @@ export default function TicketPDFPage() {
     </div>
   );
 }
+

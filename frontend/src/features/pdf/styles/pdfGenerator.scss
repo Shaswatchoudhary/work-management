@@ -1,0 +1,463 @@
+// ════════════════════════════════════════════════════════════════════════════
+// PDF DOCUMENT STYLES - SCSS
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── Color Variables ─────────────────────────────────────────────────────────
+$color-primary: #111111;
+$color-text: #222222;
+$color-text-light: #444444;
+$color-text-muted: #888888;
+$color-text-very-light: #aaaaaa;
+$color-text-disabled: #bbbbbb;
+$color-text-link: #cccccc;
+$color-border: #cccccc;
+$color-border-light: #dddddd;
+$color-border-lighter: #eeeeee;
+$color-bg: #ffffff;
+$color-bg-light: #f9f9f9;
+$color-bg-lighter: #f5f5f5;
+$color-bg-lightest: #fafafa;
+$color-success: #16a34a;
+
+// Signature box colors
+$color-hr-approval: #0e6b5e;
+$color-admin-approval: #1a3a6b;
+$color-hr-inspection: #0e6b5e;
+$color-admin-payment: #7a4b00;
+
+// ── Font Variables ──────────────────────────────────────────────────────────
+$font-family-serif: Georgia, 'Times New Roman', serif;
+$font-family-mono: 'Courier New', monospace;
+$font-size-base: 12px;
+$font-size-small: 11px;
+$font-size-smaller: 10px;
+$font-size-smallest: 9px;
+$font-size-large: 13px;
+$font-size-xl: 18px;
+$font-size-xxl: 26px;
+$line-height-base: 1.6;
+$line-height-tight: 1.15;
+$line-height-relaxed: 1.8;
+
+// ── Spacing Variables ───────────────────────────────────────────────────────
+$spacing-xs: 3px;
+$spacing-sm: 4px;
+$spacing-md: 6px;
+$spacing-lg: 8px;
+$spacing-xl: 10px;
+$spacing-xxl: 12px;
+$spacing-3xl: 14px;
+$spacing-4xl: 16px;
+$spacing-5xl: 18px;
+
+// ── Mixins ──────────────────────────────────────────────────────────────────
+@mixin flex-cell($width: auto, $padding: 0) {
+  display: table-cell;
+  vertical-align: middle;
+  width: $width;
+
+  @if $padding !=0 {
+    padding: $padding;
+  }
+}
+
+@mixin border-light {
+  border: 1px solid $color-border;
+}
+
+@mixin border-medium {
+  border: 1.5px solid $color-border;
+}
+
+@mixin border-header {
+  border-bottom: 1.5px solid $color-border-light;
+}
+
+@mixin table-cell-label {
+  padding: 7px $spacing-xxl;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-primary;
+  @include border-light;
+  width: 150px;
+  background: $color-bg-light;
+  vertical-align: top;
+}
+
+@mixin table-cell-value {
+  padding: 7px $spacing-xxl;
+  font-size: $font-size-base;
+  color: $color-text;
+  @include border-light;
+  background: $color-bg;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PDF ROOT CONTAINER
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-root {
+  width: 794px;
+  min-height: 1117px;
+  background: $color-bg;
+  color: $color-primary;
+  font-family: $font-family-serif;
+  box-sizing: border-box;
+  padding: 0 $spacing-xxl $spacing-xl $spacing-xxl;
+  display: flex;
+  flex-direction: column;
+
+  * {
+    color-scheme: light !important;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// HEADER SECTION
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-header-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $spacing-xl;
+}
+
+.pdf-header-left {
+  vertical-align: bottom;
+  padding: 0;
+}
+
+.pdf-header-label {
+  font-size: $font-size-smallest;
+  letter-spacing: 0.2em;
+  color: $color-text-muted;
+  margin-bottom: $spacing-xs;
+  text-transform: uppercase;
+}
+
+.pdf-header-title {
+  font-size: $font-size-xxl;
+  font-weight: 700;
+  color: $color-primary;
+  line-height: $line-height-tight;
+}
+
+.pdf-header-right {
+  vertical-align: top;
+  text-align: right;
+  padding: 0;
+  padding-top: $spacing-sm;
+  font-size: $font-size-base;
+  line-height: $line-height-relaxed;
+  color: $color-text-light;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.pdf-divider {
+  height: 3px;
+  background: $color-primary;
+  margin-bottom: $spacing-3xl;
+}
+
+.pdf-subtitle {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-primary;
+  margin-bottom: $spacing-3xl;
+  word-break: break-word;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DETAILS TABLE
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $spacing-4xl;
+  @include border-light;
+}
+
+.pdf-details-label {
+  @include table-cell-label;
+}
+
+.pdf-details-value {
+  @include table-cell-value;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DESCRIPTION SECTION
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-description-label {
+  font-size: $font-size-smallest;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+  margin-bottom: $spacing-sm;
+}
+
+.pdf-description-box {
+  @include border-light;
+  border-radius: 4px;
+  padding: $spacing-xl $spacing-3xl;
+  font-size: $font-size-large;
+  color: $color-text;
+  line-height: $line-height-base;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: $spacing-5xl;
+  min-height: 60px;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SIGNATURES SECTION
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-signatures-label {
+  font-size: $font-size-smallest;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+  margin-bottom: $spacing-xxl;
+}
+
+.pdf-signatures-table {
+  width: 100%;
+  border-collapse: collapse;
+  flex: 1;
+}
+
+.pdf-signature-cell-left {
+  width: 50%;
+  padding: 0 $spacing-md $spacing-xl 0;
+  vertical-align: top;
+}
+
+.pdf-signature-cell-right {
+  width: 50%;
+  padding: 0 0 $spacing-xl $spacing-md;
+  vertical-align: top;
+}
+
+.pdf-signature-cell-bottom-left {
+  width: 50%;
+  padding: 0 $spacing-md 0 0;
+  vertical-align: top;
+}
+
+.pdf-signature-cell-bottom-right {
+  width: 50%;
+  padding: 0 0 0 $spacing-md;
+  vertical-align: top;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SIGNATURE BOX - PENDING
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-sig-box-pending {
+  @include border-medium;
+  border-radius: 6px;
+  background: $color-bg;
+  font-family: $font-family-serif;
+  height: 100%;
+}
+
+.pdf-sig-box-pending__header {
+  background: $color-bg-lighter;
+  @include border-header;
+  padding: $spacing-xl $spacing-3xl;
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pdf-sig-box-pending__number {
+  @include flex-cell(28px);
+
+  .number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: $color-border-light;
+    font-size: $font-size-smaller;
+    font-weight: 700;
+    color: $color-text-light;
+    text-align: center;
+    line-height: 22px;
+  }
+}
+
+.pdf-sig-box-pending__label {
+  @include flex-cell(auto, 0 0 0 $spacing-lg);
+  font-size: $font-size-base;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.pdf-sig-box-pending__body {
+  padding: 32px $spacing-3xl;
+  text-align: center;
+}
+
+.pdf-sig-box-pending__text {
+  font-size: $font-size-large;
+  color: $color-text-disabled;
+  font-style: italic;
+  margin-bottom: $spacing-lg;
+}
+
+.pdf-sig-box-pending__divider {
+  height: 1px;
+  background: $color-border-lighter;
+  margin: $spacing-xxl 20px;
+}
+
+.pdf-sig-box-pending__footer {
+  font-size: $font-size-smaller;
+  color: $color-border;
+  font-style: italic;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SIGNATURE BOX - SIGNED
+// ════════════════════════════════════════════════════════════════════════════
+
+.pdf-sig-box-signed {
+  @include border-medium;
+  border-radius: 6px;
+  background: $color-bg;
+  font-family: $font-family-serif;
+  height: 100%;
+}
+
+.pdf-sig-box-signed__header {
+  background: $color-bg-lighter;
+  @include border-header;
+  padding: $spacing-xl $spacing-3xl;
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pdf-sig-box-signed__number {
+  @include flex-cell(28px);
+
+  .number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: $color-border-light;
+    font-size: $font-size-smaller;
+    font-weight: 700;
+    color: $color-text-light;
+    text-align: center;
+    line-height: 22px;
+  }
+}
+
+.pdf-sig-box-signed__label {
+  @include flex-cell(auto, 0 0 0 $spacing-lg);
+  font-size: $font-size-base;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.pdf-sig-box-signed__body {
+  padding: $spacing-xxl $spacing-4xl $spacing-3xl;
+}
+
+.pdf-sig-box-signed__canvas-wrapper {
+  text-align: center;
+  height: 70px;
+  line-height: 70px;
+  margin-bottom: $spacing-xl;
+  background: $color-bg-lightest;
+  @include border-light;
+  border-radius: 4px;
+}
+
+.pdf-sig-box-signed__canvas {
+  max-height: 64px;
+  max-width: 90%;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.pdf-sig-box-signed__divider {
+  height: 1.5px;
+  background: $color-border-light;
+  margin-bottom: $spacing-xl;
+}
+
+.pdf-sig-box-signed__details-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pdf-sig-box-signed__detail-label {
+  font-size: $font-size-smaller;
+  color: $color-text-muted;
+  padding: 0 0 $spacing-sm 0;
+  width: 50px;
+  vertical-align: top;
+}
+
+.pdf-sig-box-signed__detail-value {
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-primary;
+  padding: 0 0 $spacing-sm $spacing-lg;
+  vertical-align: top;
+
+  &--role {
+    font-size: $font-size-smaller;
+    color: $color-text-light;
+    font-weight: normal;
+  }
+
+  &--date {
+    font-size: $font-size-smaller;
+    color: $color-text;
+    font-weight: normal;
+  }
+
+  &--hash {
+    font-size: $font-size-smaller;
+    color: $color-text-very-light;
+    font-family: $font-family-mono;
+    font-weight: normal;
+  }
+}
+
+.pdf-sig-box-signed__verification {
+  margin-top: $spacing-xl;
+  font-size: $font-size-smaller;
+  font-weight: 700;
+  color: $color-success;
+
+  &::before {
+    content: '✓ ';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// RESPONSIVE OVERRIDES
+// ════════════════════════════════════════════════════════════════════════════
+
+@media print {
+  .pdf-root {
+    position: static;
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+  }
+}

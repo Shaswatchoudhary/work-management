@@ -3,31 +3,74 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md" | "lg";
   className?: string;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
+
+const variantsStyle: Record<string, React.CSSProperties> = {
+  primary: {
+    background: "linear-gradient(135deg, #0052cc, #0066ff)",
+    color: "#ffffff",
+    boxShadow: "0 4px 6px -1px rgba(0, 82, 204, 0.1), 0 2px 4px -1px rgba(0, 82, 204, 0.06)",
+  },
+  secondary: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    color: "#ffffff",
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    backdropFilter: "blur(4px)",
+  },
+  ghost: {
+    backgroundColor: "transparent",
+    color: "#ffffff",
+  },
+  danger: {
+    backgroundColor: "rgba(220, 38, 38, 0.8)",
+    color: "#ffffff",
+    borderColor: "rgba(220, 38, 38, 0.35)",
+  },
+  success: {
+    backgroundColor: "rgba(22, 163, 74, 0.8)",
+    color: "#ffffff",
+    borderColor: "rgba(22, 163, 74, 0.35)",
+  },
+  outline: {
+    backgroundColor: "transparent",
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    color: "#ffffff",
+  },
+};
+
+const sizesStyle: Record<string, React.CSSProperties> = {
+  sm: { height: "32px", padding: "0 12px", fontSize: "12px" },
+  md: { height: "36px", padding: "0 16px", fontSize: "14px" },
+  lg: { height: "40px", padding: "0 20px", fontSize: "14px" },
+};
 
 export default function Button({
   variant = "primary",
   size = "md",
   className = "",
   children,
+  style,
   ...props
 }: ButtonProps) {
-  const variants = {
-    primary: "bg-gradient-to-r from-[#0052cc] to-[#0066ff] hover:brightness-110 text-white shadow-md shadow-blue-500/10",
-    secondary: "bg-white/10 hover:bg-white/15 text-white border border-white/10 backdrop-blur-sm",
-    ghost: "bg-transparent hover:bg-white/10 text-white",
-    danger: "bg-red-550/80 hover:bg-red-550/95 text-white border border-red-500/35",
-    success: "bg-emerald-550/80 hover:bg-emerald-550/95 text-white border border-emerald-500/35",
-    outline: "bg-transparent border border-white/20 hover:bg-white/10 text-white",
-  };
-  const sizes = {
-    sm: "h-8 px-3 text-xs",
-    md: "h-9 px-4 text-sm",
-    lg: "h-10 px-5 text-sm",
-  };
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant]} ${sizes[size]} ${className}`}
+      className={className}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        borderRadius: "6px",
+        fontWeight: 600,
+        transition: "all 0.15s ease-in-out",
+        border: "1px solid transparent",
+        cursor: "pointer",
+        boxSizing: "border-box",
+        ...variantsStyle[variant],
+        ...sizesStyle[size],
+        ...style,
+      }}
       {...props}
     >
       {children}

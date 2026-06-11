@@ -102,24 +102,12 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
     notify({ title: `Ticket ${ticket.id} inspection failed — rework`, forRole: "helpdesk" });
   };
 
-  // ── inline style helpers ──
-  const infoBox: React.CSSProperties = {
-    borderRadius: "8px", border: "0.5px solid #EDE9E0",
-    background: "#FAFAF7", padding: "8px 12px",
-  };
-  const sectionLabel: React.CSSProperties = {
-    fontSize: "10px", textTransform: "uppercase" as const,
-    letterSpacing: "0.06em", color: "#AAA", fontWeight: 600, marginBottom: "6px",
-  };
-  const actionBox: React.CSSProperties = {
-    borderRadius: "10px", border: "0.5px solid #EDE9E0",
-    background: "#FAFAF7", padding: "14px",
-  };
-
+  // ── styles ──
+  // Style helpers are now migrated to TicketDetail.scss
   const renderActions = () => {
     if (role === "hr" && ticket.status === "pending_hr") {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="action-inner-wrapper">
           <PinThenDrawSignature
             userId={user!.id} userName={user!.name}
             ticketId={ticket.id} purpose="hr_approval"
@@ -133,7 +121,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
               notify({ title: `Ticket ${ticket.id} approved by HR`, forRole: "admin" });
             }}
           />
-          <div style={{ borderTop: "0.5px solid #EDE9E0", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div className="action-divider">
             <Label>Rejection comment (required to reject)</Label>
             <Textarea value={rejectText} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRejectText(e.target.value)} placeholder="Reason for rejection..." />
             <Button variant="danger" onClick={hrReject}>Reject</Button>
@@ -144,7 +132,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "admin" && ticket.status === "pending_admin") {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="action-inner-wrapper">
           <PinThenDrawSignature
             userId={user!.id} userName={user!.name}
             ticketId={ticket.id} purpose="admin_approval"
@@ -158,7 +146,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
               notify({ title: `Ticket ${ticket.id} approved by Admin`, forRole: "helpdesk" });
             }}
           />
-          <div style={{ borderTop: "0.5px solid #EDE9E0", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div className="action-divider">
             <Label>Rejection comment (required to reject)</Label>
             <Textarea value={rejectText} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRejectText(e.target.value)} placeholder="Reason for rejection..." />
             <Button variant="danger" onClick={adminReject}>Reject</Button>
@@ -169,11 +157,11 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "helpdesk" && (ticket.status === "rejected_hr" || ticket.status === "rejected_admin")) {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "10px 12px", fontSize: "13px", color: "#DC2626" }}>
+        <div className="action-inner-wrapper">
+          <div className="action-alert alert-danger">
             Rejected by {ticket.status === "rejected_hr" ? "HR" : "Admin"}. Edit and resubmit.
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "8px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             <Button onClick={() => setEditOpen(true)}>Edit Ticket</Button>
             <Button variant="secondary" onClick={resubmit}>Resubmit As-Is</Button>
           </div>
@@ -183,7 +171,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "helpdesk" && ticket.status === "work_in_progress") {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div className="action-inner-wrapper">
           {!ticket.assignee ? (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
               <div><Label>Assignee name</Label><Input value={assignName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignName(e.target.value)} /></div>
@@ -191,8 +179,8 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
               <div style={{ gridColumn: "span 2" }}><Button onClick={assign}>Assign Internal Team</Button></div>
             </div>
           ) : (
-            <div style={{ ...infoBox, fontSize: "13px", color: "#333" }}>
-              Assigned to <b>{ticket.assignee.name}</b> <span style={{ color: "#AAA" }}>({ticket.assignee.department})</span>
+            <div className="ticket-info-box">
+              <div className="info-value">Assigned to <b>{ticket.assignee.name}</b> <span style={{ color: "#AAA" }}>({ticket.assignee.department})</span></div>
             </div>
           )}
           <Button variant="success" onClick={markDone} disabled={!ticket.assignee}>Mark Work Done</Button>
@@ -202,7 +190,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "helpdesk" && ticket.status === "inspection_pending") {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div className="action-inner-wrapper">
           <Label>Inspection notes</Label>
           <Textarea value={inspectionNotes} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInspectionNotes(e.target.value)} placeholder="Findings..." />
           <div style={{ display: "flex", gap: "8px" }}>
@@ -218,8 +206,8 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "hr" && ticket.status === "inspection_pending" && ticket.inspection?.passed && !ticket.signatures?.hrInspection) {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ borderRadius: "8px", border: "0.5px solid #FCD34D", background: "#FFFBEB", padding: "10px 12px", fontSize: "12px", color: "#92400E" }}>
+        <div className="action-inner-wrapper">
+          <div className="action-alert alert-warning">
             Inspection passed. Co-sign to confirm. Admin will also sign before payment.
           </div>
           <PinThenDrawSignature
@@ -241,7 +229,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "hr" && ticket.status === "inspection_pending" && ticket.inspection?.passed && ticket.signatures?.hrInspection && !ticket.inspection?.signedByAdmin) {
       return (
-        <div style={{ borderRadius: "8px", border: "0.5px solid #BBF7D0", background: "#F0FDF4", padding: "10px 12px", fontSize: "12px", color: "#16A34A" }}>
+        <div className="action-alert alert-success">
           You have co-signed the inspection. Waiting for Admin to co-sign.
         </div>
       );
@@ -249,14 +237,14 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
     if (role === "admin" && ticket.status === "inspection_pending" && ticket.inspection?.passed && !ticket.signatures?.adminPayment) {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="action-inner-wrapper">
           {!ticket.signatures?.hrInspection ? (
-            <div style={{ borderRadius: "8px", border: "0.5px solid #FCD34D", background: "#FFFBEB", padding: "10px 12px", fontSize: "12px", color: "#92400E" }}>
+            <div className="action-alert alert-warning">
               Waiting for HR to co-sign inspection first.
             </div>
           ) : (
             <>
-              <div style={{ borderRadius: "8px", border: "0.5px solid #BFDBFE", background: "#EFF6FF", padding: "10px 12px", fontSize: "12px", color: "#1E40AF" }}>
+              <div className="action-alert alert-info">
                 HR has co-signed. Your signature will move ticket to Payment Pending.
               </div>
               <PinThenDrawSignature
@@ -282,9 +270,9 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
     if (role === "admin" && ticket.status === "payment_pending") {
       const hasSigned = !!ticket.signatures?.adminPayment;
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ ...infoBox, fontSize: "13px", color: "#333" }}>
-            Amount to release: <b style={{ color: "#16A34A" }}>{fmtMoney(ticket.estimatedCost)}</b>
+        <div className="action-inner-wrapper">
+          <div className="ticket-info-box">
+            <div className="info-value">Amount to release: <b style={{ color: "#16A34A" }}>{fmtMoney(ticket.estimatedCost)}</b></div>
           </div>
           {!hasSigned ? (
             <PinThenDrawSignature
@@ -296,7 +284,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
             />
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ borderRadius: "8px", border: "0.5px solid #BBF7D0", background: "#F0FDF4", padding: "10px 12px", fontSize: "12px", color: "#16A34A" }}>
+              <div className="action-alert alert-success">
                 Payment authorized. Click below to release and close ticket.
               </div>
               <Button
@@ -327,7 +315,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
       <Modal open={!!ticket} onClose={onClose} title={`${ticket.id} — ${ticket.title}`} size="xl">
 
         {/* Top action buttons */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
+        <div className="ticket-detail-actions-bar">
           <Button size="sm" variant={docView ? "primary" : "secondary"} onClick={() => setDocView((v) => !v)}>
             {docView ? "Show Ticket UI" : "Open Requirement Document"}
           </Button>
@@ -339,16 +327,16 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
           </Button>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
+        <div className="ticket-detail-grid">
 
           {/* Left: main content — 2 cols */}
-          <div style={{ gridColumn: "span 2", display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="ticket-detail-main">
             {docView ? (
               <RequirementDoc ticket={ticket} />
             ) : (
               <>
                 {/* Badges */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center" }}>
+                <div className="ticket-detail-badges">
                   <StatusBadge status={ticket.status} />
                   <PriorityBadge priority={ticket.priority} />
                   <Badge>{ticket.category}</Badge>
@@ -358,7 +346,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
                 <StatusTimeline status={ticket.status} />
 
                 {/* Info grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "13px" }}>
+                <div className="ticket-info-grid">
                   {[
                     { label: "Location", value: ticket.location },
                     { label: "Estimated Cost", value: fmtMoney(ticket.estimatedCost) },
@@ -367,29 +355,28 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
                     { label: "Assignee", value: ticket.assignee ? `${ticket.assignee.name} (${ticket.assignee.department})` : "—" },
                     { label: "Inspection", value: ticket.inspection ? (ticket.inspection.passed ? "Passed" : "Failed") : "—" },
                   ].map(({ label, value }) => (
-                    <div key={label} style={infoBox}>
-                      <div style={{ fontSize: "10px", textTransform: "uppercase" as const, letterSpacing: "0.06em", color: "#AAA", fontWeight: 600 }}>{label}</div>
-                      <div style={{ fontSize: "13px", marginTop: "2px", color: "#333" }}>{value}</div>
+                    <div key={label} className="ticket-info-box">
+                      <div className="info-label">{label}</div>
+                      <div className="info-value">{value}</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Description */}
                 <div>
-                  <div style={sectionLabel}>Description</div>
-                  <div style={{ ...infoBox, fontSize: "13px", color: "#444", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+                  <div className="ticket-section-label">Description</div>
+                  <div className="ticket-desc-box">
                     {ticket.description}
                   </div>
                 </div>
 
                 {/* Documents */}
                 <div>
-                  <div style={sectionLabel}>Documents</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  <div className="ticket-section-label">Documents</div>
+                  <div className="ticket-pdfs-list">
                     {ticket.pdfs.length === 0 && <span style={{ fontSize: "12px", color: "#AAA" }}>No PDFs generated yet.</span>}
                     {ticket.pdfs.map((p, i) => (
-                      <a key={i} href={p.dataUrl} download={p.name}
-                        style={{ fontSize: "12px", borderRadius: "7px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "4px 10px", color: "#555", textDecoration: "none" }}>
+                      <a key={i} href={p.dataUrl} download={p.name} className="pdf-link">
                         {p.name}
                       </a>
                     ))}
@@ -398,7 +385,7 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
 
                 {/* Comments */}
                 <div>
-                  <div style={sectionLabel}>Activity &amp; Comments</div>
+                  <div className="ticket-section-label">Activity &amp; Comments</div>
                   <CommentThread ticketId={ticket.id} />
                 </div>
               </>
@@ -406,15 +393,15 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
           </div>
 
           {/* Right: actions + signatures */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div style={actionBox}>
-              <div style={sectionLabel}>Available Actions</div>
+          <div className="ticket-detail-sidebar">
+            <div className="ticket-action-box">
+              <div className="ticket-section-label">Available Actions</div>
               {renderActions()}
             </div>
 
             {ticket.signatures && Object.keys(ticket.signatures).length > 0 && (
-              <div style={actionBox}>
-                <div style={sectionLabel}>Signatures on file</div>
+              <div className="ticket-action-box">
+                <div className="ticket-section-label">Signatures on file</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {ticket.signatures.hrApproval && <SignatureCard number={1} label="HR Approval" accent="#16A34A" block={ticket.signatures.hrApproval} />}
                   {ticket.signatures.adminApproval && <SignatureCard number={2} label="Admin Approval" accent="#2563EB" block={ticket.signatures.adminApproval} />}
@@ -432,28 +419,26 @@ export default function TicketDetail({ ticketId, onClose }: TicketDetailProps) {
   );
 }
 
-
-
 interface SignatureCardProps { number: number; label: string; accent: string; block: SignatureBlock; }
 function SignatureCard({ number, label, accent, block }: SignatureCardProps) {
   return (
-    <div style={{ borderRadius: "8px", border: "0.5px solid #EDE9E0", overflow: "hidden" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px", background: "#FAFAF7", borderBottom: "0.5px solid #EDE9E0" }}>
-        <span style={{ fontSize: "10px", fontWeight: 700, color: accent }}>{number}.</span>
-        <span style={{ fontSize: "10px", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.05em", color: accent }}>{label}</span>
+    <div className="sidebar-signature-card">
+      <div className="sig-card-header">
+        <span className="num" style={{ color: accent }}>{number}.</span>
+        <span className="lbl" style={{ color: accent }}>{label}</span>
       </div>
-      <div style={{ background: "#fff", height: "48px", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px" }}>
-        <img src={block.signatureImage} alt={label} style={{ maxHeight: "40px", maxWidth: "100%", objectFit: "contain" }} />
+      <div className="sig-card-img-wrapper">
+        <img src={block.signatureImage} alt={label} />
       </div>
-      <div style={{ padding: "6px 10px", background: "#FAFAF7" }}>
-        <div style={{ fontSize: "10px", fontWeight: 500, color: "#333" }}>{block.signedBy}</div>
-        <div style={{ fontSize: "9px", color: "#AAA", marginTop: "1px" }}>
+      <div className="sig-card-details">
+        <div className="signer">{block.signedBy}</div>
+        <div className="time">
           {new Date(block.signedAt).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
         </div>
-        <div style={{ fontSize: "9px", fontFamily: "monospace", color: "#CCC", marginTop: "1px" }}>Hash: {block.hash}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "3px" }}>
-          <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16A34A" }} />
-          <span style={{ fontSize: "9px", color: "#16A34A", fontWeight: 600 }}>PIN Verified · Digitally Signed</span>
+        <div className="hash">Hash: {block.hash}</div>
+        <div className="verified-badge">
+          <div className="green-dot" />
+          <span className="lbl-text">PIN Verified · Digitally Signed</span>
         </div>
       </div>
     </div>

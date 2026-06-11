@@ -4,37 +4,15 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { ROLE_HOME } from "../../constants/roles.ts";
 import { Role } from "../../types";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import "./styles/LoginPage.scss"
 
-const C = {
-  bg: "#F7F5F0",
-  card: "#FFFFFF",
-  border: "#EDE9E0",
-  inputBg: "#FAFAF7",
-  amber: "#F59E0B",
-  amberLight: "#FEF3C7",
-  amberText: "#92400E",
-  text: "#1A1A1A",
-  muted: "#AAA",
-  subtle: "#777",
-  error: "#991B1B",
-  errorBg: "#FEF2F2",
-  errorBorder: "#FECACA",
+const ROLE_CONFIG: Record<Role, { label: string; desc: string; iconColor: string }> = {
+  helpdesk: { label: "Help Desk", desc: "Create and track internal requests", iconColor: "#92400E" },
+  hr: { label: "HR", desc: "Review and approve ticket requests", iconColor: "#065F46" },
+  admin: { label: "Admin", desc: "Final approvals, payments and reports", iconColor: "#1E40AF" },
 };
 
 type LoginStep = "credentials" | "confirm";
-
-const ROLE_CONFIG: Record<Role, { label: string; desc: string; color: string; bg: string; border: string }> = {
-  helpdesk: { label: "Help Desk", desc: "Create and track internal requests", color: "#92400E", bg: "#FEF3C7", border: "#FCD34D" },
-  hr: { label: "HR", desc: "Review and approve ticket requests", color: "#065F46", bg: "#D1FAE5", border: "#6EE7B7" },
-  admin: { label: "Admin", desc: "Final approvals, payments and reports", color: "#1E40AF", bg: "#DBEAFE", border: "#93C5FD" },
-};
-
-const inputStyle: React.CSSProperties = {
-  width: "100%", height: "40px",
-  border: `0.5px solid ${C.border}`, borderRadius: "9px",
-  padding: "0 12px", fontSize: "13px", color: "#222",
-  background: C.inputBg, outline: "none", boxSizing: "border-box",
-};
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -50,7 +28,7 @@ export default function LoginPage() {
   const [detectedRole, setDetectedRole] = useState<Role | null>(null);
   const [detectedName, setDetectedName] = useState("");
 
-  // Step 1: sirf verify karo, store touch nahi hoga
+  // Step 1 — verify only, don't touch store yet
   const handleCredentials = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -69,27 +47,6 @@ export default function LoginPage() {
           break;
         }
       }
-    //   const register = async ()=> {
-    //     try {
-    //       const response = await fetch(
-    //   "http://localhost:8080/api/auth/register",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ email, password }),
-    //   }
-    // );
-    // const data  = await response.json();
-    // console.log("data", data);
-
-    //     } catch (error) {
-    //       console.error("Login failed", error);
-    //       alert("Login failed");
-          
-    //     }
-    //   }
 
       setLoading(false);
       if (!matched) { setErr("Invalid email or password."); return; }
@@ -100,7 +57,7 @@ export default function LoginPage() {
     [verifyCredentials, email, password],
   );
 
-  // Step 2: ab store mein set karo aur navigate karo
+  // Step 2 — set store and navigate
   const handleConfirm = useCallback(() => {
     if (!detectedRole) return;
     login(email.trim(), password, detectedRole);
@@ -115,55 +72,57 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 16px", fontFamily: "var(--font-sans, system-ui, sans-serif)" }}>
-      <div style={{ width: "100%", maxWidth: "380px" }}>
+    <div className="login-page">
+      <div className="login-container">
 
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px", justifyContent: "center" }}>
-          <div style={{ width: "32px", height: "32px", background: C.amber, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+        <div className="login-logo">
+          <div className="login-logo__icon">
+            {/*  */}
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="2" y="7" width="20" height="14" rx="2" />
               <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
             </svg>
           </div>
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#333" }}>Work Management</span>
+          <span className="login-logo__text">Work Management</span>
         </div>
 
         {/* Card */}
-        <div style={{ background: C.card, borderRadius: "20px", padding: "36px 32px", border: `0.5px solid ${C.border}`, boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
+        <div className="login-card">
 
-          {/* STEP 1: Credentials */}
+          {/* ── STEP 1: Credentials ── */}
           {step === "credentials" && (
             <>
-              <div style={{ fontSize: "22px", fontWeight: 500, color: C.text, marginBottom: "4px" }}>Welcome back</div>
-              <div style={{ fontSize: "13px", color: C.muted, marginBottom: "28px" }}>
+              <h1 className="login-title">Welcome back</h1>
+              <p className="login-subtitle">
                 Don't have an account?{" "}
-                <Link to="/register" style={{ color: C.amber, fontWeight: 500, textDecoration: "none" }}>Register</Link>
-              </div>
+                <Link to="/register">Register</Link>
+              </p>
 
-              <form onSubmit={handleCredentials} noValidate>
+              <form className="login-form" onSubmit={handleCredentials} noValidate>
 
                 {/* Email */}
-                <div style={{ marginBottom: "16px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: 500, color: C.subtle, marginBottom: "5px" }}>Email</div>
+                <div className="login-field">
+                  <label className="login-field__label" htmlFor="login-email">Email</label>
                   <input
-                    style={inputStyle}
+                    id="login-email"
+                    className="login-input"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@company.com"
                     autoComplete="email"
                     autoFocus
-                  
                   />
                 </div>
 
                 {/* Password */}
-                <div style={{ marginBottom: "10px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: 500, color: C.subtle, marginBottom: "5px" }}>Password</div>
-                  <div style={{ position: "relative" }}>
+                <div className="login-field">
+                  <label className="login-field__label" htmlFor="login-password">Password</label>
+                  <div className="login-field__wrapper">
                     <input
-                      style={{ ...inputStyle, paddingRight: "40px" }}
+                      id="login-password"
+                      className="login-input login-input--password"
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -172,9 +131,9 @@ export default function LoginPage() {
                     />
                     <button
                       type="button"
+                      className="login-eye-btn"
                       onClick={() => setShowPassword((p) => !p)}
                       aria-label={showPassword ? "Hide password" : "Show password"}
-                      style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: C.muted, padding: 0, display: "flex" }}
                     >
                       {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
@@ -182,22 +141,20 @@ export default function LoginPage() {
                 </div>
 
                 {/* Forgot */}
-                <div style={{ textAlign: "right", marginBottom: "22px" }}>
-                  <a href="#" style={{ fontSize: "11px", color: C.muted, textDecoration: "none" }}>Forgot password?</a>
+                <div className="login-forgot">
+                  <a href="#">Forgot password?</a>
                 </div>
 
                 {/* Error */}
                 {err && (
-                  <div role="alert" style={{ background: C.errorBg, border: `0.5px solid ${C.errorBorder}`, borderRadius: "8px", padding: "10px 12px", fontSize: "12px", color: C.error, marginBottom: "16px", textAlign: "center" }}>
-                    {err}
-                  </div>
+                  <div role="alert" className="login-error">{err}</div>
                 )}
 
                 {/* Submit */}
                 <button
                   type="submit"
+                  className="login-btn-primary"
                   disabled={loading}
-                  style={{ width: "100%", height: "42px", background: loading ? "#FCD97A" : C.amber, border: "none", borderRadius: "10px", color: "#fff", fontSize: "14px", fontWeight: 500, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s" }}
                 >
                   {loading ? "Checking..." : "Continue"}
                 </button>
@@ -205,48 +162,57 @@ export default function LoginPage() {
             </>
           )}
 
-          {/* STEP 2: Confirm Role */}
+          {/* ── STEP 2: Confirm Role ── */}
           {step === "confirm" && detectedRole && (
             <>
-              <div style={{ fontSize: "22px", fontWeight: 500, color: C.text, marginBottom: "4px" }}>Confirm your role</div>
-              <div style={{ fontSize: "13px", color: C.muted, marginBottom: "24px" }}>We found your account. Please confirm before continuing.</div>
+              <h1 className="login-title">Confirm your role</h1>
+              <p className="login-confirm-subtitle">
+                We found your account. Please confirm before continuing.
+              </p>
 
-              {/* Account card */}
-              <div style={{ background: C.bg, border: `0.5px solid ${C.border}`, borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
-                <div style={{ fontSize: "11px", color: C.muted, marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Signed in as</div>
-                <div style={{ fontSize: "14px", fontWeight: 500, color: "#333", marginBottom: "16px" }}>{email}</div>
+              <div className="login-account-card">
+                <div className="login-account-label">Signed in as</div>
+                <div className="login-account-email">{email}</div>
 
-                <div style={{ fontSize: "11px", color: C.muted, marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your role</div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: ROLE_CONFIG[detectedRole].bg, border: `0.5px solid ${ROLE_CONFIG[detectedRole].border}`, borderRadius: "10px", padding: "10px 14px", width: "100%", boxSizing: "border-box" }}>
-                  <CheckCircle2 size={18} color={ROLE_CONFIG[detectedRole].color} />
-                  <div>
-                    <div style={{ fontSize: "13px", fontWeight: 600, color: ROLE_CONFIG[detectedRole].color }}>{ROLE_CONFIG[detectedRole].label}</div>
-                    <div style={{ fontSize: "11px", color: ROLE_CONFIG[detectedRole].color, opacity: 0.7, marginTop: "1px" }}>{ROLE_CONFIG[detectedRole].desc}</div>
+                <div className="login-role-label">Your role</div>
+                <div className={`login-role-badge login-role-badge--${detectedRole}`}>
+                  <CheckCircle2
+                    size={18}
+                    color={ROLE_CONFIG[detectedRole].iconColor}
+                  />
+                  <div className="login-role-badge__info">
+                    <span className="login-role-badge__name">
+                      {ROLE_CONFIG[detectedRole].label}
+                    </span>
+                    <span className="login-role-badge__desc">
+                      {ROLE_CONFIG[detectedRole].desc}
+                    </span>
                   </div>
                 </div>
 
                 {detectedName && (
-                  <div style={{ fontSize: "12px", color: C.muted, marginTop: "10px" }}>
-                    Hello, <span style={{ color: "#555", fontWeight: 500 }}>{detectedName}</span>!
+                  <div className="login-hello">
+                    Hello, <span>{detectedName}</span>!
                   </div>
                 )}
               </div>
 
               <button
+                className="login-btn-primary login-btn-confirm"
                 onClick={handleConfirm}
-                style={{ width: "100%", height: "42px", background: C.amber, border: "none", borderRadius: "10px", color: "#fff", fontSize: "14px", fontWeight: 500, cursor: "pointer", marginBottom: "10px" }}
               >
                 Go to {ROLE_CONFIG[detectedRole].label} Dashboard →
               </button>
 
               <button
+                className="login-btn-secondary"
                 onClick={handleBack}
-                style={{ width: "100%", height: "38px", background: "none", border: `0.5px solid ${C.border}`, borderRadius: "10px", color: C.muted, fontSize: "13px", cursor: "pointer" }}
               >
                 ← Back
               </button>
             </>
           )}
+
         </div>
       </div>
     </div>

@@ -1,0 +1,79 @@
+.status-timeline-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  box-sizing: border-box;
+
+  .step-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+
+    .step-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 500;
+      border: 0.5px solid #ede9e0;
+      background: #fafaf7;
+      color: #aaa;
+      box-sizing: border-box;
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ddd;
+        flex-shrink: 0;
+      }
+
+      &.is-active {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: #16a34a;
+
+        .dot {
+          background: #16a34a;
+        }
+      }
+
+      &.is-current {
+        border-color: #f59e0b;
+        background: #fffbeb;
+        color: #92400e;
+
+        .dot {
+          background: #f59e0b;
+        }
+      }
+    }
+
+    .connecting-line {
+      height: 1px;
+      width: 12px;
+      background: #ede9e0;
+
+      &.is-passed {
+        background: #bbf7d0;
+      }
+    }
+  }
+
+  .rejected-badge {
+    margin-left: 8px;
+    border-radius: 6px;
+    border: 0.5px solid #fecaca;
+    background: #fef2f2;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #dc2626;
+    flex-shrink: 0;
+  }
+}

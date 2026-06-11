@@ -1,6 +1,8 @@
+// src/features/signature/PinThenDrawSignature.tsx
 import { useState, useCallback, useRef, useEffect } from "react";
 import { verifyPin, createSignatureBlock } from "./signatureEngine";
-import { SignatureBlock, SignaturePurpose } from "./SignatureBlock";
+import type { SignatureBlock, SignaturePurpose } from "./types";
+import "./styles/PinThenDrawSignature.scss";
 
 interface PinThenDrawSignatureProps {
   userId: string;
@@ -21,46 +23,44 @@ const PURPOSE_LABELS: Record<SignaturePurpose, string> = {
 
 // ── Locked display — sign ho gaya, kuch edit nahi hoga ────────────────────
 const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
-  <div style={{ borderRadius: "10px", border: "0.5px solid #BBF7D0", background: "#F0FDF4", padding: "16px", pointerEvents: "none", userSelect: "none" }}>
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
-      <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#16A34A", fontWeight: 700 }}>
+  <div className="signature-locked-display">
+    <div className="header-row">
+      <span className="purpose-tag">
         {PURPOSE_LABELS[sig.purpose]}
       </span>
-      <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "9px", background: "#BBF7D0", color: "#16A34A", padding: "4px 8px", borderRadius: "20px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <span className="badge-locked">
         ✓ Verified & Locked
       </span>
     </div>
 
     {/* Drawn signature image */}
-    <div style={{ background: "#fff", borderRadius: "8px", padding: "8px", border: "0.5px solid #EDE9E0", marginBottom: "12px" }}>
+    <div className="signature-img-box">
       {sig.signatureImage ? (
         <img
           src={sig.signatureImage}
           alt="Signature"
-          style={{ width: "100%", height: "80px", objectFit: "contain" }}
+          className="signature-img"
         />
       ) : (
-        <div
-          style={{ color: "#333", textAlign: "center", padding: "16px 0", fontFamily: "'Georgia', serif", fontStyle: "italic", fontSize: "24px" }}
-        >
+        <div className="signature-fallback-name">
           {sig.signedBy}
         </div>
       )}
     </div>
 
     {/* All details — plain spans only, no inputs */}
-    <div style={{ background: "#fff", borderRadius: "8px", padding: "12px", border: "0.5px solid #EDE9E0", display: "flex", flexDirection: "column", gap: "8px", fontSize: "11px" }}>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Signed by</span>
-        <span style={{ color: "#333", fontWeight: 600 }}>{sig.signedBy}</span>
+    <div className="details-box">
+      <div className="detail-row">
+        <span className="field-label">Signed by</span>
+        <span className="field-value">{sig.signedBy}</span>
       </div>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Role</span>
-        <span style={{ color: "#333", fontWeight: 600 }}>{sig.role}</span>
+      <div className="detail-row">
+        <span className="field-label">Role</span>
+        <span className="field-value">{sig.role}</span>
       </div>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Date & Time</span>
-        <span style={{ color: "#333", fontWeight: 600, fontFamily: "monospace", fontSize: "10px" }}>
+      <div className="detail-row">
+        <span className="field-label">Date & Time</span>
+        <span className="field-value" style={{ fontFamily: "monospace", fontSize: "10px" }}>
           {new Date(sig.signedAt).toLocaleString("en-IN", {
             day: "2-digit", month: "short", year: "numeric",
             hour: "2-digit", minute: "2-digit", second: "2-digit",
@@ -68,21 +68,21 @@ const SignedDisplay = ({ sig }: { sig: SignatureBlock }) => (
           })}
         </span>
       </div>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Ticket ID</span>
-        <span style={{ color: "#333", fontWeight: 600 }}>{sig.ticketId}</span>
+      <div className="detail-row">
+        <span className="field-label">Ticket ID</span>
+        <span className="field-value">{sig.ticketId}</span>
       </div>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <span style={{ color: "#AAA", width: "96px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "9px", paddingTop: "2px" }}>Hash</span>
-        <span style={{ color: "#CCC", fontFamily: "monospace", fontSize: "9px", wordBreak: "break-all" }}>{sig.hash}</span>
+      <div className="detail-row">
+        <span className="field-label">Hash</span>
+        <span className="field-value-hash">{sig.hash}</span>
       </div>
     </div>
 
-    <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
-      <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#16A34A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <span style={{ color: "#fff", fontSize: "7px", fontWeight: 700, lineHeight: 1 }}>✓</span>
+    <div className="verified-badge-footer">
+      <div className="dot-check">
+        <span className="check-char">✓</span>
       </div>
-      <span style={{ fontSize: "9px", color: "#16A34A", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <span className="badge-text">
         PIN Verified · Digitally Signed · Non-editable
       </span>
     </div>
@@ -247,16 +247,16 @@ export default function PinThenDrawSignature({
   // ── Render: draw mode ──────────────────────────────────────────────────
   if (mode === "draw") {
     return (
-      <div style={{ borderRadius: "10px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div>
-          <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#AAA", fontWeight: 600, marginBottom: "4px" }}>
+      <div className="signature-verify-container draw-mode">
+        <div className="section-header">
+          <div className="purpose-title">
             {PURPOSE_LABELS[purpose]}
           </div>
-          <p style={{ fontSize: "13px", color: "#555" }}>PIN verified. Now draw your signature below.</p>
+          <p className="instructions">PIN verified. Now draw your signature below.</p>
         </div>
 
         {/* Canvas — white background, black ink */}
-        <div style={{ borderRadius: "10px", overflow: "hidden", border: "0.5px solid #EDE9E0", background: "#fff" }}>
+        <div className="canvas-wrapper">
           <canvas
             ref={canvasRef}
             width={560}
@@ -268,30 +268,32 @@ export default function PinThenDrawSignature({
             onTouchStart={startDrawing}
             onTouchMove={draw}
             onTouchEnd={stopDrawing}
-            style={{ width: "100%", height: "160px", cursor: "crosshair", touchAction: "none", display: "block" }}
+            className="signature-canvas"
           />
         </div>
 
-        <p style={{ fontSize: "10px", color: "#AAA", textAlign: "center" }}>
+        <p className="canvas-help-text">
           Draw inside the white box above
         </p>
 
         {error && (
-          <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "8px 12px", fontSize: "12px", color: "#DC2626", textAlign: "center" }}>
+          <div className="error-block">
             {error}
           </div>
         )}
 
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div className="button-row">
           <button
             onClick={clearCanvas}
-            style={{ flex: 1, padding: "10px 14px", background: "#fff", border: "0.5px solid #EDE9E0", color: "#555", fontSize: "13px", fontWeight: 500, borderRadius: "10px", cursor: "pointer", transition: "background 0.15s" }}
+            className="btn-clear"
+            type="button"
           >
             Clear
           </button>
           <button
             onClick={saveSignature}
-            style={{ flex: 1, padding: "10px 14px", background: "#16A34A", border: "none", color: "#fff", fontSize: "13px", fontWeight: 600, borderRadius: "10px", cursor: "pointer", transition: "background 0.15s" }}
+            className="btn-save"
+            type="button"
           >
             Save Signature
           </button>
@@ -302,28 +304,20 @@ export default function PinThenDrawSignature({
 
   // ── Render: idle mode — PIN entry ──────────────────────────────────────
   return (
-    <div style={{ borderRadius: "10px", border: "0.5px solid #EDE9E0", background: "#FAFAF7", padding: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
-      <div>
-        <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em", color: "#AAA", fontWeight: 600, marginBottom: "4px" }}>
+    <div className="signature-verify-container">
+      <div className="section-header">
+        <div className="purpose-title">
           {PURPOSE_LABELS[purpose]}
         </div>
-        <p style={{ fontSize: "13px", color: "#555" }}>{label} — enter your 4-digit PIN to unlock signature.</p>
+        <p className="instructions">{label} — enter your 4-digit PIN to unlock signature.</p>
       </div>
 
       {/* 4 dot indicators */}
-      <div style={{ display: "flex", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
+      <div className="pin-dots-list">
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
-            style={{
-              width: "48px", height: "48px", borderRadius: "10px", border: "2px solid",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "20px", fontWeight: 700, transition: "all 0.15s",
-              borderColor: pin.length > i ? "#F59E0B" : "#EDE9E0",
-              background: pin.length > i ? "#FFFBEB" : "#fff",
-              color: pin.length > i ? "#F59E0B" : "transparent",
-              transform: pin.length > i ? "scale(1.05)" : "scale(1)",
-            }}
+            className={`dot-box ${pin.length > i ? "active" : ""}`}
           >
             {pin.length > i ? "●" : ""}
           </div>
@@ -343,46 +337,33 @@ export default function PinThenDrawSignature({
         onKeyDown={(e) => e.key === "Enter" && handleVerify()}
         disabled={locked}
         placeholder="••••"
-        style={{
-          width: "100%", padding: "10px 14px",
-          background: "#fff", border: "0.5px solid #EDE9E0", borderRadius: "10px",
-          color: "#333", textAlign: "center", fontFamily: "monospace",
-          fontSize: "24px", letterSpacing: "0.5em", outline: "none",
-          opacity: locked ? 0.4 : 1, cursor: locked ? "not-allowed" : "text",
-        }}
+        className="pin-input"
         autoFocus
       />
 
       {error && (
-        <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "8px 12px", fontSize: "12px", color: "#DC2626", textAlign: "center" }}>
+        <div className="error-block">
           {error}
         </div>
       )}
 
       {locked && (
-        <div style={{ borderRadius: "8px", border: "0.5px solid #FECACA", background: "#FEF2F2", padding: "10px 12px", textAlign: "center" }}>
-          <div style={{ fontSize: "13px", fontWeight: 600, color: "#DC2626" }}>🔒 Locked</div>
-          <div style={{ fontSize: "11px", color: "#DC2626", marginTop: "4px", opacity: 0.8 }}>Contact admin to reset.</div>
+        <div className="locked-block">
+          <div className="title">🔒 Locked</div>
+          <div className="subtitle">Contact admin to reset.</div>
         </div>
       )}
 
       <button
         onClick={handleVerify}
         disabled={pin.length !== 4 || locked || loading}
-        style={{
-          width: "100%", padding: "10px 14px",
-          background: pin.length !== 4 || locked || loading ? "#FCD97A" : "#F59E0B",
-          border: "none", borderRadius: "10px",
-          color: "#fff", fontSize: "13px", fontWeight: 600,
-          opacity: pin.length !== 4 || locked || loading ? 0.5 : 1,
-          cursor: pin.length !== 4 || locked || loading ? "not-allowed" : "pointer",
-          transition: "background 0.15s",
-        }}
+        className="action-btn-full"
+        type="button"
       >
         {loading ? "Verifying..." : "Verify PIN"}
       </button>
 
-      <p style={{ fontSize: "10px", color: "#AAA", textAlign: "center" }}>
+      <p className="caution-warning">
         ⚠️ This signature is legally binding. Do not share your PIN.
       </p>
     </div>

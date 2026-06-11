@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import { Ticket, SafeUser } from "../../types/index.ts";
 import { fmtMoney } from "../../utils/dateFormatter.ts";
 import { STATUS_LABEL } from "../../constants/ticketStatus.ts";
-
+import "./styles/pdfGenerator.scss"
 export interface SignatureBlock {
   label: string;
   name: string;
@@ -77,7 +77,7 @@ function injectSafeColorVars(): HTMLStyleElement {
   const style = document.createElement("style");
   style.id = "pdf-color-override";
   style.textContent = `
-    #pdf-root, #pdf-root * { color-scheme: light !important; }
+    .pdf-root, .pdf-root * { color-scheme: light !important; }
     :root, [data-theme], .dark, [class*="dark"] {
       --background: #ffffff !important;
       --foreground: #111111 !important;
@@ -102,17 +102,17 @@ const html2canvasOptions = () => ({
 
 // ── Pending signature box ──────────────────────────────────────────────
 const buildPendingBox = (index: number, label: string, color: string): string => `
-<div style="border:1.5px solid #cccccc;border-radius:6px;background:#ffffff;font-family:Georgia,serif;height:100%;">
-  <div style="background:#f5f5f5;border-bottom:1.5px solid #dddddd;padding:10px 14px;display:table;width:100%;box-sizing:border-box;">
-    <div style="display:table-cell;vertical-align:middle;width:28px;">
-      <div style="width:22px;height:22px;border-radius:50%;background:#dddddd;font-size:11px;font-weight:700;color:#444;text-align:center;line-height:22px;">${index + 1}</div>
+<div class="pdf-sig-box-pending">
+  <div class="pdf-sig-box-pending__header">
+    <div class="pdf-sig-box-pending__number">
+      <div class="number">${index + 1}</div>
     </div>
-    <div style="display:table-cell;vertical-align:middle;font-size:12px;font-weight:700;color:${color};letter-spacing:0.4px;padding-left:8px;">${label}</div>
+    <div class="pdf-sig-box-pending__label" style="color: ${color};">${label}</div>
   </div>
-  <div style="padding:32px 14px;text-align:center;">
-    <div style="font-size:13px;color:#bbbbbb;font-style:italic;margin-bottom:8px;">Pending signature</div>
-    <div style="height:1px;background:#eeeeee;margin:12px 20px;"></div>
-    <div style="font-size:11px;color:#cccccc;font-style:italic;">Not yet signed</div>
+  <div class="pdf-sig-box-pending__body">
+    <div class="pdf-sig-box-pending__text">Pending signature</div>
+    <div class="pdf-sig-box-pending__divider"></div>
+    <div class="pdf-sig-box-pending__footer">Not yet signed</div>
   </div>
 </div>`;
 
@@ -120,39 +120,37 @@ const buildPendingBox = (index: number, label: string, color: string): string =>
 const buildSignedBox = (sig: SignatureBlock, index: number, label: string, color: string): string => {
   const shortHash = sig.hash.length > 12 ? sig.hash.slice(0, 12) : sig.hash;
   return `
-<div style="border:1.5px solid #cccccc;border-radius:6px;background:#ffffff;font-family:Georgia,serif;height:100%;">
-  <div style="background:#f5f5f5;border-bottom:1.5px solid #dddddd;padding:10px 14px;display:table;width:100%;box-sizing:border-box;">
-    <div style="display:table-cell;vertical-align:middle;width:28px;">
-      <div style="width:22px;height:22px;border-radius:50%;background:#dddddd;font-size:11px;font-weight:700;color:#444;text-align:center;line-height:22px;">${index + 1}</div>
+<div class="pdf-sig-box-signed">
+  <div class="pdf-sig-box-signed__header">
+    <div class="pdf-sig-box-signed__number">
+      <div class="number">${index + 1}</div>
     </div>
-    <div style="display:table-cell;vertical-align:middle;font-size:12px;font-weight:700;color:${color};letter-spacing:0.4px;padding-left:8px;">${label}</div>
+    <div class="pdf-sig-box-signed__label" style="color: ${color};">${label}</div>
   </div>
-  <div style="padding:12px 16px 14px;">
-    <div style="text-align:center;height:70px;line-height:70px;margin-bottom:10px;background:#fafafa;border:1px solid #eeeeee;border-radius:4px;">
-      <img src="${sig.canvasPNG}" style="max-height:64px;max-width:90%;vertical-align:middle;display:inline-block;" />
+  <div class="pdf-sig-box-signed__body">
+    <div class="pdf-sig-box-signed__canvas-wrapper">
+      <img src="${sig.canvasPNG}" class="pdf-sig-box-signed__canvas" />
     </div>
-    <div style="height:1.5px;background:#dddddd;margin-bottom:10px;"></div>
-    <table style="width:100%;border-collapse:collapse;">
+    <div class="pdf-sig-box-signed__divider"></div>
+    <table class="pdf-sig-box-signed__details-table">
       <tr>
-        <td style="font-size:11px;color:#888;padding:0 0 4px 0;width:50px;vertical-align:top;">Name:</td>
-        <td style="font-size:12px;font-weight:700;color:#111;padding:0 0 4px 4px;vertical-align:top;">${safe(sig.name)}</td>
+        <td class="pdf-sig-box-signed__detail-label">Name:</td>
+        <td class="pdf-sig-box-signed__detail-value">${safe(sig.name)}</td>
       </tr>
       <tr>
-        <td style="font-size:11px;color:#888;padding:0 0 4px 0;vertical-align:top;">Role:</td>
-        <td style="font-size:11px;color:#444;padding:0 0 4px 4px;vertical-align:top;">${safe(sig.role)}</td>
+        <td class="pdf-sig-box-signed__detail-label">Role:</td>
+        <td class="pdf-sig-box-signed__detail-value pdf-sig-box-signed__detail-value--role">${safe(sig.role)}</td>
       </tr>
       <tr>
-        <td style="font-size:11px;color:#888;padding:0 0 4px 0;vertical-align:top;">Signed:</td>
-        <td style="font-size:11px;color:#333;padding:0 0 4px 4px;vertical-align:top;">${safe(fmt(sig.signedAt))}</td>
+        <td class="pdf-sig-box-signed__detail-label">Signed:</td>
+        <td class="pdf-sig-box-signed__detail-value pdf-sig-box-signed__detail-value--date">${safe(fmt(sig.signedAt))}</td>
       </tr>
       <tr>
-        <td style="font-size:10px;color:#aaa;padding:0;vertical-align:top;">Hash:</td>
-        <td style="font-size:10px;color:#aaa;font-family:'Courier New',monospace;padding:0 0 0 4px;vertical-align:top;">${safe(shortHash)}</td>
+        <td class="pdf-sig-box-signed__detail-label">Hash:</td>
+        <td class="pdf-sig-box-signed__detail-value pdf-sig-box-signed__detail-value--hash">${safe(shortHash)}</td>
       </tr>
     </table>
-    <div style="margin-top:10px;">
-      <span style="font-size:11px;font-weight:700;color:#16a34a;">&#10003; PIN VERIFIED &middot; DIGITALLY SIGNED</span>
-    </div>
+    <div class="pdf-sig-box-signed__verification">PIN VERIFIED &middot; DIGITALLY SIGNED</div>
   </div>
 </div>`;
 };
@@ -185,8 +183,8 @@ const buildDocumentHTML = (ticket: TicketData): string => {
 
   const detailRowsHTML = detailRows.map(([label, value]) => `
 <tr>
-  <td style="padding:7px 12px;font-size:12px;font-weight:700;color:#111;border:1px solid #cccccc;width:150px;background:#f9f9f9;vertical-align:top;">${safe(label)}</td>
-  <td style="padding:7px 12px;font-size:12px;color:#222;border:1px solid #cccccc;background:#ffffff;vertical-align:top;word-break:break-word;">${safe(value)}</td>
+  <td class="pdf-details-label">${safe(label)}</td>
+  <td class="pdf-details-value">${safe(value)}</td>
 </tr>`).join("");
 
   const sigBoxes = sigBlocks.map((block, idx) =>
@@ -197,12 +195,12 @@ const buildDocumentHTML = (ticket: TicketData): string => {
 
   const sigRowsHTML = `
 <tr>
-  <td style="width:50%;padding:0 6px 10px 0;vertical-align:top;">${sigBoxes[0]}</td>
-  <td style="width:50%;padding:0 0 10px 6px;vertical-align:top;">${sigBoxes[1]}</td>
+  <td class="pdf-signature-cell-left">${sigBoxes[0]}</td>
+  <td class="pdf-signature-cell-right">${sigBoxes[1]}</td>
 </tr>
 <tr>
-  <td style="width:50%;padding:0 6px 0 0;vertical-align:top;">${sigBoxes[2]}</td>
-  <td style="width:50%;padding:0 0 0 6px;vertical-align:top;">${sigBoxes[3]}</td>
+  <td class="pdf-signature-cell-bottom-left">${sigBoxes[2]}</td>
+  <td class="pdf-signature-cell-bottom-right">${sigBoxes[3]}</td>
 </tr>`;
 
   const generatedDate = new Date().toLocaleDateString("en-IN", {
@@ -210,45 +208,39 @@ const buildDocumentHTML = (ticket: TicketData): string => {
   });
 
   return `
-<div id="pdf-root" style="width:794px;min-height:1117px;background:#ffffff;color:#111111;font-family:Georgia,'Times New Roman',serif;box-sizing:border-box;padding:0px 12px 10px 12px;display:flex;flex-direction:column;">
-
-  <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+<div class="pdf-root">
+  <table class="pdf-header-table">
     <tr>
-      <td style="vertical-align:bottom;padding:0;">
-        <div style="font-size:10px;letter-spacing:0.2em;color:#666;margin-bottom:3px;text-transform:uppercase;">Work Management</div>
-        <div style="font-size:26px;font-weight:700;color:#111;line-height:1.15;">Requirement Document</div>
+      <td class="pdf-header-left">
+        <div class="pdf-header-label">Work Management</div>
+        <div class="pdf-header-title">Requirement Document</div>
       </td>
-      <td style="vertical-align:top;text-align:right;padding:0;padding-top:4px;">
-        <div style="font-size:12px;line-height:1.8;color:#444;">
-          Ref: <strong>${safe(ticket.id)}</strong><br>
-          Date: ${safe(generatedDate)}<br>
-          Status: ${safe(ticket.status)}
-        </div>
+      <td class="pdf-header-right">
+        Ref: <strong>${safe(ticket.id)}</strong><br>
+        Date: ${safe(generatedDate)}<br>
+        Status: ${safe(ticket.status)}
       </td>
     </tr>
   </table>
 
-  <div style="height:3px;background:#111111;margin-bottom:14px;"></div>
+  <div class="pdf-divider"></div>
 
-  <div style="font-size:18px;font-weight:700;color:#111;margin-bottom:14px;word-break:break-word;">${safe(ticket.title)}</div>
+  <div class="pdf-subtitle">${safe(ticket.title)}</div>
 
-  <table style="width:100%;border-collapse:collapse;margin-bottom:16px;border:1px solid #cccccc;">
+  <table class="pdf-details-table">
     ${detailRowsHTML}
   </table>
 
-  <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:5px;">Description</div>
-  <div style="border:1px solid #cccccc;border-radius:4px;padding:10px 14px;font-size:13px;color:#222;line-height:1.6;white-space:pre-wrap;word-break:break-word;margin-bottom:18px;min-height:60px;">${safe(ticket.description || "—")}</div>
+  <div class="pdf-description-label">Description</div>
+  <div class="pdf-description-box">${safe(ticket.description || "—")}</div>
 
-  <div style="height:3px;background:#111111;margin-bottom:14px;"></div>
+  <div class="pdf-divider"></div>
 
-  <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:12px;">Authorized Signatures</div>
+  <div class="pdf-signatures-label">Authorized Signatures</div>
 
-  <table style="width:100%;border-collapse:collapse;flex:1;">
+  <table class="pdf-signatures-table">
     ${sigRowsHTML}
   </table>
-
- 
-
 </div>`;
 };
 
@@ -292,7 +284,7 @@ async function renderToDataUrl(data: TicketData, onStatus?: StatusCallback): Pro
     document.body.appendChild(hiddenWrapper);
     await document.fonts.ready;
 
-    const pdfRoot = hiddenWrapper.querySelector("#pdf-root") as HTMLElement;
+    const pdfRoot = hiddenWrapper.querySelector(".pdf-root") as HTMLElement;
     if (!pdfRoot) throw new Error("pdf-root not found");
 
     onStatus?.("Rendering document...", "processing");
@@ -350,7 +342,7 @@ export function ticketToTicketData(ticket: Ticket, user?: SafeUser): TicketData 
       signedAt: s.signedAt,
       purpose: s.purpose,
       hash: s.hash,
-      canvasPNG: s.signatureImage,
+      canvasPNG: s.signatureImage || "",
       matched: true,
       confidence: 100,
     };

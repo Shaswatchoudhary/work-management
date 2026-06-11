@@ -1,0 +1,268 @@
+/* TicketDetail.scss */
+
+.ticket-detail-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.ticket-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.ticket-detail-main {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    grid-column: span 2;
+  }
+}
+
+.ticket-detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.ticket-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.ticket-info-box {
+  border-radius: 8px;
+  border: 0.5px solid #ede9e0;
+  background: #fafaf7;
+  padding: 8px 12px;
+  box-sizing: border-box;
+
+  .info-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #aaa;
+    font-weight: 600;
+  }
+
+  .info-value {
+    font-size: 13px;
+    margin-top: 2px;
+    color: #333;
+  }
+}
+
+.ticket-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #aaa;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.ticket-desc-box {
+  border-radius: 8px;
+  border: 0.5px solid #ede9e0;
+  background: #fafaf7;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #444;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.ticket-pdfs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  box-sizing: border-box;
+
+  .pdf-link {
+    font-size: 12px;
+    border-radius: 7px;
+    border: 0.5px solid #ede9e0;
+    background: #fafaf7;
+    padding: 4px 10px;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #f5f3ee;
+      border-color: #aaa;
+      color: #333;
+    }
+  }
+}
+
+.ticket-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.ticket-action-box {
+  border-radius: 10px;
+  border: 0.5px solid #ede9e0;
+  background: #fafaf7;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.action-inner-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.action-divider {
+  border-top: 0.5px solid #ede9e0;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.action-alert {
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  box-sizing: border-box;
+
+  &.alert-warning {
+    border: 0.5px solid #fcd34d;
+    background: #fffbeb;
+    color: #92400e;
+  }
+
+  &.alert-success {
+    border: 0.5px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+
+  &.alert-danger {
+    border: 0.5px solid #fecaca;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 13px;
+  }
+
+  &.alert-info {
+    border: 0.5px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+  }
+}
+
+.sidebar-signature-card {
+  border-radius: 8px;
+  border: 0.5px solid #ede9e0;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  .sig-card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #fafaf7;
+    border-bottom: 0.5px solid #ede9e0;
+    box-sizing: border-box;
+
+    .num {
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .lbl {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .sig-card-img-wrapper {
+    background: #fff;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    box-sizing: border-box;
+
+    img {
+      max-height: 40px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .sig-card-details {
+    padding: 6px 10px;
+    background: #fafaf7;
+    box-sizing: border-box;
+
+    .signer {
+      font-size: 10px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .time {
+      font-size: 9px;
+      color: #aaa;
+      margin-top: 1px;
+    }
+
+    .hash {
+      font-size: 9px;
+      font-family: monospace;
+      color: #ccc;
+      margin-top: 1px;
+    }
+
+    .verified-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 3px;
+
+      .green-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #16a34a;
+      }
+
+      .lbl-text {
+        font-size: 9px;
+        color: #16a34a;
+        font-weight: 600;
+      }
+    }
+  }
+}

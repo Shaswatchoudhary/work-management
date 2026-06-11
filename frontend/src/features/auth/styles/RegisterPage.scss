@@ -1,0 +1,491 @@
+@use "sass:color";
+
+// ── Variables ─────────────────────────────────────────────────────────
+$bg:           #F7F5F0;
+$card:         #FFFFFF;
+$border:       #EDE9E0;
+$input-bg:     #FAFAF7;
+$amber:        #F59E0B;
+$amber-light:  #FEF3C7;
+$amber-text:   #92400E;
+$text:         #1A1A1A;
+$muted:        #AAA;
+$subtle:       #777;
+$error:        #991B1B;
+$error-bg:     #FEF2F2;
+$error-border: #FECACA;
+
+$role-helpdesk-color:  #92400E;
+$role-helpdesk-bg:     #FEF3C7;
+$role-helpdesk-border: #FCD34D;
+
+$role-hr-color:        #065F46;
+$role-hr-bg:           #D1FAE5;
+$role-hr-border:       #6EE7B7;
+
+$role-admin-color:     #1E40AF;
+$role-admin-bg:        #DBEAFE;
+$role-admin-border:    #93C5FD;
+
+// ── Page ──────────────────────────────────────────────────────────────
+.register-page {
+  min-height: 100vh;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  box-sizing: border-box;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+// ── Logo ──────────────────────────────────────────────────────────────
+.register-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  justify-content: center;
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    background: $amber;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+}
+
+// ── Card ──────────────────────────────────────────────────────────────
+.register-card {
+  background: $card;
+  border-radius: 20px;
+  border: 0.5px solid $border;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+// ── Form section ──────────────────────────────────────────────────────
+.register-form-section {
+  padding: 32px 32px 24px;
+}
+
+.register-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: $text;
+  margin: 0 0 4px 0;
+}
+
+.register-subtitle {
+  font-size: 13px;
+  color: $muted;
+  margin: 0 0 28px 0;
+
+  a {
+    color: $amber;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Fields ────────────────────────────────────────────────────────────
+.register-field {
+  margin-bottom: 16px;
+
+  &--last {
+    margin-bottom: 20px;
+  }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: $subtle;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+
+  &__hint {
+    font-size: 11px;
+    color: $error;
+    margin-top: 4px;
+  }
+}
+
+.register-input {
+  width: 100%;
+  height: 40px;
+  border: 0.5px solid $border;
+  border-radius: 9px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #222;
+  background: $input-bg;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: $amber;
+  }
+
+  &--password {
+    padding-right: 40px;
+  }
+
+  &--error {
+    border-color: $error-border;
+  }
+}
+
+.register-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $muted;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+// ── Role selector ─────────────────────────────────────────────────────
+.register-role-section {
+  margin-bottom: 24px;
+}
+
+.register-role-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: $subtle;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.register-role-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.register-role-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 0.5px solid $border;
+  border-radius: 10px;
+  background: $input-bg;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+
+  &__radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #CCC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+
+    &-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+  }
+
+  &__desc {
+    font-size: 11px;
+    color: $muted;
+    margin-top: 1px;
+  }
+
+  // Selected state per role
+  &--helpdesk-selected {
+    border: 1.5px solid $role-helpdesk-border;
+    background: $role-helpdesk-bg;
+
+    .register-role-btn__radio {
+      border-color: $role-helpdesk-color;
+    }
+    .register-role-btn__radio-dot { background: $role-helpdesk-color; }
+    .register-role-btn__name      { color: $role-helpdesk-color; }
+    .register-role-btn__desc      { color: $role-helpdesk-color; opacity: 0.8; }
+  }
+
+  &--hr-selected {
+    border: 1.5px solid $role-hr-border;
+    background: $role-hr-bg;
+
+    .register-role-btn__radio {
+      border-color: $role-hr-color;
+    }
+    .register-role-btn__radio-dot { background: $role-hr-color; }
+    .register-role-btn__name      { color: $role-hr-color; }
+    .register-role-btn__desc      { color: $role-hr-color; opacity: 0.8; }
+  }
+
+  &--admin-selected {
+    border: 1.5px solid $role-admin-border;
+    background: $role-admin-bg;
+
+    .register-role-btn__radio {
+      border-color: $role-admin-color;
+    }
+    .register-role-btn__radio-dot { background: $role-admin-color; }
+    .register-role-btn__name      { color: $role-admin-color; }
+    .register-role-btn__desc      { color: $role-admin-color; opacity: 0.8; }
+  }
+}
+
+// ── Error ─────────────────────────────────────────────────────────────
+.register-error {
+  background: $error-bg;
+  border: 0.5px solid $error-border;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: $error;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+// ── Submit ────────────────────────────────────────────────────────────
+.register-btn-submit {
+  width: 100%;
+  height: 42px;
+  background: $amber;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+background: color.adjust($amber, $lightness: -6%);
+  }
+
+  &:disabled {
+    background: #FCD97A;
+    cursor: not-allowed;
+  }
+}
+
+// ── Demo accounts section ─────────────────────────────────────────────
+.register-demo {
+  border-top: 0.5px solid $border;
+  background: $bg;
+  padding: 20px 32px 28px;
+
+  &__heading {
+    font-size: 11px;
+    font-weight: 500;
+    color: $muted;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.register-demo-item {
+  background: $card;
+  border: 0.5px solid $border;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+
+  &__role-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 20px;
+
+    &--helpdesk { background: $role-helpdesk-bg; color: $role-helpdesk-color; }
+    &--hr       { background: $role-hr-bg;       color: $role-hr-color;       }
+    &--admin    { background: $role-admin-bg;     color: $role-admin-color;    }
+  }
+
+  &__name {
+    font-size: 11px;
+    color: #555;
+  }
+
+  &__meta {
+    font-size: 11px;
+    color: $muted;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__sep {
+    color: $border;
+  }
+
+  &__pass-label {
+    strong {
+      color: #555;
+    }
+  }
+}
+
+.register-demo-fill-btn {
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-width: 0.5px;
+  border-style: solid;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.8; }
+
+  &--helpdesk {
+    background: $role-helpdesk-bg;
+    border-color: $role-helpdesk-border;
+    color: $role-helpdesk-color;
+  }
+  &--hr {
+    background: $role-hr-bg;
+    border-color: $role-hr-border;
+    color: $role-hr-color;
+  }
+  &--admin {
+    background: $role-admin-bg;
+    border-color: $role-admin-border;
+    color: $role-admin-color;
+  }
+}
+
+.register-copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $muted;
+  padding: 0 0 0 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+// ── Success state ─────────────────────────────────────────────────────
+.register-success {
+  padding: 40px 32px;
+  text-align: center;
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    background: $amber-light;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 500;
+    color: $text;
+    margin: 0 0 8px 0;
+  }
+
+  &__desc {
+    font-size: 13px;
+    color: $muted;
+    margin: 0 0 28px 0;
+    line-height: 1.6;
+  }
+
+  &__btn {
+    width: 100%;
+    height: 42px;
+    background: $amber;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+background: color.adjust($amber, $lightness: -6%);
+    }
+  }
+}

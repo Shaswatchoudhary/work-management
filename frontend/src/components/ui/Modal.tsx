@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ModalProps {
   open: boolean;
@@ -9,6 +9,8 @@ interface ModalProps {
 }
 
 export default function Modal({ open, onClose, title, children, size = "lg" }: ModalProps) {
+  const [hoveredClose, setHoveredClose] = useState(false);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose?.();
@@ -19,25 +21,121 @@ export default function Modal({ open, onClose, title, children, size = "lg" }: M
       document.body.style.overflow = "";
     };
   }, [open, onClose]);
+
   if (!open) return null;
-  const sizes = { sm: "max-w-md", md: "max-w-xl", lg: "max-w-3xl", xl: "max-w-5xl" };
+
+  const sizeWidths = {
+    sm: "448px",
+    md: "576px",
+    lg: "768px",
+    xl: "1024px",
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/55 backdrop-blur-md" onClick={onClose} />
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Backdrop */}
       <div
-        className={`relative w-full ${sizes[size]} max-h-[90vh] overflow-hidden rounded-2xl bg-white/[0.08] border border-white/15 backdrop-blur-[25px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] flex flex-col text-white`}
+        onClick={onClose}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+        }}
+      />
+
+      {/* Modal Dialog */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: sizeWidths[size],
+          maxHeight: "90vh",
+          overflow: "hidden",
+          borderRadius: "16px",
+          backgroundColor: "rgba(255, 255, 255, 0.08)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+          backdropFilter: "blur(25px)",
+          WebkitBackdropFilter: "blur(25px)",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6)",
+          display: "flex",
+          flexDirection: "column",
+          color: "#ffffff",
+          boxSizing: "border-box",
+        }}
       >
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
-          <h3 className="text-sm font-bold tracking-tight text-white">{title}</h3>
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "14px 20px",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.10)",
+            boxSizing: "border-box",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "14px",
+              fontWeight: 700,
+              letterSpacing: "-0.01em",
+              color: "#ffffff",
+              margin: 0,
+            }}
+          >
+            {title}
+          </h3>
           <button
             onClick={onClose}
-            className="text-white/60 hover:text-white text-xl leading-none cursor-pointer transition-colors"
+            onMouseEnter={() => setHoveredClose(true)}
+            onMouseLeave={() => setHoveredClose(false)}
+            style={{
+              background: "none",
+              border: "none",
+              color: hoveredClose ? "#ffffff" : "rgba(255, 255, 255, 0.6)",
+              fontSize: "22px",
+              lineHeight: 1,
+              cursor: "pointer",
+              transition: "color 0.15s ease",
+              padding: 0,
+            }}
           >
             ×
           </button>
         </div>
-        <div className="overflow-y-auto px-5 py-4 bg-transparent">{children}</div>
+
+        {/* Body Content */}
+        <div
+          style={{
+            overflowY: "auto",
+            padding: "16px 20px",
+            backgroundColor: "transparent",
+            boxSizing: "border-box",
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
 }
+
