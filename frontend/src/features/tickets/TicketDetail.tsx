@@ -8,7 +8,7 @@ import CommentThread from "../thread/CommentThread.tsx";
 import PinThenDrawSignature from "../signature/PinThenDrawSignature.tsx";
 import RequirementDoc from "./RequirementDoc.tsx";
 import TicketForm from "./TicketForm.tsx";
-
+import "./TicketDetail.scss"
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";

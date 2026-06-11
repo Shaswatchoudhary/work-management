@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { verifyPin, createSignatureBlock } from "./signatureEngine";
 import type { SignatureBlock, SignaturePurpose } from "./types";
-import "./styles/PinThenDrawSignature.scss";
+import "./PinThenDrawSignature.scss";
 
 interface PinThenDrawSignatureProps {
   userId: string;

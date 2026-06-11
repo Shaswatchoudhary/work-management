@@ -1,7 +1,7 @@
 import { fmtDate, fmtMoney } from "../../utils/dateFormatter.ts";
 import { STATUS_LABEL } from "../../constants/ticketStatus.ts";
 import { Ticket, SignatureBlock } from "../../types";
-import "./styles/RequirementDoc.scss";
+import "./RequirementDoc.scss";
 
 interface RequirementDocProps {
   ticket: Ticket;

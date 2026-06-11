@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import { Ticket, SafeUser } from "../../types/index.ts";
 import { fmtMoney } from "../../utils/dateFormatter.ts";
 import { STATUS_LABEL } from "../../constants/ticketStatus.ts";
-import "./styles/pdfGenerator.scss"
+import "./pdfGenerator.scss"
 export interface SignatureBlock {
   label: string;
   name: string;

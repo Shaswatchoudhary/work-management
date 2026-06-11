@@ -5,7 +5,7 @@ import TicketTable from "../tickets/TicketTable.tsx";
 import TicketDetail from "../tickets/TicketDetail.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";
-import "./styles/HrScreen.scss";
+import "./HrScreen.scss";
 
 export default function HrScreen() {
   const tickets = useTicketStore((s) => s.tickets);

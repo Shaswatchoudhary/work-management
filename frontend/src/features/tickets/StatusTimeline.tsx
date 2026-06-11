@@ -1,6 +1,6 @@
 import { STATUS_STEPS, STATUS_LABEL } from "../../constants/ticketStatus.ts";
 import { Status } from "../../types";
-import "./styles/StatusTimeline.scss";
+import "./StatusTimeline.scss";
 
 interface StatusTimelineProps {
   status: Status;
@@ -13,7 +13,7 @@ export default function StatusTimeline({ status }: StatusTimelineProps) {
   return (
     <div className="status-timeline-container">
       {STATUS_STEPS.map((s, i) => {
-        const active  = i <= idx;
+        const active = i <= idx;
         const current = i === idx;
         return (
           <div key={s} className="step-wrapper">

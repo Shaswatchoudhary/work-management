@@ -7,7 +7,7 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
 import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
 import { Ticket, Priority } from "../../types";
-import "./styles/TicketForm.scss";
+import "./TicketForm.scss";
 
 interface FormData {
   title: string; category: string; priority: Priority;

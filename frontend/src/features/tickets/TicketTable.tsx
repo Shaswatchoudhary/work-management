@@ -1,24 +1,24 @@
 import { Ticket } from "../../types";
-import "./styles/TicketTable.scss";
+import "./TicketTable.scss";
 
 const PRIORITY_COLORS: Record<string, { bg: string; color: string }> = {
-  Low:      { bg: "#F0FDF4", color: "#16A34A" },
-  Medium:   { bg: "#FFFBEB", color: "#D97706" },
-  High:     { bg: "#FEF2F2", color: "#DC2626" },
+  Low: { bg: "#F0FDF4", color: "#16A34A" },
+  Medium: { bg: "#FFFBEB", color: "#D97706" },
+  High: { bg: "#FEF2F2", color: "#DC2626" },
   Critical: { bg: "#FDF2F8", color: "#9333EA" },
-  Urgent:   { bg: "#FEF2F2", color: "#DC2626" },
+  Urgent: { bg: "#FEF2F2", color: "#DC2626" },
 };
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
-  pending_hr:          { bg: "#FFFBEB", color: "#D97706" },
-  pending_admin:       { bg: "#EFF6FF", color: "#2563EB" },
-  rejected_hr:         { bg: "#FEF2F2", color: "#DC2626" },
-  rejected_admin:      { bg: "#FEF2F2", color: "#DC2626" },
-  work_in_progress:    { bg: "#EFF6FF", color: "#2563EB" },
-  inspection_pending:  { bg: "#F5F3FF", color: "#7C3AED" },
-  payment_pending:     { bg: "#ECFDF5", color: "#059669" },
-  closed:              { bg: "#F0FDF4", color: "#16A34A" },
-  draft:               { bg: "#F9FAFB", color: "#6B7280" },
+  pending_hr: { bg: "#FFFBEB", color: "#D97706" },
+  pending_admin: { bg: "#EFF6FF", color: "#2563EB" },
+  rejected_hr: { bg: "#FEF2F2", color: "#DC2626" },
+  rejected_admin: { bg: "#FEF2F2", color: "#DC2626" },
+  work_in_progress: { bg: "#EFF6FF", color: "#2563EB" },
+  inspection_pending: { bg: "#F5F3FF", color: "#7C3AED" },
+  payment_pending: { bg: "#ECFDF5", color: "#059669" },
+  closed: { bg: "#F0FDF4", color: "#16A34A" },
+  draft: { bg: "#F9FAFB", color: "#6B7280" },
 };
 
 interface TicketTableProps {
@@ -51,7 +51,7 @@ export default function TicketTable({ tickets, onOpen, emptyText = "No tickets f
         <tbody>
           {tickets.map((t) => {
             const pColor = PRIORITY_COLORS[t.priority] ?? { bg: "#F9FAFB", color: "#555" };
-            const sColor = STATUS_COLORS[t.status]   ?? { bg: "#F9FAFB", color: "#555" };
+            const sColor = STATUS_COLORS[t.status] ?? { bg: "#F9FAFB", color: "#555" };
             return (
               <tr
                 key={t.id}

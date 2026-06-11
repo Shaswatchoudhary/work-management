@@ -2,7 +2,7 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
 } from "react";
-import "./styles/SignatureBlock.scss";
+import "./SignatureBlock.scss";
 
 /**
  * Props for an individual signature card.

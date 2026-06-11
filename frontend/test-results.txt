@@ -1,0 +1,43 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90m/Users/shaswat/Documents/task/vendor/frontend[39m
+
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22minitial state user null hona chahiye[32m 1[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22mverifyCredentials incorrect credentials pe error return karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22mverifyCredentials correct credentials pe user object return karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22mlogin successful login pe store user state set karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22mlogin failed login pe store user state null hi rakhta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/authStore.test.ts[2m > [22museAuthStore[2m > [22mlogout store user state ko clear (null) karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22minitial tickets load hone chahiye[32m 1[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22mgetById correctly ticket find karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22maddTicket ticket append karta hai aur unique ID assign karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22maddComment ticket mein naya comment append karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22msetStatus ticket status change karta hai aur optional comment save karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22mupdateTicket fields update aur signatures merge karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/store/__tests__/ticketStore.test.ts[2m > [22museTicketStore[2m > [22mreset state ko original mock data pe set karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn true for correct HR pin[32m 1[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn true for correct admin pin[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn true for correct helpdesk pin[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn false for incorrect pin[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn false for invalid user ID[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mverifyPin[2m > [22mReturn false for empty PIN[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mformatSignatureTimestamp[2m > [22mConverts ISO string to readable format[32m 35[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mformatSignatureTimestamp[2m > [22mformat contains both date and time[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mgenerateSecureHash[2m > [22mReturn 64 char hex string for valid input[32m 1[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mgenerateSecureHash[2m > [22mReturn same hash for same input[32m 0[2mms[22m[39m
+ [32m✓[39m src/features/signature/__tests__/signatureEngine.test.ts[2m > [22mgenerateSecureHash[2m > [22mReturn different hash for different input[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtDate[2m > [22mvalid ISO string ko readable date mein convert karta hai[32m 1[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtDate[2m > [22mDate object bhi accept karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtDate[2m > [22mformat MMM d yyyy hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtMoney[2m > [22mnumber ko INR currency format mein convert karta hai[32m 13[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtMoney[2m > [22mzero pe bhi kaam karta hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtMoney[2m > [22mbada number comma ke saath format hota hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtMoney[2m > [22mINR symbol ya currency code include hota hai[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtRel[2m > [22mrecent date ke liye relative string return karta hai[32m 1[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtRel[2m > [22msuffix 'ago' include hota hai past date ke liye[32m 0[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/dateFormatter.test.ts[2m > [22mfmtRel[2m > [22mDate object bhi accept karta hai[32m 0[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m34 passed[39m[22m[90m (34)[39m
+[2m   Start at [22m 17:00:12
+[2m   Duration [22m 1.59s[2m (transform 165ms, setup 324ms, import 772ms, tests 73ms, environment 2.69s)[22m
+

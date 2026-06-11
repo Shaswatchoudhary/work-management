@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import "./styles/SignaturePad.scss";
+import "./SignaturePad.scss";
 
 interface SignaturePadProps {
   onSave?: (data: string) => void;

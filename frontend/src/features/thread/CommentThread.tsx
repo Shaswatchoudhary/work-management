@@ -3,7 +3,7 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { fmtRel } from "../../utils/dateFormatter.ts";
 import { ROLE_LABEL } from "../../constants/roles.ts";
-import "./styles/CommentThread.scss";
+import "./CommentThread.scss";
 
 interface CommentThreadProps {
   ticketId: string;

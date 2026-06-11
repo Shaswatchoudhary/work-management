@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import SignatureBlock from "../signature/SignatureBlock";
 import { generatePDF, TicketData } from "../pdf/generatePDF";
-import "./styles/TicketPDFPage.scss";
+import "./TicketPDFPage.scss";
 
 const mockTicket: TicketData = {
   id: "TKT-1017",

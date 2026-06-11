@@ -8,7 +8,7 @@ import { MOCK_USERS } from "../../data/mockUsers.ts";
 import { fmtMoney } from "../../utils/dateFormatter.ts";
 import { ROLE_LABEL } from "../../constants/roles.ts";
 import { useTickets } from "../tickets/hooks/useTickets.ts";
-import "./styles/AdminScreen.scss";
+import "./AdminScreen.scss";
 
 export default function AdminScreen() {
   const { tickets } = useTickets();

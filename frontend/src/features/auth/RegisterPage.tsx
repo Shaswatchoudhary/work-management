@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, CheckCircle2, Copy, Check } from "lucide-react";
 import { Role } from "../../types";
-import "./styles/RegisterPage.scss";
+import "./RegisterPage.scss";
 
 const ROLES: Role[] = ["helpdesk", "hr", "admin"];
 

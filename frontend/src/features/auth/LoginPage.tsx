@@ -4,7 +4,7 @@ import { useAuthStore } from "../../store/authStore.ts";
 import { ROLE_HOME } from "../../constants/roles.ts";
 import { Role } from "../../types";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
-import "./styles/LoginPage.scss"
+import "./LoginPage.scss"
 
 const ROLE_CONFIG: Record<Role, { label: string; desc: string; iconColor: string }> = {
   helpdesk: { label: "Help Desk", desc: "Create and track internal requests", iconColor: "#92400E" },

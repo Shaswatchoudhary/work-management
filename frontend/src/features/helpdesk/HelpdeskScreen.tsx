@@ -7,7 +7,7 @@ import TicketForm from "../tickets/TicketForm.tsx";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { CATEGORIES } from "../../data/categories.ts";
 import { STATUS } from "../../constants/ticketStatus.ts";
-import "./styles/HelpdeskScreen.scss";
+import "./HelpdeskScreen.scss";
 
 export default function HelpdeskScreen() {
   const tickets = useTicketStore((s) => s.tickets);
