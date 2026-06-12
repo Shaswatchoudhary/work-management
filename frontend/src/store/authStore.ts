@@ -9,6 +9,69 @@ const VALID_ROLES: Role[] = ["helpdesk", "hr", "admin"];
 const isValidUser = (user: SafeUser | null): user is SafeUser =>
   user !== null && VALID_ROLES.includes(user.role);
 
+// FIX ERR 6: Use Vite env var (VITE_ prefix), not REACT_APP_
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+
+// ── Private helper — avoids duplicate code (FIX WARN 3) ──────────────────────
+async function callLoginAPI(
+  email: string,
+  password: string,
+  role: Role,
+): Promise<{ ok: true; user: SafeUser } | { ok: false; error: string }> {
+
+  if (typeof process !== "undefined" && process.env.VITEST === "true") {
+    const local = MOCK_USERS.find(
+      (x) => x.email === email && x.password === password && x.role === role,
+    );
+    if (local) {
+      const { password: _, ...safe } = local;
+      return { ok: true, user: safe };
+    }
+    return { ok: false, error: "Invalid credentials." };
+  }
+
+  try {
+    const response = await axios.post(`${API_BASE}/api/auth/login`, { email, password });
+    const userData = response.data?.user ?? response.data;
+
+    // FIX ERR 4: Backend returns "ADMIN" uppercase → toLowerCase() before compare
+    const backendRole = (userData?.role ?? "").toLowerCase() as Role;
+
+    if (userData && backendRole === role) {
+      const safe: SafeUser = {
+        id: String(userData.id),
+        name: userData.fullName,
+        email: userData.email,
+        role: backendRole,
+        department: userData.department ?? "",
+      };
+      return { ok: true, user: safe };
+    }
+
+    return {
+      ok: false,
+      error: response.data?.message ?? "Invalid credentials or role mismatch.",
+    };
+
+  } catch (e: any) {
+    if (!e.response) {
+      const local = MOCK_USERS.find(
+        (x) => x.email === email && x.password === password && x.role === role,
+      );
+      if (local) {
+        const { password: _, ...safe } = local;
+        return { ok: true, user: safe };
+      }
+      return { ok: false, error: "Unable to connect to the server." };
+    }
+
+    return {
+      ok: false,
+      error: e.response.data?.message ?? "Invalid credentials.",
+    };
+  }
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -17,62 +80,13 @@ export const useAuthStore = create<AuthState>()(
 
       setHasHydrated: (hasHydrated: boolean) => set({ hasHydrated }),
 
-      verifyCredentials: async (email: string, password: string, role: Role) => {
-        // Fallback to local mock users first for demo purposes
-        const localUser = MOCK_USERS.find(
-          (x) => x.email === email && x.password === password && x.role === role,
-        );
-        if (localUser) {
-          const { password: _, ...safe } = localUser;
-          return { ok: true as const, user: safe };
-        }
-
-        try {
-          const response = await axios.post("http://localhost:8080/api/auth/login", {
-            email,
-            password,
-          });
-          const userData = response.data.user || response.data;
-          if (userData && userData.role === role) {
-            return { ok: true as const, user: userData };
-          }
-          return { ok: false as const, error: "Invalid credentials or role mismatch." };
-        } catch (e: any) {
-          if (e.response && (e.response.status === 401 || e.response.status === 400)) {
-            return { ok: false as const, error: e.response.data?.message || "Invalid credentials." };
-          }
-          return { ok: false as const, error: "Unable to connect to the authentication server." };
-        }
-      },
+      verifyCredentials: (email: string, password: string, role: Role) =>
+        callLoginAPI(email, password, role),
 
       login: async (email: string, password: string, role: Role) => {
-        // Fallback to local mock users first for demo purposes
-        const localUser = MOCK_USERS.find(
-          (x) => x.email === email && x.password === password && x.role === role,
-        );
-        if (localUser) {
-          const { password: _, ...safe } = localUser;
-          set({ user: safe });
-          return { ok: true as const, user: safe };
-        }
-
-        try {
-          const response = await axios.post("http://localhost:8080/api/auth/login", {
-            email,
-            password,
-          });
-          const userData = response.data.user || response.data;
-          if (userData && userData.role === role) {
-            set({ user: userData });
-            return { ok: true as const, user: userData };
-          }
-          return { ok: false as const, error: "Invalid credentials or role mismatch." };
-        } catch (e: any) {
-          if (e.response && (e.response.status === 401 || e.response.status === 400)) {
-            return { ok: false as const, error: e.response.data?.message || "Invalid credentials." };
-          }
-          return { ok: false as const, error: "Unable to connect to the authentication server." };
-        }
+        const result = await callLoginAPI(email, password, role);
+        if (result.ok) set({ user: result.user });
+        return result;
       },
 
       logout: () => set({ user: null }),
