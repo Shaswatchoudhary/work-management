@@ -13,8 +13,8 @@ describe("useAuthStore", () => {
     expect(state.user).toBeNull();
   });
 
-  test("verifyCredentials incorrect credentials pe error return karta hai", () => {
-    const result = useAuthStore.getState().verifyCredentials(
+  test("verifyCredentials incorrect credentials pe error return karta hai", async () => {
+    const result = await useAuthStore.getState().verifyCredentials(
       "nonexistent@company.com",
       "password",
       "hr"
@@ -25,8 +25,8 @@ describe("useAuthStore", () => {
     }
   });
 
-  test("verifyCredentials correct credentials pe user object return karta hai", () => {
-    const result = useAuthStore.getState().verifyCredentials(
+  test("verifyCredentials correct credentials pe user object return karta hai", async () => {
+    const result = await useAuthStore.getState().verifyCredentials(
       "hr@company.com",
       "1234",
       "hr"
@@ -38,8 +38,8 @@ describe("useAuthStore", () => {
     }
   });
 
-  test("login successful login pe store user state set karta hai", () => {
-    const result = useAuthStore.getState().login(
+  test("login successful login pe store user state set karta hai", async () => {
+    const result = await useAuthStore.getState().login(
       "admin@company.com",
       "1234",
       "admin"
@@ -49,8 +49,8 @@ describe("useAuthStore", () => {
     expect(useAuthStore.getState().user?.role).toBe("admin");
   });
 
-  test("login failed login pe store user state null hi rakhta hai", () => {
-    const result = useAuthStore.getState().login(
+  test("login failed login pe store user state null hi rakhta hai", async () => {
+    const result = await useAuthStore.getState().login(
       "hr@company.com",
       "wrong-password",
       "hr"
@@ -59,9 +59,9 @@ describe("useAuthStore", () => {
     expect(useAuthStore.getState().user).toBeNull();
   });
 
-  test("logout store user state ko clear (null) karta hai", () => {
+  test("logout store user state ko clear (null) karta hai", async () => {
     // Pehle login karein
-    useAuthStore.getState().login("helpdesk@company.com", "1234", "helpdesk");
+    await useAuthStore.getState().login("helpdesk@company.com", "1234", "helpdesk");
     expect(useAuthStore.getState().user).not.toBeNull();
 
     // Fir logout karein
@@ -69,3 +69,4 @@ describe("useAuthStore", () => {
     expect(useAuthStore.getState().user).toBeNull();
   });
 });
+

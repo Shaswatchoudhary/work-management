@@ -63,33 +63,35 @@ export default function RegisterPage() {
 
       setLoading(true);
 
-      // ── BACKEND INTEGRATION (uncomment when backend is ready) ──────────
-      // try {
-      //   const response = await fetch("http://localhost:8080/api/auth/register", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ name, email, password, role }),
-      //   });
-      //   const data = await response.json();
-      //   if (!response.ok) {
-      //     setErr(data.message || "Registration failed. Try again.");
-      //     setLoading(false);
-      //     return;
-      //   }
-      //   setLoading(false);
-      //   setDone(true);
-      //   return;
-      // } catch (error) {
-      //   setErr("Server not reachable. Using demo mode.");
-      // }
-      // ───────────────────────────────────────────────────────────────────
 
-      // ── DEMO MODE (remove when backend is ready) ───────────────────────
+      /*
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, role }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          setErr(data.message || "Registration failed. Try again.");
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        setDone(true);
+        return;
+      } catch (error) {
+        setErr("Unable to reach authentication server.");
+        setLoading(false);
+        return;
+      }
+      */
+
       setTimeout(() => {
         setLoading(false);
         setDone(true);
       }, 800);
-      // ───────────────────────────────────────────────────────────────────
+
     },
     [name, email, password, confirm, role],
   );
