@@ -1,4 +1,3 @@
-// src/features/signature/PinThenDrawSignature.tsx
 import { useState, useCallback, useRef, useEffect } from "react";
 import { verifyPin, createSignatureBlock } from "./signatureEngine";
 import type { SignatureBlock, SignaturePurpose } from "./types";

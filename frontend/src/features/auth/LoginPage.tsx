@@ -30,7 +30,7 @@ export default function LoginPage() {
 
   // Step 1 — verify only, don't touch store yet
   const handleCredentials = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setErr("");
       if (!email.trim()) { setErr("Email is required."); return; }
@@ -41,12 +41,29 @@ export default function LoginPage() {
       let matched: { role: Role; name: string } | null = null;
 
       for (const r of roles) {
-        const res = verifyCredentials(email.trim(), password, r);
+        const res = await verifyCredentials(email.trim(), password, r);
         if (res.ok && res.user) {
           matched = { role: res.user.role, name: res.user.name };
           break;
         }
       }
+      // ── BACKEND INTEGRATION (uncomment when backend is ready) ──────────
+      // const response = await fetch("http://localhost:8080/api/auth/login", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ email: email.trim(), password, role: detectedRole }),
+      // });
+      // const data = await response.json();
+      // // store mein token save karo
+      // useAuthStore.getState().setToken(data.token);
+      // ───────────────────────────────────────────────────────────────────
+
+      // ── DEMO MODE (remove when backend is ready) ───────────────────────
+      //   login(email.trim(), password, detectedRole);
+      //   // ───────────────────────────────────────────────────────────────────
+
+      //   navigate(ROLE_HOME[detectedRole]);
+      // }, [detectedRole, login, email, password, navigate]);
 
       setLoading(false);
       if (!matched) { setErr("Invalid email or password."); return; }
@@ -58,9 +75,9 @@ export default function LoginPage() {
   );
 
   // Step 2 — set store and navigate
-  const handleConfirm = useCallback(() => {
+  const handleConfirm = useCallback(async () => {
     if (!detectedRole) return;
-    login(email.trim(), password, detectedRole);
+    await login(email.trim(), password, detectedRole);
     navigate(ROLE_HOME[detectedRole]);
   }, [detectedRole, login, email, password, navigate]);
 

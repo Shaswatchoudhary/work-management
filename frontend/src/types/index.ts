@@ -132,13 +132,13 @@ export interface AuthState {
     email: string,
     password: string,
     role: Role,
-  ) => { ok: true; user: SafeUser } | { ok: false; error: string };
+  ) => Promise<{ ok: true; user: SafeUser } | { ok: false; error: string }>;
 
   login: (
     email: string,
     password: string,
     role: Role,
-  ) => { ok: true; user: SafeUser } | { ok: false; error: string };
+  ) => Promise<{ ok: true; user: SafeUser } | { ok: false; error: string }>;
 
   logout: () => void;
 }
