@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -133,7 +133,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,7 +150,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">85x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,7 +175,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,14 +184,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { STATUS_TONE, STATUS_LABEL } from "../../constants/ticketStatus";
 import { Status, Priority } from "../../types";
@@ -214,8 +214,8 @@ interface BadgeProps {
   style?: React.CSSProperties;
 }
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >Badge({</span> tone = <span class="branch-0 cbranch-no" title="branch not covered" >"muted", c</span>hildren, className = <span class="branch-0 cbranch-no" title="branch not covered" >"", s</span>tyle }: BadgeProps) {
-<span class="cstat-no" title="statement not covered" >  return (</span>
+export default function Badge({ tone = "muted", children, className = "", style }: BadgeProps) {
+  return (
     &lt;span
       className={className}
       style={{
@@ -239,24 +239,24 @@ interface StatusBadgeProps {
   status: Status;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >StatusBadge({</span> status }: StatusBadgeProps) {
-<span class="cstat-no" title="statement not covered" >  return &lt;Badge tone={STATUS_TONE[status] as BadgeTone || "muted"}&gt;{STATUS_LABEL[status] || status}&lt;/Badge&gt;;</span>
+export function StatusBadge({ status }: StatusBadgeProps) {
+  return &lt;Badge tone={STATUS_TONE[status] as BadgeTone || "muted"}&gt;{STATUS_LABEL[status] || status}&lt;/Badge&gt;;
 }
 &nbsp;
 interface PriorityBadgeProps {
   priority: Priority;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >PriorityBadge({</span> priority }: PriorityBadgeProps) {
+export function PriorityBadge({ priority }: PriorityBadgeProps) {
   const tone: BadgeTone =
-<span class="cstat-no" title="statement not covered" >    priority === "Critical"</span>
+    priority === "Critical"
       ? "danger"
       : priority === "High"
         ? "warning"
         : priority === "Medium"
           ? "info"
           : "muted";
-<span class="cstat-no" title="statement not covered" >  return &lt;Badge tone={tone}&gt;{priority}&lt;/Badge&gt;;</span>
+  return &lt;Badge tone={tone}&gt;{priority}&lt;/Badge&gt;;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -265,7 +265,7 @@ export function <span class="fstat-no" title="function not covered" >PriorityBad
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-12T10:06:01.200Z
+                at 2026-06-13T18:32:12.921Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

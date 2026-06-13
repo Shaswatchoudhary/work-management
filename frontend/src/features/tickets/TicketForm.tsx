@@ -5,7 +5,7 @@ import { PRIORITY } from "../../constants/ticketStatus.ts";
 import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
-import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
+import { generateAndDownloadPdf } from "../pdf/generatePDF.tsx";
 import { Ticket, Priority } from "../../types";
 import "./TicketForm.scss";
 

@@ -108,7 +108,7 @@ export default function PinThenDrawSignature({
   const [error, setError] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [locked, setLocked] = useState(false);
-  const [loading, setLoading] = useState(false);
+
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
@@ -125,12 +125,13 @@ export default function PinThenDrawSignature({
     canvas: HTMLCanvasElement,
   ) => {
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+    const scaleX = rect.width ? canvas.width / rect.width : 1;
+    const scaleY = rect.height ? canvas.height / rect.height : 1;
     if ("touches" in e) {
+      const touch = e.touches && e.touches[0] ? e.touches[0] : { clientX: 0, clientY: 0 };
       return {
-        x: (e.touches[0].clientX - rect.left) * scaleX,
-        y: (e.touches[0].clientY - rect.top) * scaleY,
+        x: (touch.clientX - rect.left) * scaleX,
+        y: (touch.clientY - rect.top) * scaleY,
       };
     }
     return {
@@ -210,31 +211,31 @@ export default function PinThenDrawSignature({
   }, [userId, userName, ticketId, purpose, onSigned]);
 
   // ── PIN verify ─────────────────────────────────────────────────────────
-  const handleVerify = useCallback(() => {
-    if (locked || loading) return;
-    if (pin.length !== 4) { setError("4-digit PIN required."); return; }
+const handleVerify = useCallback(async () => {
+  if (locked) return;
+  if (pin.length !== 4) {
+    setError("4-digit PIN required.");
+    return;
+  }
 
-    setLoading(true);
-    setTimeout(() => {
-      const valid = verifyPin(userId, pin);
-      if (!valid) {
-        const n = attempts + 1;
-        setAttempts(n);
-        setPin("");
-        setLoading(false);
-        if (n >= MAX_ATTEMPTS) {
-          setLocked(true);
-          setError("Too many wrong attempts. Contact admin.");
-        } else {
-          setError(`Wrong PIN. ${MAX_ATTEMPTS - n} attempt(s) remaining.`);
-        }
-        return;
-      }
-      setLoading(false);
-      setError("");
-      setMode("draw");
-    }, 400);
-  }, [pin, locked, loading, attempts, userId]);
+  // Call verifyPin which may return a boolean or a promise
+  const result = verifyPin(userId, pin);
+  const valid = await Promise.resolve(result);
+  if (!valid) {
+    const n = attempts + 1;
+    setAttempts(n);
+    setPin("");
+    if (n >= MAX_ATTEMPTS) {
+      setLocked(true);
+      setError("Too many wrong attempts. Contact admin.");
+    } else {
+      setError("Wrong PIN");
+    }
+    return;
+  }
+  setError("");
+  setMode("draw");
+}, [pin, locked, attempts, userId, MAX_ATTEMPTS]);
 
   // ── Render: signed mode ────────────────────────────────────────────────
   // Show whichever block we have — existing prop OR newly saved
@@ -355,11 +356,11 @@ export default function PinThenDrawSignature({
 
       <button
         onClick={handleVerify}
-        disabled={pin.length !== 4 || locked || loading}
+        disabled={pin.length !== 4 || locked}
         className="action-btn-full"
         type="button"
       >
-        {loading ? "Verifying..." : "Verify PIN"}
+        Verify PIN
       </button>
 
       <p className="caution-warning">

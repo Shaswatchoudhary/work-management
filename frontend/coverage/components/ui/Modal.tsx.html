@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.29% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -215,29 +215,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">64x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">64x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -312,8 +312,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,26 +359,26 @@ export default function Modal({ open, onClose, title, children, size = "lg" }: M
   const [hoveredClose, setHoveredClose] = useState(false);
 &nbsp;
   useEffect(() =&gt; {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!open) return;
-    const <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >onKey = (e</span>: KeyboardEvent) =&gt; <span class="cstat-no" title="statement not covered" >e.key === "Escape" &amp;&amp; onClose?.();</span></span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("keydown", onKey);</span>
-<span class="cstat-no" title="statement not covered" >    document.body.style.overflow = "hidden";</span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    return () =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >      window.removeEventListener("keydown", onKey);</span>
-<span class="cstat-no" title="statement not covered" >      document.body.style.overflow = "";</span>
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) =&gt; e.key === "Escape" &amp;&amp; onClose?.();
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () =&gt; {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
     };
   }, [open, onClose]);
 &nbsp;
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (!open) return null;
+  if (!open) return null;
 &nbsp;
-  const sizeWidths = <span class="cstat-no" title="statement not covered" >{</span>
+  const sizeWidths = {
     sm: "448px",
     md: "576px",
     lg: "768px",
     xl: "1024px",
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div
       style={{
         position: "fixed",
@@ -453,8 +453,8 @@ export default function Modal({ open, onClose, title, children, size = "lg" }: M
           &lt;/h3&gt;
           &lt;button
             onClick={onClose}
-<span class="fstat-no" title="function not covered" >            onMouseEnter={() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etHoveredClose(true)}</span>
-<span class="fstat-no" title="function not covered" >            onMouseLeave={() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etHoveredClose(false)}</span>
+            onMouseEnter={() =&gt; setHoveredClose(true)}
+            onMouseLeave={() =&gt; setHoveredClose(false)}
             style={{
               background: "none",
               border: "none",
@@ -493,7 +493,7 @@ export default function Modal({ open, onClose, title, children, size = "lg" }: M
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-12T10:06:01.200Z
+                at 2026-06-13T18:32:12.921Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

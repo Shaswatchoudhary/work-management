@@ -13,7 +13,7 @@ import { useTicketStore } from "../../store/ticketStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useNotificationStore } from "../../store/notificationStore.ts";
 import { fmtDate, fmtMoney } from "../../utils/dateFormatter.ts";
-import { generateAndDownloadPdf } from "../pdf/generatePDF.ts";
+import { generateAndDownloadPdf } from "../pdf/generatePDF.tsx";
 import { SignatureBlock } from "../../types";
 
 interface TicketDetailProps {

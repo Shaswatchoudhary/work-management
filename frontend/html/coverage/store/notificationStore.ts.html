@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/12</span>
+                <span class='fraction'>6/12</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.09% </span>
+                <span class="strong">45.45% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/11</span>
+                <span class='fraction'>5/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/9</span>
+                <span class='fraction'>4/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -116,33 +116,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,8 +170,8 @@ export const useNotificationStore = create&lt;NotificationState&gt;()(
     (set, get) =&gt; ({
       notifications: [],
 &nbsp;
-<span class="fstat-no" title="function not covered" >      addNotification: (n</span>: Omit&lt;Notification, "id" | "read" | "at"&gt;) =&gt;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >        set((s</span>) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+      addNotification: (n: Omit&lt;Notification, "id" | "read" | "at"&gt;) =&gt;
+        set((s) =&gt; ({
           notifications: [
             {
               id: "n-" + Date.now() + Math.random().toString(36).slice(2, 6),
@@ -190,8 +190,8 @@ export const useNotificationStore = create&lt;NotificationState&gt;()(
           ),
         })),
 &nbsp;
-<span class="fstat-no" title="function not covered" >      markAllRead: (f</span>orRole?: Role) =&gt;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >        set((s</span>) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+      markAllRead: (forRole?: Role) =&gt;
+        set((s) =&gt; ({
           notifications: s.notifications.<span class="fstat-no" title="function not covered" >map((n</span>) =&gt;
 <span class="cstat-no" title="statement not covered" >            !forRole || n.forRole === forRole || n.forRole === "all"</span>
               ? { ...n, read: true }
@@ -217,7 +217,7 @@ export const useNotificationStore = create&lt;NotificationState&gt;()(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-12T10:06:01.200Z
+                at 2026-06-13T18:32:12.921Z
             </div>
         <script src="../prettify.js"></script>
         <script>

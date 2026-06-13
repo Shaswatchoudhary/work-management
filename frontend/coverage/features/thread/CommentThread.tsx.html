@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -138,30 +138,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">46x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">46x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,7 +174,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,32 +200,32 @@ interface CommentThreadProps {
   ticketId: string;
 }
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >CommentThread({</span> ticketId }: CommentThreadProps) {
-  const <span class="cstat-no" title="statement not covered" >user      = <span class="fstat-no" title="function not covered" >useAuthStore((s</span>) =&gt; <span class="cstat-no" title="statement not covered" >s.user)</span>;</span>
-  const <span class="cstat-no" title="statement not covered" >ticket    = <span class="fstat-no" title="function not covered" >useTicketStore((s</span>) =&gt; <span class="cstat-no" title="statement not covered" >s.tickets.<span class="fstat-no" title="function not covered" >find((t</span>) =&gt; <span class="cstat-no" title="statement not covered" >t.id === ticketId)</span>)</span>;</span>
-  const <span class="cstat-no" title="statement not covered" >addComment = <span class="fstat-no" title="function not covered" >useTicketStore((s</span>) =&gt; <span class="cstat-no" title="statement not covered" >s.addComment)</span>;</span>
-  const [text, <span class="cstat-no" title="statement not covered" >setText] = useState("");</span>
+export default function CommentThread({ ticketId }: CommentThreadProps) {
+  const user      = useAuthStore((s) =&gt; s.user);
+  const ticket    = useTicketStore((s) =&gt; s.tickets.find((t) =&gt; t.id === ticketId));
+  const addComment = useTicketStore((s) =&gt; s.addComment);
+  const [text, setText] = useState("");
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!ticket) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+  if (!ticket) return null;
 &nbsp;
-  const <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >submit = () =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >    if (!text.trim()) <span class="cstat-no" title="statement not covered" >return;</span></span>
-<span class="cstat-no" title="statement not covered" >    addComment(ticketId, { userId: user!.id, role: user!.role, text: text.trim() });</span>
-<span class="cstat-no" title="statement not covered" >    setText("");</span>
+  const submit = () =&gt; {
+    if (!text.trim()) return;
+    addComment(ticketId, { userId: user!.id, role: user!.role, text: text.trim() });
+    setText("");
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className="comment-thread"&gt;
       {/* Comment list */}
       &lt;div className="comment-list"&gt;
         {ticket.comments.length === 0 &amp;&amp; (
           &lt;div className="empty-text"&gt;No activity yet.&lt;/div&gt;
         )}
-        {ticket.comments.<span class="fstat-no" title="function not covered" >map((c</span>) =&gt; (
-<span class="cstat-no" title="statement not covered" >          &lt;div key={c.id} className="comment-item"&gt;</span>
+        {ticket.comments.map((c) =&gt; (
+          &lt;div key={c.id} className="comment-item"&gt;
             &lt;div className="comment-meta"&gt;
               &lt;span className="comment-role"&gt;
-                {ROLE_LABEL[c.role] || c.role}
+                {ROLE_LABEL[c.role] || <span class="branch-1 cbranch-no" title="branch not covered" >c.role}</span>
               &lt;/span&gt;
               &lt;span className="comment-time"&gt;{fmtRel(c.at)}&lt;/span&gt;
             &lt;/div&gt;
@@ -239,7 +239,7 @@ export default function <span class="fstat-no" title="function not covered" >Com
         &lt;textarea
           placeholder="Add a comment..."
           value={text}
-<span class="fstat-no" title="function not covered" >          onChange={(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setText(e.target.value)}</span>
+          onChange={(e) =&gt; setText(e.target.value)}
           rows={2}
           className="comment-textarea"
         /&gt;
@@ -259,7 +259,7 @@ export default function <span class="fstat-no" title="function not covered" >Com
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-12T10:06:01.200Z
+                at 2026-06-13T18:32:12.921Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
